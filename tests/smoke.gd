@@ -128,11 +128,26 @@ func _ready() -> void:
 	add_child(main)
 	for i: int in 10:
 		await get_tree().process_frame
-	_check("Gebäudezeilen angelegt", main.get_node("%BuildingList").get_child_count(), Game.buildings.size())
+	var top_level: int = 0
+	for building: Dictionary in Game.buildings:
+		if not building.has("parent") and building.get("placement", "list") == "list":
+			top_level += 1
+	_check("Gebäudezeilen angelegt", main.get_node("%BuildingList").get_child_count(), top_level)
 
+	# Klick auf den Planeten samt Flug-Animation darf keinen Fehler werfen
+	var coins_before_click: float = Game.amounts["coins"]
+	main._on_planet_pressed()
+	await get_tree().create_timer(0.2).timeout
+	_check("Klick über die Oberfläche zählt", Game.amounts["coins"] > coins_before_click, true)
 	_check("Rezeptzeilen angelegt", main.get_node("%RecipeList").get_child_count(), Game.recipes.size())
 
 	for arg: String in OS.get_cmdline_user_args():
+		if arg == "--expand":
+			for row: Node in main.get_node("%BuildingList").get_children():
+				row.expand_button.button_pressed = true
+			await get_tree().process_frame
+			main.get_node("%BuildingList").get_parent().scroll_vertical = 330
+			await get_tree().process_frame
 		if arg.begins_with("--tab="):
 			main.get_node("%Tabs").current_tab = int(arg.trim_prefix("--tab="))
 			await get_tree().process_frame

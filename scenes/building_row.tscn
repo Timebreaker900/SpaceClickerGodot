@@ -2,41 +2,46 @@
 
 [ext_resource type="Script" path="res://scripts/building_row.gd" id="1_row"]
 
-[node name="BuildingRow" type="PanelContainer"]
+[node name="BuildingRow" type="VBoxContainer"]
 size_flags_horizontal = 3
+theme_override_constants/separation = 10
 script = ExtResource("1_row")
 
-[node name="Margin" type="MarginContainer" parent="."]
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Panel"]
 layout_mode = 2
 theme_override_constants/margin_left = 18
 theme_override_constants/margin_top = 14
 theme_override_constants/margin_right = 18
 theme_override_constants/margin_bottom = 14
 
-[node name="Row" type="HBoxContainer" parent="Margin"]
+[node name="Row" type="HBoxContainer" parent="Panel/Margin"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Icon" type="TextureRect" parent="Margin/Row"]
+[node name="Icon" type="TextureRect" parent="Panel/Margin/Row"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(120, 120)
 layout_mode = 2
+size_flags_vertical = 0
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Text" type="VBoxContainer" parent="Margin/Row"]
+[node name="Text" type="VBoxContainer" parent="Panel/Margin/Row"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 2
 
-[node name="Name" type="Label" parent="Margin/Row/Text"]
+[node name="Name" type="Label" parent="Panel/Margin/Row/Text"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"HeadingLabel"
 theme_override_font_sizes/font_size = 38
 text = "Gebäude  Lv 0"
 
-[node name="Info" type="Label" parent="Margin/Row/Text"]
+[node name="Info" type="Label" parent="Panel/Margin/Row/Text"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.25, 0.82, 1, 1)
@@ -44,17 +49,39 @@ theme_override_font_sizes/font_size = 28
 text = "+1 Ressource/s"
 autowrap_mode = 3
 
-[node name="Cost" type="Label" parent="Margin/Row/Text"]
+[node name="Cost" type="RichTextLabel" parent="Panel/Margin/Row/Text"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+mouse_filter = 2
+bbcode_enabled = true
 text = "Kosten"
-autowrap_mode = 3
+fit_content = true
+scroll_active = false
 
-[node name="BuyButton" type="Button" parent="Margin/Row"]
+[node name="ExpandButton" type="Button" parent="Panel/Margin/Row/Text"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"LinkButton2"
+toggle_mode = true
+text = "Untermenü"
+
+[node name="BuyButton" type="Button" parent="Panel/Margin/Row"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(170, 110)
 layout_mode = 2
 size_flags_vertical = 4
 theme_type_variation = &"PrimaryButton"
 text = "+1"
+
+[node name="SubMargin" type="MarginContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 56
+
+[node name="SubList" type="VBoxContainer" parent="SubMargin"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 10

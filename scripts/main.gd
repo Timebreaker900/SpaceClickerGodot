@@ -10,6 +10,8 @@ const UpgradeRow := preload("res://scenes/upgrade_row.tscn")
 @onready var planet: TextureButton = %Planet
 @onready var click_coins: Button = %ClickCoins
 @onready var click_wood: Button = %ClickWood
+@onready var pop_cost: RichTextLabel = %PopCost
+@onready var pop_button: Button = %PopButton
 @onready var buy_amount_button: Button = %BuyAmountButton
 @onready var building_list: VBoxContainer = %BuildingList
 @onready var recipe_list: VBoxContainer = %RecipeList
@@ -19,6 +21,7 @@ const UpgradeRow := preload("res://scenes/upgrade_row.tscn")
 
 var _bar_labels: Dictionary = {}   # Ressourcen-ID -> Label in der Leiste oben
 var _list_labels: Dictionary = {}  # Ressourcen-ID -> Label im Reiter "Ressourcen"
+var _planet_building: Dictionary   # Gebäude mit eigenem Knopf beim Planeten (Bevölkerung)
 
 
 func _ready() -> void:
@@ -31,10 +34,7 @@ func _ready() -> void:
 			_add_group_heading(current_group)
 		_list_labels[res["id"]] = _add_resource_entry(resource_list, res, 64, true)
 
-	for building: Dictionary in Game.buildings:
-		var row: Node = BuildingRow.instantiate()
-		building_list.add_child(row)
-		row.setup(building)
+	_build_building_rows()
 	for recipe: Dictionary in Game.recipes:
 		var row: Node = RecipeRow.instantiate()
 		recipe_list.add_child(row)
@@ -50,8 +50,28 @@ func _ready() -> void:
 	planet.button_down.connect(_on_planet_pressed)
 	click_coins.pressed.connect(_set_click_target.bind("coins"))
 	click_wood.pressed.connect(_set_click_target.bind("wood"))
+	pop_button.pressed.connect(func() -> void: Game.buy(_planet_building))
 	buy_amount_button.pressed.connect(_on_buy_amount_pressed)
 	_set_click_target(Game.click_target)
+
+
+## Legt die Gebäudezeilen an. Drei Fälle, gesteuert über data/buildings.json:
+##   "placement": "planet" -> keine Zeile, sondern der Knopf beim Planeten
+##   "parent": "mine"      -> Unterzeile im aufklappbaren Menü der Mine
+##   sonst                 -> normale Zeile in der Liste
+func _build_building_rows() -> void:
+	var rows: Dictionary = {}  # Gebäude-ID -> Zeile
+	for building: Dictionary in Game.buildings:
+		if building.get("placement", "list") == "planet":
+			_planet_building = building
+			continue
+		var row: Node = BuildingRow.instantiate()
+		if building.has("parent"):
+			rows[building["parent"]].add_sub_row(row)
+		else:
+			building_list.add_child(row)
+		row.setup(building)
+		rows[building["id"]] = row
 
 
 func _process(_delta: float) -> void:
@@ -60,6 +80,7 @@ func _process(_delta: float) -> void:
 		_bar_labels[id].text = _resource_text(id, rates)
 	for id: String in _list_labels:
 		_list_labels[id].text = _resource_text(id, rates)
+	_update_population_button(rates)
 
 	# Der Reiter zeigt, wie viele Upgrades gerade kaufbar sind.
 	var buyable: int = 0
@@ -67,6 +88,24 @@ func _process(_delta: float) -> void:
 		if Game.can_buy_upgrade(upgrade):
 			buyable += 1
 	tabs.set_tab_title(upgrade_list.get_parent().get_index(), "Upgrades (%d)" % buyable if buyable > 0 else "Upgrades")
+
+
+## Der Bevölkerungs-Knopf: einmaliger Preis plus laufender Verbrauch, jeder
+## Posten einzeln rot, wenn es daran scheitert.
+func _update_population_button(rates: Dictionary) -> void:
+	if _planet_building.is_empty():
+		return
+	var count: int = Game.buy_amount
+	var text: String = Ui.cost_line(Game.cost_for(_planet_building, count))
+	var upkeep: Dictionary = Game.building_output(_planet_building, "produces")
+	for id: String in upkeep:
+		var per_second: float = -float(upkeep[id]) * count
+		if per_second > 0.0:
+			text += "   " + Ui.amount(id, per_second, rates.get(id, 0.0) >= per_second, "", "/s")
+	if pop_cost.text != text:
+		pop_cost.text = text
+	pop_button.text = "+%d" % count
+	pop_button.disabled = not Game.can_buy(_planet_building, count)
 
 
 ## "1234  +2/s" für Vorräte, "frei/gesamt" für Bevölkerung und Strom.
@@ -104,8 +143,9 @@ func _add_resource_entry(parent: Container, res: Dictionary, icon_size: int, wit
 func _add_group_heading(title: String) -> void:
 	var heading := Label.new()
 	heading.text = title
-	heading.add_theme_font_size_override("font_size", 40)
-	heading.add_theme_color_override("font_color", Color(0.72, 0.85, 1.0))
+	heading.theme_type_variation = &"HeadingLabel"
+	heading.add_theme_font_size_override("font_size", 38)
+	heading.add_theme_color_override("font_color", Color(0.25, 0.82, 1.0))
 	resource_list.add_child(heading)
 
 
@@ -126,17 +166,32 @@ func _on_planet_pressed() -> void:
 	var tween: Tween = create_tween()
 	tween.tween_property(planet, "scale", Vector2(0.94, 0.94), 0.05)
 	tween.tween_property(planet, "scale", Vector2.ONE, 0.08)
-	_spawn_click_text("+" + Game.fmt(gain))
+	_spawn_click_effect(Game.click_target, gain)
 
 
-func _spawn_click_text(text: String) -> void:
-	var label := Label.new()
-	label.text = text
-	label.add_theme_font_size_override("font_size", 48)
-	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(label)
-	label.global_position = get_global_mouse_position() + Vector2(randf_range(-40, 40), -60)
-	var tween: Tween = label.create_tween().set_parallel()
-	tween.tween_property(label, "position:y", label.position.y - 140, 0.6)
-	tween.tween_property(label, "modulate:a", 0.0, 0.6)
-	tween.chain().tween_callback(label.queue_free)
+## Das geklickte Icon springt kurz hoch und fliegt dann im Bogen zur Seite weg,
+## wie im alten Spiel. Die Bahn ist eine Wurfparabel: seitlich gleichmäßig,
+## nach unten immer schneller.
+func _spawn_click_effect(resource_id: String, gain: float) -> void:
+	var effect := TextureRect.new()
+	effect.texture = load(Game.resource_def(resource_id)["icon"])
+	effect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	effect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	effect.size = Vector2(84, 84)
+	effect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(effect)
+	if gain > 1.0:
+		var label := Label.new()
+		label.text = "+" + Game.fmt(gain)
+		label.position = Vector2(88, 16)
+		effect.add_child(label)
+
+	var start: Vector2 = get_local_mouse_position() - effect.size / 2.0
+	var direction: float = -1.0 if randf() < 0.5 else 1.0
+	var distance: float = randf_range(200.0, 300.0)
+	var fly := func(t: float) -> void:
+		effect.position = start + Vector2(direction * distance * t, 422.0 * t * t - 169.0 * t)
+		effect.modulate.a = clampf(2.0 - 2.0 * t, 0.0, 1.0)  # zweite Hälfte ausblenden
+	var tween: Tween = effect.create_tween()
+	tween.tween_method(fly, 0.0, 1.0, 0.45)
+	tween.tween_callback(effect.queue_free)

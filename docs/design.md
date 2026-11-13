@@ -30,12 +30,16 @@ Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Abschnitte mit �
 - Vier Reiter: Gebäude, Produktion, Upgrades, Ressourcen (die Sicht mit allen Währungen)
 - Upgrades: je eines für Farm, Holzfäller, Mine, Wassermühle, Bank und Sandmine sowie Klick-Upgrades für Coins und Holz – Werte in `data/upgrades.json`
 - Eigenes Design: dunkle Flächen mit türkisem Akzent, Schrift Exo 2
+- Gezeichnete Erde aus dem alten Projekt als Planet
+- Coins/Holz-Umschalter als Icon-Knöpfe; das geklickte Icon fliegt im Bogen weg
+- Bevölkerung hat einen eigenen Kaufknopf beim Planeten statt einer Zeile in der Gebäudeliste
+- Erzabbau ist ein aufklappbares Untermenü der Mine
+- Kosten zeigen Icons; rot wird nur der Posten, der fehlt
 
 Abweichungen vom alten Stand:
 
 - Kostenfaktor 1,15 pro Level für alle Gebäude. Das ist ein Vorschlag, der alte Wert ist unbekannt.
 - Bevölkerung ist technisch ein Gebäude (kostet Nahrung, verbraucht 2 Nahrung/s, liefert 1 Bevölkerung).
-- Die Erde ist eine sich drehende Kugel statt eines flachen Bildes.
 - Das Level von Schmelze und Fabrik bestimmt die Menge pro Durchgang. Im alten Stand hatte das Level keine erkennbare Wirkung.
 - Auto ist bei jedem Rezept sofort verfügbar. Im alten Stand war es als Upgrade gedacht.
 

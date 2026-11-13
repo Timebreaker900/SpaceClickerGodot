@@ -36,6 +36,22 @@ func _init() -> void:
 	# Flächen (Gebäudezeilen, Ressourcenleiste)
 	theme.set_stylebox("panel", "PanelContainer", _box(PANEL, PANEL_BORDER, 2, 20))
 
+	# Große Fläche hinter den Reitern: dunkler und ruhiger als die Zeilen darauf.
+	theme.set_type_variation("SheetPanel", "PanelContainer")
+	theme.set_stylebox("panel", "SheetPanel", _box(Color(0.02, 0.04, 0.10, 0.72), Color(ACCENT, 0.18), 2, 30))
+
+	# Kleine, unauffällige Knöpfe (z. B. Untermenü auf- und zuklappen)
+	theme.set_type_variation("LinkButton2", "Button")
+	theme.set_stylebox("normal", "LinkButton2", _box(Color(ACCENT, 0.10), Color(ACCENT, 0.35), 1, 12, 16, 4))
+	theme.set_stylebox("hover", "LinkButton2", _box(Color(ACCENT, 0.20), ACCENT, 1, 12, 16, 4))
+	theme.set_stylebox("pressed", "LinkButton2", _box(Color(ACCENT, 0.30), ACCENT, 1, 12, 16, 4))
+	theme.set_color("font_color", "LinkButton2", ACCENT)
+	theme.set_color("font_pressed_color", "LinkButton2", Color.WHITE)
+	theme.set_font_size("font_size", "LinkButton2", 26)
+
+	theme.set_color("default_color", "RichTextLabel", TEXT)
+	theme.set_font_size("normal_font_size", "RichTextLabel", 28)
+
 	# Normale Knöpfe. "pressed" gilt auch für eingerastete Umschalter (Coins/Holz).
 	theme.set_stylebox("normal", "Button", _box(BUTTON, Color(ACCENT, 0.55), 2, 16, 24, 10))
 	theme.set_stylebox("hover", "Button", _box(BUTTON_HOVER, ACCENT, 2, 16, 24, 10))

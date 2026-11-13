@@ -5,7 +5,7 @@ extends PanelContainer
 @onready var icon: TextureRect = %Icon
 @onready var name_label: Label = %Name
 @onready var info_label: Label = %Info
-@onready var cost_label: Label = %Cost
+@onready var cost_label: RichTextLabel = %Cost
 @onready var buy_button: Button = %BuyButton
 
 var upgrade: Dictionary
@@ -25,8 +25,9 @@ func _process(_delta: float) -> void:
 	var unlocked: bool = Game.upgrade_unlocked(upgrade)
 	var affordable: bool = Game.can_buy_upgrade(upgrade)
 	buy_button.disabled = not affordable
-	cost_label.text = _describe_cost() if unlocked else _describe_requirements()
-	cost_label.modulate = Color.WHITE if affordable or not unlocked else Color(1.0, 0.62, 0.62)
+	var cost_text: String = Ui.cost_line(upgrade.get("cost", {})) if unlocked else _describe_requirements()
+	if cost_label.text != cost_text:
+		cost_label.text = cost_text
 	icon.modulate.a = 1.0 if unlocked else 0.4
 
 
@@ -51,14 +52,6 @@ func _describe_effects() -> String:
 	var click: Dictionary = upgrade.get("add_click", {})
 	for id: String in click:
 		parts.append("%s %s pro Klick" % [Game.fmt_signed(click[id]), Game.resource_def(id)["name"]])
-	return ", ".join(parts)
-
-
-func _describe_cost() -> String:
-	var parts: PackedStringArray = []
-	var cost: Dictionary = upgrade.get("cost", {})
-	for id: String in cost:
-		parts.append("%s %s" % [Game.fmt(cost[id]), Game.resource_def(id)["name"]])
 	return ", ".join(parts)
 
 
