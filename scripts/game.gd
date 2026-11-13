@@ -356,6 +356,18 @@ func recipe_upgrade_available(recipe: Dictionary, kind: String) -> bool:
 	return true
 
 
+## Wie viele Stufen es von diesem Upgrade höchstens gibt (0 = unbegrenzt).
+## Tempo endet, wenn die Mindestdauer erreicht ist: 4 s Grunddauer -> 3 Stufen.
+func recipe_upgrade_max(recipe: Dictionary, kind: String) -> int:
+	var rules: Dictionary = settings["recipe_upgrades"]
+	match kind:
+		"auto":
+			return 1
+		"speed":
+			return int(ceil((float(recipe["seconds"]) - float(rules["min_seconds"])) / float(rules["seconds_per_level"])))
+	return 0
+
+
 ## Preis des nächsten Upgrades, bezahlt mit dem Erzeugnis des Rezepts.
 ## Auto kostet einen festen Betrag; Tempo und Menge kosten 25, 50, 75 ...
 func recipe_upgrade_cost(recipe: Dictionary, kind: String) -> Dictionary:

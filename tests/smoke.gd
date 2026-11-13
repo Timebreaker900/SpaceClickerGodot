@@ -266,6 +266,7 @@ func _ready() -> void:
 	Game.buy_recipe_upgrade(bar, "speed")
 	Game.buy_recipe_upgrade(bar, "speed")
 	_check("Nach drei Stufen 1 s, mehr gibt es nicht", [Game.recipe_seconds(bar), Game.recipe_upgrade_available(bar, "speed")], [1.0, false])
+	_check("Tempo hat 3 Stufen (4 s bis 1 s), Menge unbegrenzt", [Game.recipe_upgrade_max(bar, "speed"), Game.recipe_upgrade_max(bar, "amount"), Game.recipe_upgrade_max(_recipe("gold_bar"), "speed")], [3, 0, 7])
 	_check("Vierte Stufe wird nicht verkauft", Game.buy_recipe_upgrade(bar, "speed"), false)
 	Game.buy_recipe_upgrade(bar, "amount")
 	_check("Menge I: 2 pro Durchgang (1 + 1 Upgrade)", Game.recipe_batch(bar), 2)

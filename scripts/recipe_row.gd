@@ -63,8 +63,18 @@ func _process(_delta: float) -> void:
 		button.visible = Game.recipe_upgrade_available(recipe, kind)
 		if button.visible:
 			var cost: Dictionary = Game.recipe_upgrade_cost(recipe, kind)
-			button.text = "%s  %s" % [UPGRADE_LABELS[kind], Game.fmt(cost.values()[0])]
+			button.text = "%s%s · %s" % [UPGRADE_LABELS[kind], _level_text(kind), Game.fmt(cost.values()[0])]
 			button.disabled = not Game.can_buy_recipe_upgrade(recipe, kind)
+
+
+## Stand eines Upgrades für die Beschriftung: " 1/3" bei begrenzten Stufen,
+## " 4" bei unbegrenzten, nichts beim einmaligen Auto.
+func _level_text(kind: String) -> String:
+	if kind == "auto":
+		return ""
+	var level: int = int(Game.recipe_state[recipe["id"]][kind])
+	var maximum: int = Game.recipe_upgrade_max(recipe, kind)
+	return " %d/%d" % [level, maximum] if maximum > 0 else " Lv %d" % level
 
 
 func _on_upgrade_pressed(kind: String) -> void:
