@@ -50,7 +50,9 @@ Abweichungen vom alten Stand:
 
 - Kostenfaktor 1,15 pro Level für alle Gebäude. Das ist ein Vorschlag, der alte Wert ist unbekannt.
 - Bevölkerung ist technisch ein Gebäude (kostet Nahrung, verbraucht 2 Nahrung/s, liefert 1 Bevölkerung).
-- Menge pro Durchgang = Level von Schmelze bzw. Fabrik plus Mengen-Upgrades des Rezepts. Dass das Gebäude-Level mitzählt, ist ein Vorschlag; im alten Stand hatte es keine erkennbare Wirkung.
+- Menge pro Durchgang kommt allein aus den Mengen-Upgrades des Rezepts (Start: 1).
+- Das Level der Schmelze schaltet die Schmelz-Rezepte frei: ab Lv 5 Kupferbarren und Glas, ab Lv 10 Eisenbarren, ab Lv 15 Goldbarren. Darüber gibt es kein Level (Höchstlevel 15, Vorschlag).
+- Die Fabrik gibt es vorerst nur einmal; ihre beiden Rezepte sind sofort da. Ob sie wie die Schmelze gestaffelt werden soll, ist offen.
 
 Vorschlagswerte, weil die alten nur im Unity-Editor standen: Kosten und Ertrag der Sandmine, Kosten und Freischalt-Level des Erzabbaus (Mine Lv 5 / 10 / 20), Mengen und Zeiten aller Rezepte. Die Erz-Raten 0,8 / 0,5 / 0,2 pro Sekunde stammen aus dem alten Code.
 

@@ -24,8 +24,9 @@ extends Node
 ## oder andere Upgrades (requires_upgrades).
 ##
 ## Ein Rezept wandelt in "seconds" Sekunden "input" in "output" um. Es gehört zu
-## einem Gebäude. Wie viel pro Durchgang verarbeitet wird, ergibt sich aus dem
-## Level des Gebäudes plus den Mengen-Upgrades des Rezepts.
+## einem Gebäude und wird ab dessen Level "requires_level" freigeschaltet
+## (ohne Angabe ab Level 1). Wie viel pro Durchgang verarbeitet wird, bestimmen
+## allein die Mengen-Upgrades des Rezepts.
 ## Jedes Rezept hat drei eigene Upgrades, bezahlt mit dem, was es herstellt:
 ##   auto   - einmalig: das Rezept startet von selbst
 ##   speed  - je Stufe 1 Sekunde schneller, bis zur Mindestdauer
@@ -236,6 +237,11 @@ func upgrade_visibility(upgrade: Dictionary) -> String:
 	return "mystery"
 
 
+## Hat das Gebäude sein Höchstlevel erreicht? Dann gibt es nichts mehr zu kaufen.
+func is_maxed(building: Dictionary) -> bool:
+	return building.has("max_level") and levels[building["id"]] >= int(building["max_level"])
+
+
 ## Sind alle Voraussetzungen ("requires") eines Gebäudes erfüllt?
 func is_unlocked(building: Dictionary) -> bool:
 	var requires: Dictionary = building.get("requires", {})
@@ -265,6 +271,9 @@ func cost_for(building: Dictionary, count: int) -> Dictionary:
 func can_buy(building: Dictionary, count: int) -> bool:
 	if building_visibility(building) != "known":
 		return false
+	# Manche Gebäude gibt es nur begrenzt oft (Schmelze, Fabrik: einmal).
+	if building.has("max_level") and levels[building["id"]] + count > int(building["max_level"]):
+		return false
 	# Manche Gebäude dürfen ein anderes nicht überholen (Erzabbau <= Mine).
 	if building.has("level_cap") and levels[building["id"]] + count > levels[building["level_cap"]]:
 		return false
@@ -286,13 +295,22 @@ func can_buy(building: Dictionary, count: int) -> bool:
 	return true
 
 
-## Wie viele Einheiten ein Rezept pro Durchgang verarbeitet: Level des Gebäudes
-## plus Mengen-Upgrades. Ohne Gebäude 0, das Rezept ist dann nicht verfügbar.
+## Wie viele Einheiten ein Rezept pro Durchgang verarbeitet: 1 plus Mengen-
+## Upgrades. Ohne Gebäude 0, das Rezept ist dann nicht verfügbar.
 func recipe_batch(recipe: Dictionary) -> int:
-	var building_level: int = levels[recipe["building"]]
-	if building_level == 0:
+	if levels[recipe["building"]] < int(recipe.get("requires_level", 1)):
 		return 0
-	return building_level + int(recipe_state[recipe["id"]]["amount"])
+	return 1 + int(recipe_state[recipe["id"]]["amount"])
+
+
+## Ab welchem Level das Gebäude sein nächstes Rezept freischaltet (0 = keines mehr).
+func next_recipe_level(building: Dictionary) -> int:
+	var next: int = 0
+	for recipe: Dictionary in recipes:
+		var needed: int = int(recipe.get("requires_level", 1))
+		if recipe["building"] == building["id"] and needed > levels[building["id"]] and (next == 0 or needed < next):
+			next = needed
+	return next
 
 
 ## Ein Rezept taucht erst auf, wenn sein Gebäude steht und der Spieler alle

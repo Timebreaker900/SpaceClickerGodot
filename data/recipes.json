@@ -1,6 +1,7 @@
 [
 	{
 		"id": "copper_bar",
+		"requires_level": 5,
 		"name": "Kupferbarren",
 		"icon": "res://assets/icons/copper_bar.svg",
 		"building": "smeltery",
@@ -10,6 +11,7 @@
 	},
 	{
 		"id": "iron_bar",
+		"requires_level": 10,
 		"name": "Eisenbarren",
 		"icon": "res://assets/icons/iron_bar.svg",
 		"building": "smeltery",
@@ -19,6 +21,7 @@
 	},
 	{
 		"id": "gold_bar",
+		"requires_level": 15,
 		"name": "Goldbarren",
 		"icon": "res://assets/icons/gold_bar.svg",
 		"building": "smeltery",
@@ -28,6 +31,7 @@
 	},
 	{
 		"id": "glass",
+		"requires_level": 5,
 		"name": "Glas",
 		"icon": "res://assets/icons/glass.svg",
 		"building": "smeltery",

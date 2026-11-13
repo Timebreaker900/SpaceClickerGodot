@@ -74,7 +74,14 @@ func _process(_delta: float) -> void:
 	buy_button.text = "+%d" % count if known else "?"
 
 	var cost_text: String
-	if known:
+	var maxed: bool = known and Game.is_maxed(building)
+	buy_button.visible = not maxed
+	if maxed:
+		# Fertig ausgebaut: kein Level, kein Preis, kein Kaufknopf.
+		name_label.text = building["name"]
+		info_label.text = _describe_effects()
+		cost_text = "Gebaut"
+	elif known:
 		name_label.text = "%s  Lv %d" % [building["name"], Game.levels[building["id"]]]
 		info_label.text = _describe_effects()  # jedes Bild neu, weil Upgrades die Werte ändern
 		cost_text = _describe_cost()
@@ -101,6 +108,10 @@ func _describe_effects() -> String:
 		parts.append("%s %s" % [Game.fmt_signed(provides[id]), Game.resource_def(id)["name"]])
 	if building.has("note"):
 		parts.append(building["note"])
+	# Gebäude mit Rezepten sagen, wann das nächste dazukommt – aber nicht welches.
+	if building.has("recipes_label"):
+		var next_level: int = Game.next_recipe_level(building)
+		parts.append("Neues Rezept ab Lv %d" % next_level if next_level > 0 else "Alle Rezepte freigeschaltet")
 	return ", ".join(parts)
 
 

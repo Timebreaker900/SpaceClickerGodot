@@ -103,15 +103,20 @@ func _ready() -> void:
 
 	# Rezepte: Zutaten sofort weg, Ergebnis nach Ablauf, Menge = Gebäude-Level
 	var copper_bar: Dictionary = _recipe("copper_bar")
-	Game.amounts["copper_ore"] = 4.0
+	Game.amounts["copper_ore"] = 2.0
 	_check("Ohne Schmelze kein Schmelzen", Game.can_start_recipe(copper_bar), false)
-	Game.levels["smeltery"] = 2
+	Game.levels["smeltery"] = 4
+	_check("Schmelze Lv 4: noch kein Kupferbarren", Game.can_start_recipe(copper_bar), false)
+	Game.levels["smeltery"] = 5
+	_check("Schmelze Lv 5: Glas ja, Eisenbarren nein", [Game.recipe_batch(_recipe("glass")), Game.recipe_batch(_recipe("iron_bar"))], [1, 0])
+	_check("Nächstes Rezept ab Lv 10", Game.next_recipe_level(_building("smeltery")), 10)
 	_check("Mit Schmelze startbar", Game.start_recipe(copper_bar), true)
 	_check("Erz sofort abgezogen", Game.amounts["copper_ore"], 0.0)
 	Game._advance_recipe(copper_bar, 3.9)
 	_check("Vor Ablauf noch kein Barren", Game.amounts["copper_bar"], 0.0)
 	Game._advance_recipe(copper_bar, 0.2)
-	_check("Nach Ablauf 2 Barren", Game.amounts["copper_bar"], 2.0)
+	_check("Nach Ablauf 1 Barren", Game.amounts["copper_bar"], 1.0)
+	_check("Fabrik gibt es nur einmal, Schmelze bis Lv 15", [_building("factory")["max_level"], _building("smeltery")["max_level"]], [1.0, 15.0])
 	Game.amounts["copper_ore"] = 4.0
 	Game.set_recipe_auto(copper_bar, true)
 	_check("Auto ohne Upgrade bleibt aus", Game.recipe_state["copper_bar"]["auto"], false)
@@ -185,7 +190,7 @@ func _ready() -> void:
 	_check("Obergrenze 8 Stunden zu 80 Prozent", is_equal_approx(Game.amounts["food"], 8.0 * 3600.0 * 0.8), true)
 	Game.amounts["food"] = 0.0
 	Game.levels["farm"] = 0
-	Game.levels["smeltery"] = 1
+	Game.levels["smeltery"] = 5
 	Game.amounts["copper_ore"] = 10.0
 	Game.apply_offline(1000.0)
 	_check("Ohne Auto wird nichts geschmolzen", Game.amounts["copper_bar"], 0.0)
@@ -221,7 +226,7 @@ func _ready() -> void:
 	# Rezept-Upgrades: bezahlt mit dem eigenen Erzeugnis
 	_reset()
 	var bar: Dictionary = _recipe("copper_bar")  # 2 Erz -> 1 Barren in 4 s
-	Game.levels["smeltery"] = 1
+	Game.levels["smeltery"] = 5
 	Game.amounts["copper_bar"] = 24.0
 	_check("Tempo I kostet 25, 24 reichen nicht", [Game.recipe_upgrade_cost(bar, "speed")["copper_bar"], Game.can_buy_recipe_upgrade(bar, "speed")], [25.0, false])
 	Game.amounts["copper_bar"] = 1000.0
@@ -232,7 +237,7 @@ func _ready() -> void:
 	_check("Nach drei Stufen 1 s, mehr gibt es nicht", [Game.recipe_seconds(bar), Game.recipe_upgrade_available(bar, "speed")], [1.0, false])
 	_check("Vierte Stufe wird nicht verkauft", Game.buy_recipe_upgrade(bar, "speed"), false)
 	Game.buy_recipe_upgrade(bar, "amount")
-	_check("Menge I: 2 pro Durchgang (Schmelze 1 + 1)", Game.recipe_batch(bar), 2)
+	_check("Menge I: 2 pro Durchgang (1 + 1 Upgrade)", Game.recipe_batch(bar), 2)
 	Game.amounts["copper_ore"] = 4.0
 	Game.start_recipe(bar)
 	_check("Durchgang nimmt 4 Erz", Game.amounts["copper_ore"], 0.0)
@@ -248,7 +253,7 @@ func _ready() -> void:
 	_reset()
 
 	# Rezepte verraten nichts: erst sichtbar, wenn die Zutat entdeckt ist
-	Game.levels["smeltery"] = 1
+	Game.levels["smeltery"] = 15
 	_check("Goldbarren-Rezept ohne Golderz unsichtbar", Game.recipe_visible(_recipe("gold_bar")), false)
 	Game.amounts["gold_ore"] = 1.0
 	Game._update_seen()
@@ -286,7 +291,7 @@ func _ready() -> void:
 
 	# Für Bildschirmfotos: ein fortgeschrittener Spielstand
 	if OS.get_cmdline_user_args().has("--demo"):
-		Game.levels.merge({ "farm": 12, "housing": 14, "lumberjack": 4, "mine": 6, "watermill": 6, "bank": 1, "sandmine": 2, "smeltery": 2, "factory": 1, "copper_mining": 6, "iron_mining": 2 }, true)
+		Game.levels.merge({ "farm": 12, "housing": 14, "lumberjack": 4, "mine": 6, "watermill": 6, "bank": 1, "sandmine": 2, "smeltery": 10, "factory": 1, "copper_mining": 6, "iron_mining": 2 }, true)
 		Game.amounts.merge({ "coins": 4820.0, "wood": 1310.0, "food": 960.0, "stone": 455.0, "sand": 88.0, "copper_ore": 37.0, "iron_ore": 3.0, "copper_bar": 61.0, "iron_bar": 12.0 }, true)
 		Game.recipe_state["copper_bar"].merge({ "auto_unlocked": true, "auto": true, "speed": 1 }, true)
 		Game.click_counts["coins"] = 140
@@ -328,6 +333,9 @@ func _ready() -> void:
 	_check("Rezeptzeilen plus zwei Überschriften angelegt", main.get_node("%RecipeList").get_child_count(), Game.recipes.size() + 2)
 
 	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--scroll="):
+			main.get_node("%BuildingList").get_parent().scroll_vertical = int(arg.trim_prefix("--scroll="))
+			await get_tree().process_frame
 		if arg == "--notch":
 			main.set_insets(0.0, 130.0, 0.0, 70.0)  # wie ein Handy mit Notch und Wischleiste
 			await get_tree().process_frame
