@@ -76,7 +76,8 @@ func _ready() -> void:
 	for building: Dictionary in Game.buildings:
 		if not building.has("parent") and building.get("placement", "list") == "list":
 			order.append(building["id"])
-	_check("Gebäude-Reihenfolge", order, ["farm", "lumberjack", "mine", "market", "watermill", "sandmine", "smeltery", "factory", "solarpanel", "bank", "sawmill"])
+	_check("Gebäude-Reihenfolge", order, ["farm", "lumberjack", "mine", "market", "watermill", "sandmine", "smeltery", "factory", "solarpanel", "sawmill", "bank"])
+	_check("Erste Bank kostet 1 Goldbarren, die dritte 3", [Game.cost_for(_building("bank"), 1)["gold_bar"], Game.cost_for(_building("bank"), 3)["gold_bar"]], [1.0, 6.0])
 	_check("Markt liefert 1 Coin, Sägewerk mehr Holz als der Holzfäller", [_building("market")["produces"]["coins"], _building("sawmill")["produces"]["wood"] > _building("lumberjack")["produces"]["wood"]], [1.0, true])
 
 	# Bevölkerung: kostet Nahrung und laufenden Verbrauch
@@ -174,7 +175,7 @@ func _ready() -> void:
 	_check("Stufe III erst nach II sichtbar, dann Rätsel", Game.upgrade_visibility(_upgrade("farm_3")), "mystery")
 	_check("Stufe IV noch unsichtbar", Game.upgrade_visibility(_upgrade("farm_4")), "hidden")
 	_check("Strom-Upgrade in ganzen Einheiten", _upgrade("watermill_1")["add_provides"]["watermill"]["electricity"], 1.0)
-	_check("Bank-Upgrade I: halbe Grundproduktion", _upgrade("bank_1")["add_produces"]["bank"]["coins"], 12.5)
+	_check("Bank-Upgrade I: halbe Grundproduktion", _upgrade("bank_1")["add_produces"]["bank"]["coins"], 25.0)
 	_check("Upgrade nur einmal kaufbar", Game.can_buy_upgrade(farm_upgrade), false)
 	var click_upgrade: Dictionary = _upgrade("click_coins_1")
 	Game.amounts["coins"] = 5000.0

@@ -24,8 +24,8 @@ Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Abschnitte mit �
   7. Schmelze – schaltet Schmelz-Rezepte frei
   8. Fabrik – schaltet Fabrik-Rezepte frei
   9. Solarpanel – Strom; kostet Coins, Kupferkabel und Eisenplatten
-  10. Bank – 25 Coins pro Sekunde (Vorschlag); teuer, kostet Coins, Stein und Eisenplatten, belegt Bevölkerung und Strom
-  11. Sägewerk – mehr Holz als der Holzfäller
+  10. Sägewerk – mehr Holz als der Holzfäller
+  11. Bank – das letzte und teuerste Gebäude der Erde: 50 Coins pro Sekunde (Vorschlag); kostet Coins, Stein, Eisenplatten und Goldbarren (1 für die erste, je Level einer mehr), belegt Bevölkerung und Strom
 - Verstärktes Glas entfällt: Das Solarpanel braucht es nicht mehr.
 - Es gibt eine eigene Sicht, die alle Währungen auf einmal zeigt.
 
@@ -94,7 +94,7 @@ Wird Punkt für Punkt abgearbeitet: Nach jedem Punkt testet der Nutzer und gibt 
 - [x] Rezept-Upgrades, bezahlt mit dem eigenen Erzeugnis: „Schneller“ (je Stufe −1 s, mindestens 1 s) und „Mehr“ (je Stufe +1 Menge, also Zutaten und Ergebnis um den Grundwert); Preis 25, 50, 75 …
 - [x] Produktion zeigt Icons statt Namen; oben ein Umschalter zwischen „Schmelzen“ und „Herstellen“
 - [x] Leiste oben als festes Raster, damit nichts springt
-- [ ] Mehr Verwendung für Strom und Goldbarren
+- [x] Mehr Verwendung für Strom und Goldbarren (Schmelze und Fabrik brauchen viel Strom, die Bank kostet Goldbarren)
 
 ## Rahmen
 
@@ -179,7 +179,6 @@ Verstärktes Glas wird vom Solarpanel verlangt, hat aber kein Rezept.
 
 ## Offene Fragen
 
-- Wofür werden Goldbarren und Glas gebraucht?
 - Was ist das ultimative Ziel? Gibt es Prestige?
 - Was heißt „futuristisch“ konkret: nur das Aussehen der Oberfläche, oder auch Inhalte (spätere Gebäude, Technologien)? Die Erde beginnt mit Farm und Holzfäller.
 - Wie viele Planeten, was bringt jeder, und wie schaltet man sie frei?
