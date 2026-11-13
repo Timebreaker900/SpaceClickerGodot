@@ -6,6 +6,9 @@ const BuildingRow := preload("res://scenes/building_row.tscn")
 const RecipeRow := preload("res://scenes/recipe_row.tscn")
 const UpgradeRow := preload("res://scenes/upgrade_row.tscn")
 const GAME_VERSION := "0.1"
+const BASE_MARGIN := 28       # normaler Abstand zum Bildschirmrand
+const HINT_TOP := 700.0       # Lage des Hinweisfelds ohne Zusatzrand
+const TOASTS_TOP := 250.0     # Lage der Einblendungen ohne Zusatzrand
 
 @onready var resource_bar: HFlowContainer = %ResourceBar
 @onready var bar_divider: ColorRect = %BarDivider
@@ -79,6 +82,8 @@ func _ready() -> void:
 	settings_button.pressed.connect(_open_settings)
 	resources_button.pressed.connect(_open_bar_picker)
 	_set_click_target(Game.click_target)
+	get_viewport().size_changed.connect(_apply_safe_area)
+	_apply_safe_area()
 	_seen_before = Game.seen.duplicate()
 	# Leiser Tipp-Ton für alles, was nur umschaltet oder ein Fenster öffnet.
 	for button: Button in [click_coins, click_wood, buy_amount_button, settings_button, resources_button, offline_close]:
@@ -142,6 +147,41 @@ func _process(_delta: float) -> void:
 		if Game.can_buy_upgrade(upgrade):
 			buyable += 1
 	tabs.set_tab_title(upgrade_list.get_parent().get_index(), "Upgrades (%d)" % buyable if buyable > 0 else "Upgrades")
+
+
+## Handys haben oben oft eine Kamera-Aussparung (Notch), unten eine Wischleiste
+## und runde Ecken. Das System nennt den "sicheren Bereich"; alles außerhalb
+## wird hier als zusätzlicher Rand freigehalten. Der Hintergrund füllt weiter
+## den ganzen Bildschirm.
+func _apply_safe_area() -> void:
+	if not OS.has_feature("mobile"):
+		return  # Am PC meldet das System hier die Arbeitsfläche des Monitors, nicht des Fensters.
+	var window: Vector2i = DisplayServer.window_get_size()
+	if window.x <= 0 or window.y <= 0:
+		return
+	var safe: Rect2i = DisplayServer.get_display_safe_area()
+	# Das System rechnet in Bildschirmpixeln, das Spiel in seiner eigenen Breite von 1080.
+	var factor: float = get_viewport_rect().size.x / float(window.x)
+	set_insets(
+		maxf(0.0, safe.position.x * factor),
+		maxf(0.0, safe.position.y * factor),
+		maxf(0.0, (window.x - safe.end.x) * factor),
+		maxf(0.0, (window.y - safe.end.y) * factor))
+
+
+## Setzt die Zusatzränder (in Spiel-Einheiten). Eigene Funktion, damit sich das
+## auch am PC ausprobieren lässt.
+func set_insets(left: float, top: float, right: float, bottom: float) -> void:
+	var margin: MarginContainer = $Margin
+	margin.add_theme_constant_override("margin_left", BASE_MARGIN + int(left))
+	margin.add_theme_constant_override("margin_top", BASE_MARGIN + int(top))
+	margin.add_theme_constant_override("margin_right", BASE_MARGIN + int(right))
+	margin.add_theme_constant_override("margin_bottom", BASE_MARGIN + int(bottom))
+	# Hinweisfeld und Einblendungen hängen nicht im Layout und wandern mit.
+	hint_area.offset_top = HINT_TOP + top
+	hint_area.offset_bottom = HINT_TOP + 90.0 + top
+	toasts.offset_top = TOASTS_TOP + top
+	toasts.offset_bottom = TOASTS_TOP + top
 
 
 ## Führt neue Spieler bis zum ersten Gebäude: klicken, beide Ressourcen sammeln,

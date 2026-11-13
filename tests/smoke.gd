@@ -268,6 +268,10 @@ func _ready() -> void:
 	_check("Rezeptzeilen angelegt", main.get_node("%RecipeList").get_child_count(), Game.recipes.size())
 
 	for arg: String in OS.get_cmdline_user_args():
+		if arg == "--notch":
+			main.set_insets(0.0, 130.0, 0.0, 70.0)  # wie ein Handy mit Notch und Wischleiste
+			await get_tree().process_frame
+			await get_tree().process_frame
 		if arg == "--short":
 			Options.number_format = "short"
 			Game.amounts["coins"] = 48213456.0
@@ -300,6 +304,12 @@ func _ready() -> void:
 		if arg.begins_with("--shot="):
 			await RenderingServer.frame_post_draw
 			get_viewport().get_texture().get_image().save_png(arg.trim_prefix("--shot="))
+
+	# Handy-Ränder: Zusatzrand kommt zum normalen Abstand dazu
+	main.set_insets(0.0, 130.0, 0.0, 70.0)
+	_check("Rand oben = 28 + 130", main.get_node("Margin").get_theme_constant("margin_top"), 158)
+	_check("Rand unten = 28 + 70", main.get_node("Margin").get_theme_constant("margin_bottom"), 98)
+	main.set_insets(0.0, 0.0, 0.0, 0.0)
 
 	# Einstiegshinweise: führen bis zur ersten Farm, danach Ruhe
 	_reset()

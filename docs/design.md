@@ -71,7 +71,7 @@ Wird Punkt für Punkt abgearbeitet: Nach jedem Punkt testet der Nutzer und gibt 
 - [x] Einstiegshinweis für neue Spieler (führt bis zum ersten Gebäude: tippen, umschalten, kaufen)
 - [x] Zahlenformat als Einstellung (kurz: 12.345 / 1,23 Mio, oder wissenschaftlich: 1.23e6; kurz ist Standard)
 - [x] Bevölkerungs-Knopf erklärt, wofür Bevölkerung gebraucht wird (Beschriftung, Hinweis beim ersten Gebäude mit Bedarf, „3 frei von 9“ im Reiter)
-- [ ] Handy-Ränder (Notch, runde Ecken)
+- [x] Handy-Ränder (Notch, runde Ecken) – eingebaut und mit simulierten Rändern geprüft; am echten Handy noch zu testen
 - [ ] Ruhigerer Hintergrund
 - [ ] Solarpanel samt Rezept für verstärktes Glas
 - [ ] Auto bei Rezepten als Upgrade
