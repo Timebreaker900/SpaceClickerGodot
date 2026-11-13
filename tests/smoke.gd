@@ -259,6 +259,11 @@ func _ready() -> void:
 	_check("Rezeptzeilen angelegt", main.get_node("%RecipeList").get_child_count(), Game.recipes.size())
 
 	for arg: String in OS.get_cmdline_user_args():
+		if arg == "--fresh":
+			_reset()
+			Game._reset_discovery()
+			await get_tree().process_frame
+			await get_tree().process_frame
 		if arg == "--picker":
 			main._open_bar_picker()
 			await get_tree().process_frame
@@ -282,6 +287,20 @@ func _ready() -> void:
 		if arg.begins_with("--shot="):
 			await RenderingServer.frame_post_draw
 			get_viewport().get_texture().get_image().save_png(arg.trim_prefix("--shot="))
+
+	# Einstiegshinweise: führen bis zur ersten Farm, danach Ruhe
+	Game.levels["farm"] = 1
+	_check("Mit Farm kein Hinweis", main._hint_text(), "")
+	_reset()
+	_check("Am Anfang: tippen", main._hint_text(), "Tippe auf den Planeten")
+	Game.click_counts["coins"] = 25
+	Game.amounts["coins"] = 25.0
+	Game.click_target = "coins"
+	_check("Genug Coins: auf Holz umschalten", main._hint_text(), "Genug Coins. Schalte links um auf Holz")
+	Game.click_target = "wood"
+	_check("Beim Holzsammeln kein Hinweis", main._hint_text(), "")
+	Game.amounts["wood"] = 25.0
+	_check("Leistbar: Farm kaufen", main._hint_text(), "Kaufe unten: Farm")
 
 	# Aufräumen: laufende Töne beenden, Testdateien löschen
 	for player: AudioStreamPlayer in Sfx._players:

@@ -68,7 +68,7 @@ Wird Punkt für Punkt abgearbeitet: Nach jedem Punkt testet der Nutzer und gibt 
 - [x] Kaufmenge „Max“ (1 → 10 → 100 → Max; kauft so viele Level wie leistbar)
 - [x] Ton (Klick, Kauf, Upgrade, Aufdecken, Entdecken, Tippen) – per Code erzeugt, Lautstärke in den Einstellungen
 - [x] Planet bewegt sich leicht (schwebt auf und ab, wiegt sich)
-- [ ] Einstiegshinweis für neue Spieler
+- [x] Einstiegshinweis für neue Spieler (führt bis zum ersten Gebäude: tippen, umschalten, kaufen)
 - [ ] Zahlenformat als Einstellung (1.23e6 oder 1,23 Mio)
 - [ ] Bevölkerungs-Knopf erklärt, wofür Bevölkerung gebraucht wird
 - [ ] Handy-Ränder (Notch, runde Ecken)

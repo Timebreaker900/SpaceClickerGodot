@@ -23,6 +23,9 @@ const GAME_VERSION := "0.1"
 @onready var upgrade_list: VBoxContainer = %UpgradeList
 @onready var resource_list: VBoxContainer = %ResourceList
 @onready var tabs: TabContainer = %Tabs
+@onready var hint_area: CenterContainer = %HintArea
+@onready var hint: PanelContainer = %Hint
+@onready var hint_label: Label = %HintLabel
 @onready var toasts: VBoxContainer = %Toasts
 @onready var popup: Control = %Popup
 @onready var offline_popup: Control = %OfflinePopup
@@ -115,6 +118,12 @@ func _process(_delta: float) -> void:
 	planet.position.y = sin(time * 0.9) * 10.0
 	planet.rotation = sin(time * 0.5) * 0.045
 
+	# Einstiegshinweis: sichtbar, solange es einen gibt, und leicht wippend.
+	var hint_text: String = _hint_text()
+	hint.visible = hint_text != ""
+	hint_label.text = hint_text
+	hint.position.y = sin(time * 3.0) * 6.0
+
 	var rates: Dictionary = Game.get_rates()
 	_update_resource_views(rates)
 	_update_population_button(rates)
@@ -131,6 +140,30 @@ func _process(_delta: float) -> void:
 		if Game.can_buy_upgrade(upgrade):
 			buyable += 1
 	tabs.set_tab_title(upgrade_list.get_parent().get_index(), "Upgrades (%d)" % buyable if buyable > 0 else "Upgrades")
+
+
+## Führt neue Spieler bis zum ersten Gebäude: klicken, beide Ressourcen sammeln,
+## kaufen. Sobald das erste Gebäude steht, kommt kein Hinweis mehr.
+func _hint_text() -> String:
+	var first: Dictionary = Game.buildings[0]
+	if Game.levels[first["id"]] > 0:
+		return ""
+	if Game.can_buy(first, 1):
+		return "Kaufe unten: %s" % first["name"]
+	var total_clicks: int = 0
+	for id: String in Game.click_counts:
+		total_clicks += Game.click_counts[id]
+	if total_clicks == 0:
+		return "Tippe auf den Planeten"
+	# Wovon ist schon genug da, wovon fehlt noch? Der Hinweis kommt nur, wenn
+	# gerade das Falsche geklickt wird.
+	var cost: Dictionary = Game.cost_for(first, 1)
+	var target: String = Game.click_target
+	if cost.has(target) and Game.amounts[target] >= float(cost[target]):
+		for id: String in cost:
+			if id != target and Game.amounts[id] < float(cost[id]):
+				return "Genug %s. Schalte links um auf %s" % [Game.resource_def(target)["name"], Game.resource_def(id)["name"]]
+	return ""
 
 
 ## Leiste und Ressourcen-Reiter zeigen nur, was der Spieler schon einmal hatte.
