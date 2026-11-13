@@ -80,6 +80,7 @@ func _ready() -> void:
 		levels[building["id"]] = 0
 	for recipe: Dictionary in recipes:
 		recipe_state[recipe["id"]] = _new_recipe_state()
+	_expand_upgrade_series(_load_json("res://data/upgrade_series.json"))  # braucht die Gebäude von oben
 	for upgrade: Dictionary in upgrades:
 		bought[upgrade["id"]] = false
 	for id: String in settings["click"]:
@@ -590,6 +591,54 @@ func _rebuild_bonuses() -> void:
 		var click_bonus: Dictionary = upgrade.get("add_click", {})
 		for id: String in click_bonus:
 			_bonus["click"][id] = _bonus["click"].get(id, 0.0) + float(click_bonus[id])
+
+
+## Erzeugt die Gebäude-Upgrades aus einer Regel statt aus einzelnen Einträgen:
+## Alle "every_levels" Level gibt es eine Stufe. Stufe n bringt n * step mal die
+## Grundproduktion dazu – bei step 0,5 und Grundwert 1 also +0,5, dann +1, dann
+## +1,5 usw. Jede Stufe erscheint erst, wenn die vorige gekauft ist.
+## Der Preis ist das cost_factor-Fache dessen, was das Gebäude auf dem
+## Freischalt-Level kostet, und wächst damit von selbst mit.
+func _expand_upgrade_series(series: Dictionary) -> void:
+	var every: int = int(series["every_levels"])
+	var step: float = float(series["step"])
+	for entry: Dictionary in series["buildings"]:
+		var building: Dictionary = _building_by_id[entry["building"]]
+		var growth: float = float(building.get("growth", 1.0))
+		for tier: int in range(1, int(series["tiers"]) + 1):
+			var upgrade: Dictionary = {
+				"id": "%s_%d" % [building["id"], tier],
+				"name": "%s %s" % [entry["name"], _roman(tier)],
+				"icon": building["icon"],
+				"requires": { building["id"]: every * tier },
+				"cost": {},
+			}
+			if tier > 1:
+				upgrade["requires_upgrades"] = ["%s_%d" % [building["id"], tier - 1]]
+			var cost: Dictionary = building.get("cost", {})
+			for id: String in cost:
+				upgrade["cost"][id] = roundf(float(cost[id]) * pow(growth, every * tier) * float(series["cost_factor"]))
+			var produces: Dictionary = building.get("produces", {})
+			for id: String in produces:
+				if float(produces[id]) > 0.0:
+					upgrade["add_produces"] = { building["id"]: { id: step * tier * float(produces[id]) } }
+			# Versorgung (Strom) gibt es nur in ganzen Einheiten, daher aufgerundet.
+			var provides: Dictionary = building.get("provides", {})
+			for id: String in provides:
+				upgrade["add_provides"] = { building["id"]: { id: ceilf(step * tier * float(provides[id])) } }
+			upgrades.append(upgrade)
+
+
+## 1 -> I, 4 -> IV, 14 -> XIV
+func _roman(number: int) -> String:
+	var values: Array = [10, 9, 5, 4, 1]
+	var symbols: Array = ["X", "IX", "V", "IV", "I"]
+	var result: String = ""
+	for i: int in values.size():
+		while number >= values[i]:
+			result += symbols[i]
+			number -= values[i]
+	return result
 
 
 ## Ausgangszustand: Entdeckt ist nur, was man anklicken kann. Die Leiste zeigt

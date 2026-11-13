@@ -28,7 +28,8 @@ Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Abschnitte mit �
 - Erzabbau für Kupfer, Eisen und Gold, freigeschaltet über das Minen-Level
 - Rezepte mit Laufzeit, Start-Knopf und Auto-Schalter – Werte in `data/recipes.json`
 - Vier Reiter: Gebäude, Produktion, Upgrades, Ressourcen (die Sicht mit allen Währungen)
-- Upgrades: je eines für Farm, Holzfäller, Mine, Wassermühle, Bank und Sandmine sowie Klick-Upgrades für Coins und Holz – Werte in `data/upgrades.json`
+- Gebäude-Upgrades als Reihe für Farm, Holzfäller, Mine, Wassermühle, Bank und Sandmine: alle 5 Level eine Stufe. Stufe n bringt n × 0,5 der Grundproduktion dazu (bei Grundwert 1: +0,5, dann +1, dann +1,5 …). Die Regel steht in `data/upgrade_series.json`.
+- Klick-Upgrades für Coins und Holz – Werte in `data/upgrades.json`
 - Eigenes Design: dunkle Flächen mit türkisem Akzent, Schrift Exo 2
 - Gezeichnete Erde aus dem alten Projekt als Planet
 - Coins/Holz-Umschalter als Icon-Knöpfe; das geklickte Icon fliegt im Bogen weg
@@ -54,7 +55,7 @@ Abweichungen vom alten Stand:
 
 Vorschlagswerte, weil die alten nur im Unity-Editor standen: Kosten und Ertrag der Sandmine, Kosten und Freischalt-Level des Erzabbaus (Mine Lv 5 / 10 / 20), Mengen und Zeiten aller Rezepte. Die Erz-Raten 0,8 / 0,5 / 0,2 pro Sekunde stammen aus dem alten Code.
 
-Upgrades sind Vorschlagswerte: Gebäude-Upgrades ab Level 10, Kosten rund das Zehnfache des Gebäude-Startpreises, Wirkung verdoppelt die Grundproduktion. Klick-Upgrades ab 100 Klicks, +1 pro Klick. Aus dem alten Code belegt ist nur „+1 Grundproduktion“ bei der Farm und „+1 pro Klick“.
+Vorschlagswerte bei den Upgrades: Eine Stufe der Gebäude-Reihe kostet das Fünffache dessen, was das Gebäude auf dem Freischalt-Level kostet; es gibt 20 Stufen (bis Level 100); Strom-Upgrades werden auf ganze Einheiten aufgerundet. Klick-Upgrades ab 100 Klicks, +1 pro Klick.
 
 Noch nicht portiert: Solarpanel, weitere Planeten.
 

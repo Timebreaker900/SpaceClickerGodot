@@ -105,12 +105,21 @@ func _ready() -> void:
 	Game.amounts["food"] = 1000.0
 	Game.amounts["coins"] = 1000.0
 	Game.amounts["wood"] = 1000.0
-	Game.levels["farm"] = 9
-	_check("Farm-Upgrade unter Lv 10 gesperrt", Game.can_buy_upgrade(farm_upgrade), false)
+	Game.levels["farm"] = 4
+	_check("Farm-Upgrade I unter Lv 5 gesperrt", Game.can_buy_upgrade(farm_upgrade), false)
+	Game.levels["farm"] = 5
+	_check("Farm-Upgrade I kostet das 5-Fache des Farmpreises auf Lv 5", farm_upgrade["cost"]["coins"], roundf(25.0 * pow(1.15, 5) * 5.0))
+	_check("Farm-Upgrade I kaufbar", Game.buy_upgrade(farm_upgrade), true)
+	_check("Stufe I: +0,5 je Level", Game.building_output(_building("farm"), "produces")["food"], 1.5)
+	var farm_upgrade_2: Dictionary = _upgrade("farm_2")
+	_check("Stufe II heißt II und braucht Lv 10", [farm_upgrade_2["name"], Game.can_buy_upgrade(farm_upgrade_2)], ["Farm-Upgrade II", false])
 	Game.levels["farm"] = 10
-	var food_before: float = Game.get_rates()["food"]
-	_check("Farm-Upgrade kaufbar", Game.buy_upgrade(farm_upgrade), true)
-	_check("Farm liefert doppelt", Game.get_rates()["food"] - food_before, 10.0)
+	Game.buy_upgrade(farm_upgrade_2)
+	_check("Stufe II: +1 dazu, zusammen 2,5", Game.building_output(_building("farm"), "produces")["food"], 2.5)
+	_check("Stufe III erst nach II sichtbar, dann Rätsel", Game.upgrade_visibility(_upgrade("farm_3")), "mystery")
+	_check("Stufe IV noch unsichtbar", Game.upgrade_visibility(_upgrade("farm_4")), "hidden")
+	_check("Strom-Upgrade in ganzen Einheiten", _upgrade("watermill_1")["add_provides"]["watermill"]["electricity"], 1.0)
+	_check("Bank-Upgrade I: halbe Grundproduktion", _upgrade("bank_1")["add_produces"]["bank"]["coins"], 1.0)
 	_check("Upgrade nur einmal kaufbar", Game.can_buy_upgrade(farm_upgrade), false)
 	var click_upgrade: Dictionary = _upgrade("click_coins_1")
 	Game.click_counts["coins"] = 99

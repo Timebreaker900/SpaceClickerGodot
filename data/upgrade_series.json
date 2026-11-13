@@ -1,0 +1,14 @@
+{
+	"every_levels": 5,
+	"step": 0.5,
+	"tiers": 20,
+	"cost_factor": 5,
+	"buildings": [
+		{ "building": "farm", "name": "Farm-Upgrade" },
+		{ "building": "lumberjack", "name": "Holzfäller-Upgrade" },
+		{ "building": "mine", "name": "Minen-Upgrade" },
+		{ "building": "watermill", "name": "Wassermühlen-Upgrade" },
+		{ "building": "bank", "name": "Bank-Upgrade" },
+		{ "building": "sandmine", "name": "Sandminen-Upgrade" }
+	]
+}
