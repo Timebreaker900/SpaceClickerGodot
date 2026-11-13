@@ -113,6 +113,14 @@ func _ready() -> void:
 	var copper_bar: Dictionary = _recipe("copper_bar")
 	Game.amounts["copper_ore"] = 2.0
 	_check("Ohne Schmelze kein Schmelzen", Game.can_start_recipe(copper_bar), false)
+	Game.levels["smeltery"] = 1
+	_check("Schmelze Lv 1: Glas ja, Kupferbarren nein", [Game.recipe_batch(_recipe("glass")), Game.recipe_batch(copper_bar)], [1, 0])
+	_check("Glas steht in der Liste ganz oben", Game.recipes[0]["id"], "glass")
+	var factory: Dictionary = _building("factory")
+	_check("Erste Fabrik kostet 1 Glas", Game.cost_for(factory, 1)["glass"], 1.0)
+	Game.levels["factory"] = 3
+	_check("Vierte Fabrik kostet 4 Glas, zwei auf einmal 4 + 5", [Game.cost_for(factory, 1)["glass"], Game.cost_for(factory, 2)["glass"]], [4.0, 9.0])
+	Game.levels["factory"] = 0
 	Game.levels["smeltery"] = 4
 	_check("Schmelze Lv 4: noch kein Kupferbarren", Game.can_start_recipe(copper_bar), false)
 	Game.levels["smeltery"] = 5

@@ -1,5 +1,14 @@
 [
 	{
+		"id": "glass",
+		"name": "Glas",
+		"icon": "res://assets/icons/glass.svg",
+		"building": "smeltery",
+		"input": { "sand": 2 },
+		"output": { "glass": 1 },
+		"seconds": 4
+	},
+	{
 		"id": "copper_bar",
 		"requires_level": 5,
 		"name": "Kupferbarren",
@@ -28,16 +37,6 @@
 		"input": { "gold_ore": 2 },
 		"output": { "gold_bar": 1 },
 		"seconds": 8
-	},
-	{
-		"id": "glass",
-		"requires_level": 5,
-		"name": "Glas",
-		"icon": "res://assets/icons/glass.svg",
-		"building": "smeltery",
-		"input": { "sand": 2 },
-		"output": { "glass": 1 },
-		"seconds": 4
 	},
 	{
 		"id": "copper_cable",

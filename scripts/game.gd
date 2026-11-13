@@ -10,6 +10,8 @@ extends Node
 ##
 ## Ein Gebäude kann pro Level:
 ##   cost     - einmalig Vorrat kosten (steigt mit jedem Level um "growth")
+##   cost_per_level - zusätzlich Vorrat kosten, der gleichmäßig steigt: das erste
+##                    Level kostet 1x, das zweite 2x, das dritte 3x ...
 ##   produces - Vorrat pro Sekunde liefern (negativ = laufender Verbrauch)
 ##   provides - Kapazität schaffen
 ##   reserves - Kapazität dauerhaft belegen
@@ -271,6 +273,12 @@ func cost_for(building: Dictionary, count: int) -> Dictionary:
 	var cost: Dictionary = building.get("cost", {})
 	for id: String in cost:
 		result[id] = roundf(float(cost[id]) * factor)
+	# Gleichmäßig steigender Anteil: Level n kostet n mal den Grundwert. Für mehrere
+	# Level auf einmal ist das die Summe (level+1) + (level+2) + ... + (level+count).
+	var per_level: Dictionary = building.get("cost_per_level", {})
+	for id: String in per_level:
+		var steps: float = count * level + count * (count + 1) / 2.0
+		result[id] = float(result.get(id, 0.0)) + float(per_level[id]) * steps
 	return result
 
 

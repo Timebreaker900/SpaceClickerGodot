@@ -111,6 +111,7 @@
 		"name": "Fabrik",
 		"icon": "res://assets/buildings/factory.svg",
 		"cost": { "coins": 150, "wood": 180, "stone": 225 },
+		"cost_per_level": { "glass": 1 },
 		"growth": 1.15,
 		"reserves": { "population": 2, "electricity": 3 },
 		"max_level": 10,
