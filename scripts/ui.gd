@@ -52,3 +52,32 @@ static func reveal(panel: CanvasItem, icon: Control, use_self_modulate: bool = f
 static func fade_in(node: CanvasItem) -> void:
 	node.modulate.a = 0.0
 	node.create_tween().tween_property(node, "modulate:a", 1.0, 0.4)
+
+
+# --- Wischen in Listen (Handy) ---------------------------------------------------
+
+## Am Handy scrollt eine Liste nur, wenn die Elemente darin die Berührung an die
+## Liste weiterreichen. Flächen und Knöpfe halten sie sonst fest. Diese Funktion
+## stellt alles unterhalb von "root" auf Weiterreichen (PASS).
+static func pass_touches(root: Node) -> void:
+	for child: Node in root.get_children():
+		if child is Control and child.mouse_filter == Control.MOUSE_FILTER_STOP:
+			child.mouse_filter = Control.MOUSE_FILTER_PASS
+		pass_touches(child)
+
+
+static var _scrolling: bool = false
+static var _tap_block_until: int = 0
+
+
+## Eine Liste meldet, dass gerade gewischt wird bzw. das Wischen endet.
+static func set_scrolling(active: bool) -> void:
+	_scrolling = active
+	if not active:
+		_tap_block_until = Time.get_ticks_msec() + 150
+
+
+## Darf ein Knopf in einer Liste jetzt auslösen? Nein, solange gewischt wird –
+## sonst kauft man beim Scrollen versehentlich, wo der Finger gerade liegt.
+static func tap_allowed() -> bool:
+	return not _scrolling and Time.get_ticks_msec() >= _tap_block_until

@@ -26,10 +26,12 @@ func setup(definition: Dictionary) -> void:
 	icon.texture = load(recipe["icon"])
 	name_label.text = recipe["name"]
 	start_button.pressed.connect(func() -> void:
-		if Game.start_recipe(recipe):
+		if Ui.tap_allowed() and Game.start_recipe(recipe):
 			Sfx.play("tap")
 			Ui.pop(icon))
-	auto_button.toggled.connect(func(on: bool) -> void: Game.set_recipe_auto(recipe, on))
+	auto_button.toggled.connect(func(on: bool) -> void:
+		if Ui.tap_allowed():
+			Game.set_recipe_auto(recipe, on))  # sonst stellt _process den Schalter zurück
 	# Die Upgrade-Knöpfe zeigen das Icon dessen, womit bezahlt wird.
 	var product_icon: Texture2D = load(Game.resource_def(recipe["output"].keys()[0])["icon"])
 	for kind: String in upgrade_buttons:
@@ -78,7 +80,7 @@ func _level_text(kind: String) -> String:
 
 
 func _on_upgrade_pressed(kind: String) -> void:
-	if Game.buy_recipe_upgrade(recipe, kind):
+	if Ui.tap_allowed() and Game.buy_recipe_upgrade(recipe, kind):
 		Sfx.play("upgrade")
 		Ui.flash(self)
 		Ui.pop(icon)

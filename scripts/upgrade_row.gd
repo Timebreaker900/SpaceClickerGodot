@@ -55,7 +55,7 @@ func _process(_delta: float) -> void:
 
 
 func _on_buy_pressed() -> void:
-	if not Game.buy_upgrade(upgrade):
+	if not Ui.tap_allowed() or not Game.buy_upgrade(upgrade):
 		return
 	# Aufblitzen, kurz stehen lassen, dann ausblenden und entfernen.
 	_leaving = true

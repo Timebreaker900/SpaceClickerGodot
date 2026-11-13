@@ -30,7 +30,7 @@ func setup(definition: Dictionary) -> void:
 
 
 func _on_buy_pressed() -> void:
-	if Game.buy(building):
+	if Ui.tap_allowed() and Game.buy(building):
 		Sfx.play("buy")
 		Ui.flash($Panel)
 		Ui.pop(icon)

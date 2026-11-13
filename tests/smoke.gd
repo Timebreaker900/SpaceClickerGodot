@@ -428,6 +428,19 @@ func _ready() -> void:
 			await RenderingServer.frame_post_draw
 			get_viewport().get_texture().get_image().save_png(arg.trim_prefix("--shot="))
 
+	# Wischen wie am Handy. Das lässt sich nur ohne Fenster verlässlich nachstellen;
+	# bei Läufen mit Fenster (für Bildschirmfotos) wird es übersprungen.
+	if DisplayServer.get_name() == "headless":
+		await _test_swipe(main)
+
+	# Reihenfolge im Upgrade-Reiter: Klick, Abwesenheit, Gebäude
+	var kinds: Array = []
+	for upgrade: Dictionary in Game.upgrades:
+		var kind: String = "klick" if upgrade.has("add_click") else ("abwesenheit" if upgrade["id"].begins_with("offline_") else "gebäude")
+		if kinds.is_empty() or kinds[-1] != kind:
+			kinds.append(kind)
+	_check("Upgrades: erst Klick, dann Abwesenheit, dann Gebäude", kinds, ["klick", "abwesenheit", "gebäude"])
+
 	# Handy-Ränder: Zusatzrand kommt zum normalen Abstand dazu
 	main.set_insets(0.0, 130.0, 0.0, 70.0)
 	_check("Rand oben = 28 + 130", main.get_node("Margin").get_theme_constant("margin_top"), 158)
@@ -476,6 +489,75 @@ func _building(id: String) -> Dictionary:
 			return building
 	return {}
 
+
+func _test_swipe(main: Node) -> void:
+	# Wischen wie am Handy: Finger auf einen Kaufknopf setzen, nach oben ziehen,
+	# loslassen. Die Liste muss scrollen, und es darf nichts gekauft werden.
+	# Godot scrollt per Finger nur auf Geräten mit Touchscreen; am PC wird das
+	# über "Maus als Finger" nachgestellt.
+	_reset()
+	Game.levels.merge({ "farm": 3, "housing": 30, "lumberjack": 2, "mine": 2, "market": 2, "sandmine": 2, "smeltery": 2, "watermill": 9, "factory": 1, "solarpanel": 1, "sawmill": 1 }, true)
+	for id: String in Game.amounts:
+		Game.amounts[id] = 1.0e9
+	for i: int in 3:
+		await get_tree().process_frame
+	Input.emulate_touch_from_mouse = true
+	var list_scroll: ScrollContainer = main.get_node("%BuildingList").get_parent()
+	var row: Node = main.get_node("%BuildingList").get_child(2)
+	var levels_before: Dictionary = Game.levels.duplicate()
+
+	# Gegenprobe: Hält die Zeile die Berührung fest (der Fehler vom Handy),
+	# bewegt sich nichts. So ist sicher, dass dieser Test den Fehler erkennt.
+	row.get_node("Panel").mouse_filter = Control.MOUSE_FILTER_STOP
+	await _swipe(row.get_node("%Name").get_global_rect().get_center())
+	_check("Gegenprobe: festgehaltene Berührung scrollt nicht", list_scroll.scroll_vertical, 0)
+	row.get_node("Panel").mouse_filter = Control.MOUSE_FILTER_PASS
+
+	await _swipe(row.buy_button.get_global_rect().get_center())
+	_check("Wischen scrollt die Gebäudeliste", list_scroll.scroll_vertical > 150, true)
+	_check("Beim Wischen wird nichts gekauft", Game.levels, levels_before)
+	await get_tree().create_timer(0.6).timeout
+	var tap: Vector2 = row.buy_button.get_global_rect().get_center()
+	if list_scroll.get_global_rect().has_point(tap):
+		_touch(tap, true)
+		await get_tree().process_frame
+		_touch(tap, false)
+		await get_tree().process_frame
+		_check("Antippen kauft weiterhin", Game.levels["mine"], int(levels_before["mine"]) + 1)
+	list_scroll.scroll_vertical = 0
+	Input.emulate_touch_from_mouse = false
+
+
+## Ein Finger berührt den Bildschirm bzw. hebt ab. Android meldet das dem Spiel
+## als Mausklick; genau das wird hier nachgestellt.
+func _touch(at: Vector2, pressed: bool) -> void:
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_LEFT
+	click.button_mask = MOUSE_BUTTON_MASK_LEFT if pressed else 0
+	click.position = at
+	click.global_position = at
+	click.pressed = pressed
+	get_viewport().push_input(click, true)
+
+
+## Finger aufsetzen, 360 Pixel nach oben ziehen, loslassen.
+func _swipe(from: Vector2) -> void:
+	var finger: Vector2 = from
+	_touch(finger, true)
+	await get_tree().process_frame
+	for i: int in 12:
+		finger.y -= 30.0
+		var motion := InputEventMouseMotion.new()
+		motion.button_mask = MOUSE_BUTTON_MASK_LEFT
+		motion.position = finger
+		motion.global_position = finger
+		motion.relative = Vector2(0, -30)
+		motion.velocity = Vector2(0, -900)
+		get_viewport().push_input(motion, true)
+		await get_tree().process_frame
+	_touch(finger, false)
+	for i: int in 3:
+		await get_tree().process_frame
 
 func _upgrade(id: String) -> Dictionary:
 	for upgrade: Dictionary in Game.upgrades:
