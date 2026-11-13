@@ -28,7 +28,7 @@ Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Abschnitte mit �
   11. Bank – 50 Coins pro Sekunde (Vorschlag); kostet Coins, Stein, Eisenplatten und Goldbarren (1 für die erste, je Level einer mehr), belegt Bevölkerung und Strom
   12. Forschungslabor – stellt Forschung bereit, eine statische Ressource wie Bevölkerung und Strom (je Level +1). Kostet Coins, Glas und Kupferkabel, belegt Bevölkerung und Strom. Der Titanabbau setzt das Labor voraus; Ölpumpe und Raffinerie belegen je Level 2 Forschung.
   13. Ölpumpe – Öl; kostet Coins, Stahl und Titanbarren, belegt Bevölkerung, Strom und Forschung
-  14. Raffinerie – drittes Rezept-Gebäude (Knopf „Raffinieren“): macht aus Öl Treibstoff; kostet Coins, Stahl, Titanbarren und Eisenplatten, belegt Bevölkerung, Strom und Forschung. Treibstoff wird erst von der Rakete gebraucht.
+  14. Raffinerie – drittes Rezept-Gebäude (Knopf „Raffinieren“): macht aus Öl Treibstoff (ab Lv 1) und Dünger (ab Lv 5); kostet Coins, Stahl, Titanbarren und Eisenplatten, belegt Bevölkerung, Strom und Forschung. Treibstoff wird erst von der Rakete gebraucht.
   15. Startrampe – einmalig baubar; kostet Coins, Stahl und Titanbarren, belegt Bevölkerung, Strom und Forschung. Mit ihr erscheint neben dem Planeten der Knopf zur Raketen-Ansicht.
 - Verstärktes Glas entfällt: Das Solarpanel braucht es nicht mehr.
 - Es gibt eine eigene Sicht, die alle Währungen auf einmal zeigt.
@@ -45,6 +45,7 @@ Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Abschnitte mit �
 - Rezepte mit Laufzeit, Start-Knopf und Auto-Schalter – Werte in `data/recipes.json`
 - Vier Reiter: Gebäude, Produktion, Upgrades, Ressourcen (die Sicht mit allen Währungen)
 - Gebäude-Upgrades als Reihe: alle 5 Level eine Stufe. Frühe Gebäude (Farm, Holzfäller, Mine, Markt, Wassermühle) und der gesamte Bergbau (Sand, Kohle, Kupfer, Eisen, Gold, Titan) haben 5 Stufen, späte (Solarpanel, Sägewerk, Bank) 10. So hören die frühen ab Level 25 auf, stärker zu werden, und die späten lohnen sich dauerhaft. Stufe n bringt n × 0,5 der Grundproduktion dazu (bei Grundwert 1: +0,5, dann +1, dann +1,5 …). Die Regel steht in `data/upgrade_series.json`.
+- Dünger verlängert die Upgrade-Reihen der Nahrungsgebäude um je 5 Stufen: Farm 6 bis 10, Gewächshaus 11 bis 15. Diese Stufen kosten zusätzlich Dünger (Farm 50, 100 … 250; Gewächshaus 100, 200 … 500). Die Regel steht als `extra_tiers` und `extra_cost` in `data/upgrade_series.json`.
 - Klick-Upgrades als Reihe für Coins und Holz: alle 250 Klicks eine Stufe (250, 500, 750 …), jede bringt +1 pro Klick. Die Regel steht in `data/upgrade_series.json`.
 - Eigenes Design: dunkle Flächen mit türkisem Akzent, Schrift Exo 2
 - Gezeichnete Erde aus dem alten Projekt als Planet

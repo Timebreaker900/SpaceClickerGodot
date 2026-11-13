@@ -25,6 +25,7 @@
 	{ "id": "iron_plate", "name": "Eisenplatte", "type": "stock", "group": "Bauteile", "icon": "res://assets/icons/iron_plate.svg" },
 	{ "id": "chip", "name": "Chips", "type": "stock", "group": "Bauteile", "icon": "res://assets/icons/chip.svg" },
 
-	{ "id": "oil", "name": "Öl", "type": "stock", "group": "Raumfahrt", "icon": "res://assets/icons/oil.svg" },
-	{ "id": "fuel", "name": "Treibstoff", "type": "stock", "group": "Raumfahrt", "icon": "res://assets/icons/fuel.svg" }
+	{ "id": "oil", "name": "Öl", "type": "stock", "group": "Raffinerie", "icon": "res://assets/icons/oil.svg" },
+	{ "id": "fuel", "name": "Treibstoff", "type": "stock", "group": "Raffinerie", "icon": "res://assets/icons/fuel.svg" },
+	{ "id": "fertilizer", "name": "Dünger", "type": "stock", "group": "Raffinerie", "icon": "res://assets/icons/fertilizer.svg" }
 ]

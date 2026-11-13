@@ -955,7 +955,10 @@ func _expand_upgrade_series(series: Dictionary) -> void:
 		var building: Dictionary = _building_by_id[entry["building"]]
 		var growth: float = float(building.get("growth", 1.0))
 		# Wie viele Stufen es gibt, kann je Gebäude abweichen (späte Gebäude mehr).
-		for tier: int in range(1, int(entry.get("tiers", series["tiers"])) + 1):
+		# "extra_tiers" hängt weitere Stufen an, die zusätzlich "extra_cost" kosten
+		# (Dünger für Farm und Gewächshaus): bei der ersten einfach, dann doppelt usw.
+		var base_tiers: int = int(entry.get("tiers", series["tiers"]))
+		for tier: int in range(1, base_tiers + int(entry.get("extra_tiers", 0)) + 1):
 			var upgrade: Dictionary = {
 				"id": "%s_%d" % [building["id"], tier],
 				"name": "%s %s" % [entry["name"], _roman(tier)],
@@ -970,6 +973,10 @@ func _expand_upgrade_series(series: Dictionary) -> void:
 			var cost: Dictionary = building.get("cost", {})
 			for id: String in cost:
 				upgrade["cost"][id] = roundf(float(cost[id]) * pow(growth, every * tier) * float(series["cost_factor"]))
+			if tier > base_tiers:
+				var extra_cost: Dictionary = entry.get("extra_cost", {})
+				for id: String in extra_cost:
+					upgrade["cost"][id] = float(extra_cost[id]) * (tier - base_tiers)
 			var produces: Dictionary = building.get("produces", {})
 			for id: String in produces:
 				if float(produces[id]) > 0.0:

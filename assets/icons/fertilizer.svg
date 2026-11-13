@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+<!-- Sack -->
+<path d="M30 30c-6 26-10 52-6 78a8 8 0 0 0 8 6h64a8 8 0 0 0 8-6c4-26 0-52-6-78z" fill="#e8d9b0"/>
+<path d="M64 30h34c6 26 10 52 6 78a8 8 0 0 1-8 6H64z" fill="#cdb98a"/>
+<!-- Zugebundener Rand -->
+<path d="M34 14h60l6 18H28z" fill="#e8d9b0"/><path d="M64 14h30l6 18H64z" fill="#cdb98a"/>
+<rect x="26" y="28" width="76" height="8" rx="4" fill="#8a5a33"/>
+<!-- Blatt als Zeichen -->
+<circle cx="64" cy="74" r="24" fill="#4fb35a"/>
+<path d="M64 50a24 24 0 0 1 0 48z" fill="#2f8a43"/>
+<path d="M52 86c0-14 8-24 24-26 0 16-8 26-24 26z" fill="#e8f7d0"/>
+<path d="M54 84 70 68" stroke="#4fb35a" stroke-width="3" stroke-linecap="round"/>
+<circle cx="40" cy="104" r="3.500" fill="#3fd0ff"/>
+</svg>

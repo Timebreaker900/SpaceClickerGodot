@@ -96,5 +96,15 @@
 		"input": { "oil": 5 },
 		"output": { "fuel": 1 },
 		"seconds": 8
+	},
+	{
+		"id": "fertilizer",
+		"requires_level": 5,
+		"name": "Dünger",
+		"icon": "res://assets/icons/fertilizer.svg",
+		"building": "refinery",
+		"input": { "oil": 3 },
+		"output": { "fertilizer": 1 },
+		"seconds": 6
 	}
 ]

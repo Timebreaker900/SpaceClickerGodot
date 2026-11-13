@@ -4,7 +4,7 @@
 	"tiers": 5,
 	"cost_factor": 5,
 	"buildings": [
-		{ "building": "farm", "name": "Farm-Upgrade" },
+		{ "building": "farm", "name": "Farm-Upgrade", "extra_tiers": 5, "extra_cost": { "fertilizer": 50 } },
 		{ "building": "lumberjack", "name": "Holzfäller-Upgrade" },
 		{ "building": "mine", "name": "Minen-Upgrade" },
 		{ "building": "market", "name": "Markt-Upgrade" },
@@ -15,7 +15,7 @@
 		{ "building": "iron_mining", "name": "Eisenabbau-Upgrade" },
 		{ "building": "gold_mining", "name": "Goldabbau-Upgrade" },
 		{ "building": "titanium_mining", "name": "Titanabbau-Upgrade" },
-		{ "building": "greenhouse", "name": "Gewächshaus-Upgrade", "tiers": 10 },
+		{ "building": "greenhouse", "name": "Gewächshaus-Upgrade", "tiers": 10, "extra_tiers": 5, "extra_cost": { "fertilizer": 100 } },
 		{ "building": "solarpanel", "name": "Solarpanel-Upgrade", "tiers": 10 },
 		{ "building": "sawmill", "name": "Sägewerk-Upgrade", "tiers": 10 },
 		{ "building": "bank", "name": "Bank-Upgrade", "tiers": 10 }
