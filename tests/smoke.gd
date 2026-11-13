@@ -153,6 +153,27 @@ func _ready() -> void:
 	_check("Fabrik Lv 20: Eisenplatte mit Menge 11, Chips mit Menge 6, Fabrik fertig", [Game.recipe_batch(_recipe("iron_plate")), Game.recipe_batch(_recipe("chip")), Game.is_maxed(_building("factory")), Game.can_buy(_building("factory"), 1)], [11, 6, true, false])
 	Game.levels["smeltery"] = 20
 	_check("Schmelze Lv 20: Goldbarren mit Menge 6", Game.recipe_batch(_recipe("gold_bar")), 6)
+	# Kohle-Regel: Mit vollem Sparsam und vollem Tempo müssen alle Schmelz-Rezepte
+	# zusammen weniger Kohle brauchen, als der Kohleabbau auf demselben Level liefert.
+	var coal_rule_broken: PackedStringArray = []
+	var rules: Dictionary = Game.settings["recipe_upgrades"]
+	for smeltery_level: int in [1, 5, 10, 15, 20, 25, 30]:
+		Game.levels["smeltery"] = smeltery_level
+		var demand: float = 0.0
+		for recipe: Dictionary in Game.recipes:
+			if recipe["building"] != "smeltery" or Game.recipe_batch(recipe) == 0:
+				continue
+			Game.recipe_state[recipe["id"]]["saver"] = int(rules["saver_max_levels"])
+			Game.recipe_state[recipe["id"]]["speed"] = Game.recipe_upgrade_max(recipe, "speed")
+			demand += Game.recipe_input(recipe, Game.recipe_batch(recipe)).get("coal", 0.0) / Game.recipe_seconds(recipe)
+		var supply: float = smeltery_level * float(_building("coal_mining")["produces"]["coal"])
+		print("  Kohle bei Schmelze und Kohleabbau Lv %d: Bedarf %.1f/s, Abbau %.1f/s" % [smeltery_level, demand, supply])
+		if demand > supply:
+			coal_rule_broken.append("Lv %d: %.1f > %.1f" % [smeltery_level, demand, supply])
+	_check("Kohle reicht für alle Schmelz-Rezepte (volles Sparsam, volles Tempo)", coal_rule_broken, PackedStringArray())
+	for recipe: Dictionary in Game.recipes:
+		Game.recipe_state[recipe["id"]] = Game._new_recipe_state()
+	Game.levels["smeltery"] = 0
 	# Rakete: Teile gibt es erst mit der Startrampe, jedes nur einmal, Start erst mit allen
 	var hull: Dictionary = Game.rocket["parts"][0]
 	for part: Dictionary in Game.rocket["parts"]:
