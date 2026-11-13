@@ -67,6 +67,8 @@ var _resource_by_id: Dictionary = {}
 var _building_by_id: Dictionary = {}
 var _bonus: Dictionary = {}  # Summe der gekauften Upgrades, siehe _rebuild_bonuses()
 var _save_timer: float = 0.0
+const MAX_FRAME_SECONDS: float = 1.0
+
 var _last_save_time: float = 0.0  # Zeitstempel des letzten Speicherns, 0 = noch nie
 
 ## Ergebnis der letzten Nachrechnung: { seconds, counted, gains }. Leer, wenn es
@@ -107,6 +109,11 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	# Ein einzelnes Bild darf nie mehr als eine Sekunde zählen. Kommt die App am
+	# Handy aus dem Hintergrund zurück, kann "delta" sonst die ganze Abwesenheit
+	# enthalten – die würde dann zu 100 % gutgeschrieben, an den Upgrades vorbei.
+	# Abwesenheit rechnet ausschließlich _catch_up() nach.
+	delta = minf(delta, MAX_FRAME_SECONDS)
 	advance(delta)
 	_save_timer += delta
 	if _save_timer >= float(settings.get("autosave_seconds", 10)):

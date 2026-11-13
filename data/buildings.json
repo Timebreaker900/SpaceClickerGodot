@@ -136,7 +136,7 @@
 		"icon": "res://assets/buildings/greenhouse.svg",
 		"cost": { "coins": 800, "glass": 20 },
 		"growth": 1.15,
-		"reserves": { "population": 1, "electricity": 2 },
+		"reserves": { "electricity": 2 },
 		"produces": { "food": 5 }
 	},
 	{

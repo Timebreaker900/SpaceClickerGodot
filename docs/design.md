@@ -23,7 +23,7 @@ Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Abschnitte mit �
   6. Schmelze – schaltet Schmelz-Rezepte frei; braucht Kohle statt Strom
   7. Wassermühle – Strom, zuerst für die Fabrik
   8. Fabrik – schaltet Fabrik-Rezepte frei
-  9. Gewächshaus – mehr Nahrung als die Farm; kostet Coins und Glas, belegt Bevölkerung und Strom; 10 Upgrade-Stufen
+  9. Gewächshaus – mehr Nahrung als die Farm; kostet Coins und Glas, belegt nur Strom (keine Bevölkerung, wie die Farm); 10 Upgrade-Stufen
   10. Solarpanel – Strom; kostet Coins, Kupferkabel und Eisenplatten
   11. Sägewerk – mehr Holz als der Holzfäller
   12. Bank – das letzte und teuerste Gebäude der Erde: 50 Coins pro Sekunde (Vorschlag); kostet Coins, Stein, Eisenplatten und Goldbarren (1 für die erste, je Level einer mehr), belegt Bevölkerung und Strom

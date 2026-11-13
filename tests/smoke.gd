@@ -207,6 +207,9 @@ func _ready() -> void:
 	# Abwesenheit: Gebäude liefern weiter, Auto-Rezepte laufen, Obergrenze greift
 	_reset()
 	Game.levels["farm"] = 3
+	Game._process(3600.0)
+	_check("Ein Riesen-Bild (App kommt aus dem Hintergrund) zählt höchstens 1 Sekunde", Game.amounts["food"], 3.0)
+	Game.amounts["food"] = 0.0
 	var report: Dictionary = Game.apply_offline(1000.0)
 	_check("Ohne Upgrade keine Abwesenheit", Game.amounts["food"], 0.0)
 	Game.bought["offline_1"] = true
