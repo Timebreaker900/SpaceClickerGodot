@@ -15,6 +15,7 @@ const GAME_VERSION := "0.1"
 @onready var planet: TextureButton = %Planet
 @onready var click_coins: Button = %ClickCoins
 @onready var click_wood: Button = %ClickWood
+@onready var pop_caption: Label = %PopCaption
 @onready var pop_cost: RichTextLabel = %PopCost
 @onready var pop_button: Button = %PopButton
 @onready var buy_amount_button: Button = %BuyAmountButton
@@ -54,6 +55,7 @@ func _ready() -> void:
 		_list_entries[res["id"]] = _add_resource_entry(resource_list, res, 64, true)
 
 	_build_building_rows()
+	pop_caption.text = _planet_building.get("caption", "")
 	for recipe: Dictionary in Game.recipes:
 		var row: Node = RecipeRow.instantiate()
 		recipe_list.add_child(row)
@@ -147,7 +149,7 @@ func _process(_delta: float) -> void:
 func _hint_text() -> String:
 	var first: Dictionary = Game.buildings[0]
 	if Game.levels[first["id"]] > 0:
-		return ""
+		return _capacity_hint()
 	if Game.can_buy(first, 1):
 		return "Kaufe unten: %s" % first["name"]
 	var total_clicks: int = 0
@@ -163,6 +165,23 @@ func _hint_text() -> String:
 		for id: String in cost:
 			if id != target and Game.amounts[id] < float(cost[id]):
 				return "Genug %s. Schalte links um auf %s" % [Game.resource_def(target)["name"], Game.resource_def(id)["name"]]
+	return ""
+
+
+## Zweiter Schritt der Einführung: Sobald ein Gebäude zu sehen ist, das Bevölkerung
+## braucht, und es noch keine gibt, zeigt der Hinweis auf den Knopf rechts.
+func _capacity_hint() -> String:
+	if _planet_building.is_empty():
+		return ""
+	for capacity_id: String in _planet_building.get("provides", {}):
+		if Game.capacity_total(capacity_id) > 0.0:
+			continue
+		for building: Dictionary in Game.buildings:
+			if building.get("reserves", {}).has(capacity_id) and Game.building_visibility(building) == "known":
+				var cost: Dictionary = _planet_building.get("cost", {})
+				var paid_with: String = Game.resource_def(cost.keys()[0])["name"] if not cost.is_empty() else ""
+				return "%s braucht %s. Kaufe sie rechts mit %s" % [
+					building["name"], Game.resource_def(capacity_id)["name"], paid_with]
 	return ""
 
 
@@ -216,10 +235,11 @@ func _update_population_button(rates: Dictionary) -> void:
 
 
 ## Vorräte: der Stand, auf Wunsch mit Rate ("1234  +2/s").
-## Versorgung: "frei / gesamt".
+## Versorgung: in der Leiste knapp "3 / 9", im Reiter ausgeschrieben "3 frei von 9".
 func _resource_text(id: String, rates: Dictionary, with_rate: bool) -> String:
 	if Game.resource_def(id)["type"] == "capacity":
-		return "%s / %s" % [Game.fmt(Game.capacity_free(id)), Game.fmt(Game.capacity_total(id))]
+		var pattern: String = "%s frei von %s" if with_rate else "%s / %s"
+		return pattern % [Game.fmt(Game.capacity_free(id)), Game.fmt(Game.capacity_total(id))]
 	var text: String = Game.fmt(Game.amounts[id])
 	var rate: float = rates.get(id, 0.0)
 	if with_rate and rate != 0.0:

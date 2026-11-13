@@ -70,7 +70,7 @@ Wird Punkt für Punkt abgearbeitet: Nach jedem Punkt testet der Nutzer und gibt 
 - [x] Planet bewegt sich leicht (schwebt auf und ab, wiegt sich)
 - [x] Einstiegshinweis für neue Spieler (führt bis zum ersten Gebäude: tippen, umschalten, kaufen)
 - [x] Zahlenformat als Einstellung (kurz: 12.345 / 1,23 Mio, oder wissenschaftlich: 1.23e6; kurz ist Standard)
-- [ ] Bevölkerungs-Knopf erklärt, wofür Bevölkerung gebraucht wird
+- [x] Bevölkerungs-Knopf erklärt, wofür Bevölkerung gebraucht wird (Beschriftung, Hinweis beim ersten Gebäude mit Bedarf, „3 frei von 9“ im Reiter)
 - [ ] Handy-Ränder (Notch, runde Ecken)
 - [ ] Ruhigerer Hintergrund
 - [ ] Solarpanel samt Rezept für verstärktes Glas

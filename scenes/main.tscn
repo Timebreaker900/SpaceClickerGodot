@@ -153,7 +153,19 @@ expand_icon = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PopCost" type="RichTextLabel" parent="Margin/Layout/ClickToggle"]
+[node name="PopInfo" type="VBoxContainer" parent="Margin/Layout/ClickToggle"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 2
+
+[node name="PopCaption" type="Label" parent="Margin/Layout/ClickToggle/PopInfo"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.56, 0.7, 0.84, 1)
+theme_override_font_sizes/font_size = 24
+text = "Bevölkerung"
+
+[node name="PopCost" type="RichTextLabel" parent="Margin/Layout/ClickToggle/PopInfo"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 4

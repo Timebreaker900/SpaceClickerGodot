@@ -302,8 +302,11 @@ func _ready() -> void:
 			get_viewport().get_texture().get_image().save_png(arg.trim_prefix("--shot="))
 
 	# Einstiegshinweise: führen bis zur ersten Farm, danach Ruhe
+	_reset()
 	Game.levels["farm"] = 1
-	_check("Mit Farm kein Hinweis", main._hint_text(), "")
+	_check("Nach der Farm: Hinweis auf Bevölkerung", main._hint_text(), "Holzfäller braucht Bevölkerung. Kaufe sie rechts mit Nahrung")
+	Game.levels["housing"] = 1
+	_check("Mit Bevölkerung kein Hinweis", main._hint_text(), "")
 	_reset()
 	_check("Am Anfang: tippen", main._hint_text(), "Tippe auf den Planeten")
 	Game.click_counts["coins"] = 25
