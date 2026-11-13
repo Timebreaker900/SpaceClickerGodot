@@ -97,7 +97,7 @@ Wird Punkt für Punkt abgearbeitet: Nach jedem Punkt testet der Nutzer und gibt 
 - [x] Auto bei Rezepten als Upgrade (100 vom eigenen Erzeugnis)
 - [x] Erzabbau darf das Level der Mine nie übersteigen
 - [x] Rezept-Upgrades, bezahlt mit dem eigenen Erzeugnis: „Schneller“ (je Stufe −1 s, mindestens 1 s) und „Mehr“ (je Stufe +1 Menge, also Zutaten und Ergebnis um den Grundwert); Preis 25, 50, 75 …
-- [x] Viertes Rezept-Upgrade „Sparsam“ für alle Rezepte mit Kohle: je Stufe 20 % weniger Kohle, 4 Stufen (bis auf ein Fünftel), aufgerundet auf ganze Stück; Preis wie bei „Schneller“ und „Mehr“. Die Upgrade-Knöpfe stehen dafür in zwei Spalten.
+- [x] Viertes Rezept-Upgrade „Sparsam“ für alle Rezepte mit Kohle: je Stufe 15 % weniger Kohle, 6 Stufen (bis auf ein Zehntel), aufgerundet auf ganze Stück; Preis wie bei „Schneller“ und „Mehr“. Die Upgrade-Knöpfe stehen dafür in zwei Spalten.
 - [x] Siegbildschirm nach dem Raketenstart: „Geschafft! Du hast den Mond erreicht“ mit Klicks und Gebäude-Leveln; danach kann man weiterspielen. Damit endet der Inhalt vorerst.
 - [x] Coins heißen im Spiel „Geld“ (die interne Kennung bleibt `coins`).
 - [x] Sprachauswahl Deutsch/Englisch in den Einstellungen. Deutsch ist die Ausgangssprache im Code und in den Daten; die englischen Texte stehen in `data/lang_en.json`. Neue Texte brauchen dort einen Eintrag, sonst bleiben sie deutsch. Englisch schreibt Zahlen als 1,234 und 1.23 M.

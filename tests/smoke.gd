@@ -175,13 +175,13 @@ func _ready() -> void:
 	for id: String in Game.rocket_built:
 		Game.rocket_built[id] = false
 	Game.rocket_launched = false
-	# Sparsam: je Stufe 20 % weniger Kohle, aufgerundet, andere Zutaten bleiben
+	# Sparsam: je Stufe 15 % weniger Kohle, aufgerundet, andere Zutaten bleiben
 	_check("Sparsam gibt es nur für Rezepte mit Kohle", [Game.recipe_upgrade_available(_recipe("gold_bar"), "saver"), Game.recipe_upgrade_available(_recipe("copper_cable"), "saver")], [true, false])
 	_check("Goldbarren Menge 6 ohne Sparsam: 12 Erz, 12 Kohle", Game.recipe_input(_recipe("gold_bar"), 6), { "gold_ore": 12.0, "coal": 12.0 })
 	Game.recipe_state["gold_bar"]["saver"] = 1
-	_check("Sparsam 1: 12 Kohle -> 10 (aufgerundet), Erz bleibt", Game.recipe_input(_recipe("gold_bar"), 6), { "gold_ore": 12.0, "coal": 10.0 })
-	Game.recipe_state["gold_bar"]["saver"] = 4
-	_check("Sparsam 4: 12 Kohle -> 3, danach keine Stufe mehr", [Game.recipe_input(_recipe("gold_bar"), 6)["coal"], Game.recipe_upgrade_available(_recipe("gold_bar"), "saver")], [3.0, false])
+	_check("Sparsam 1: 12 Kohle -> 11 (aufgerundet), Erz bleibt", Game.recipe_input(_recipe("gold_bar"), 6), { "gold_ore": 12.0, "coal": 11.0 })
+	Game.recipe_state["gold_bar"]["saver"] = 6
+	_check("Sparsam 6: 12 Kohle -> 2, danach keine Stufe mehr", [Game.recipe_input(_recipe("gold_bar"), 6)["coal"], Game.recipe_upgrade_available(_recipe("gold_bar"), "saver")], [2.0, false])
 	_check("Mindestens 1 Kohle bleibt", Game.recipe_input(_recipe("gold_bar"), 1)["coal"], 1.0)
 	Game.recipe_state["gold_bar"]["saver"] = 0
 	Game.levels["smeltery"] = 5
