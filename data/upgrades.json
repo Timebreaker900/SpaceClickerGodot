@@ -1,0 +1,66 @@
+[
+	{
+		"id": "click_coins_1",
+		"name": "Stärkerer Klick: Coins",
+		"icon": "res://assets/upgrades/click_coins.png",
+		"requires_clicks": { "coins": 100 },
+		"cost": { "coins": 100, "wood": 50 },
+		"add_click": { "coins": 1 }
+	},
+	{
+		"id": "click_wood_1",
+		"name": "Stärkerer Klick: Holz",
+		"icon": "res://assets/upgrades/click_wood.png",
+		"requires_clicks": { "wood": 100 },
+		"cost": { "coins": 50, "wood": 100 },
+		"add_click": { "wood": 1 }
+	},
+	{
+		"id": "farm_1",
+		"name": "Farm-Upgrade",
+		"icon": "res://assets/upgrades/farm.png",
+		"requires": { "farm": 10 },
+		"cost": { "food": 200, "coins": 250, "wood": 250 },
+		"add_produces": { "farm": { "food": 1 } }
+	},
+	{
+		"id": "lumberjack_1",
+		"name": "Holzfäller-Upgrade",
+		"icon": "res://assets/upgrades/lumberjack.png",
+		"requires": { "lumberjack": 10 },
+		"cost": { "coins": 500 },
+		"add_produces": { "lumberjack": { "wood": 1 } }
+	},
+	{
+		"id": "mine_1",
+		"name": "Minen-Upgrade",
+		"icon": "res://assets/upgrades/mine.png",
+		"requires": { "mine": 10 },
+		"cost": { "coins": 750, "wood": 750 },
+		"add_produces": { "mine": { "stone": 1 } }
+	},
+	{
+		"id": "watermill_1",
+		"name": "Wassermühlen-Upgrade",
+		"icon": "res://assets/upgrades/watermill.png",
+		"requires": { "watermill": 10 },
+		"cost": { "coins": 1000, "wood": 1000 },
+		"add_provides": { "watermill": { "electricity": 1 } }
+	},
+	{
+		"id": "bank_1",
+		"name": "Bank-Upgrade",
+		"icon": "res://assets/upgrades/bank.png",
+		"requires": { "bank": 10 },
+		"cost": { "coins": 1250, "stone": 1250 },
+		"add_produces": { "bank": { "coins": 2 } }
+	},
+	{
+		"id": "sandmine_1",
+		"name": "Sandminen-Upgrade",
+		"icon": "res://assets/upgrades/sandmine.png",
+		"requires": { "sandmine": 10 },
+		"cost": { "coins": 600 },
+		"add_produces": { "sandmine": { "sand": 1 } }
+	}
+]
