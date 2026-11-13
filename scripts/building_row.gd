@@ -23,9 +23,12 @@ func _process(_delta: float) -> void:
 		return
 	name_label.text = "%s  Lv %d" % [building["name"], Game.levels[building["id"]]]
 	buy_button.text = "+%d" % Game.buy_amount
-	buy_button.disabled = not Game.can_buy(building, Game.buy_amount)
+	var affordable: bool = Game.can_buy(building, Game.buy_amount)
+	buy_button.disabled = not affordable
 	var unlocked: bool = Game.is_unlocked(building)
 	cost_label.text = _describe_cost() if unlocked else _describe_requirements()
+	# Kosten rötlich, solange es nicht reicht.
+	cost_label.modulate = Color.WHITE if affordable else Color(1.0, 0.62, 0.62)
 	icon.modulate.a = 1.0 if unlocked else 0.4
 
 

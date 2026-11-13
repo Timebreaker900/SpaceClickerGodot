@@ -59,6 +59,7 @@ theme_override_constants/separation = 8
 unique_name_in_owner = true
 custom_minimum_size = Vector2(190, 72)
 layout_mode = 2
+theme_type_variation = &"PrimaryButton"
 text = "Start"
 
 [node name="AutoButton" type="CheckButton" parent="Margin/Row/Buttons"]
