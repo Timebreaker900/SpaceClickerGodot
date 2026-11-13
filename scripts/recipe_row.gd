@@ -2,7 +2,7 @@ extends PanelContainer
 ## Eine Zeile im Reiter "Produktion". Dieselbe Szene für jedes Rezept aus
 ## data/recipes.json.
 ##
-## Unter dem Rezept stehen seine drei Upgrades (Schneller, Mehr, Auto). Sie
+## Unter dem Rezept stehen seine Upgrades (Schneller, Mehr, Sparsam, Auto). Sie
 ## werden mit dem bezahlt, was das Rezept herstellt; die Regeln stehen in
 ## Game.recipe_upgrade_cost().
 
@@ -13,9 +13,9 @@ extends PanelContainer
 @onready var start_button: Button = %StartButton
 @onready var auto_button: CheckButton = %AutoButton
 @onready var upgrade_buttons: Dictionary = {
-	"speed": %SpeedButton, "amount": %AmountButton, "auto": %AutoUpgradeButton }
+	"speed": %SpeedButton, "amount": %AmountButton, "saver": %SaverButton, "auto": %AutoUpgradeButton }
 
-const UPGRADE_LABELS: Dictionary = { "speed": "Schneller", "amount": "Mehr", "auto": "Auto" }
+const UPGRADE_LABELS: Dictionary = { "speed": "Schneller", "amount": "Mehr", "saver": "Sparsam", "auto": "Auto" }
 
 var recipe: Dictionary
 var in_shown_group: bool = true  # vom Hauptbildschirm gesetzt: gehört zur gewählten Gruppe
@@ -56,7 +56,7 @@ func _process(_delta: float) -> void:
 	auto_button.set_pressed_no_signal(state["auto"])
 
 	var info: String = "%s  →  %s    %d s" % [
-		_describe(recipe["input"], batch, true), _describe(recipe["output"], batch, false), int(seconds)]
+		_describe(Game.recipe_input(recipe, batch), 1, true), _describe(recipe["output"], batch, false), int(seconds)]
 	if info_label.text != info:
 		info_label.text = info
 

@@ -96,6 +96,7 @@ Wird Punkt für Punkt abgearbeitet: Nach jedem Punkt testet der Nutzer und gibt 
 - [x] Auto bei Rezepten als Upgrade (100 vom eigenen Erzeugnis)
 - [x] Erzabbau darf das Level der Mine nie übersteigen
 - [x] Rezept-Upgrades, bezahlt mit dem eigenen Erzeugnis: „Schneller“ (je Stufe −1 s, mindestens 1 s) und „Mehr“ (je Stufe +1 Menge, also Zutaten und Ergebnis um den Grundwert); Preis 25, 50, 75 …
+- [x] Viertes Rezept-Upgrade „Sparsam“ für alle Rezepte mit Kohle: je Stufe 20 % weniger Kohle, 4 Stufen (bis auf ein Fünftel), aufgerundet auf ganze Stück; Preis wie bei „Schneller“ und „Mehr“. Die Upgrade-Knöpfe stehen dafür in zwei Spalten.
 - [x] Produktion zeigt Icons statt Namen; oben ein Umschalter zwischen „Schmelzen“ und „Herstellen“
 - [x] Leiste oben als festes Raster, damit nichts springt
 - [x] Mehr Verwendung für Strom und Goldbarren (Schmelze und Fabrik brauchen viel Strom, die Bank kostet Goldbarren)

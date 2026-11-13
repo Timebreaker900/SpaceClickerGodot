@@ -220,7 +220,7 @@ func _needed_for_saving(cost: Dictionary) -> bool:
 	return false
 
 
-## Rezept-Upgrades: erst Auto, dann Tempo, dann Menge – aber nur, wenn vom
+## Rezept-Upgrades: erst Auto, dann Sparsam, dann Tempo, dann Menge – aber nur, wenn vom
 ## Erzeugnis genug übrig bleibt für das, was bekannte Gebäude davon brauchen.
 func _buy_recipe_upgrades(recipe: Dictionary) -> void:
 	var product: String = recipe["output"].keys()[0]
@@ -228,7 +228,7 @@ func _buy_recipe_upgrades(recipe: Dictionary) -> void:
 	for building: Dictionary in Game.buildings:
 		if Game.building_visibility(building) == "known" and not Game.is_maxed(building):
 			keep = maxf(keep, float(Game.cost_for(building, 1).get(product, 0.0)))
-	for kind: String in ["auto", "speed", "amount"]:
+	for kind: String in ["auto", "saver", "speed", "amount"]:
 		if not Game.recipe_upgrade_available(recipe, kind):
 			continue
 		var price: float = Game.recipe_upgrade_cost(recipe, kind)[product]

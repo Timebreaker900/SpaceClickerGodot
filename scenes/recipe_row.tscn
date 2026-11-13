@@ -75,9 +75,11 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Auto"
 
-[node name="Upgrades" type="HBoxContainer" parent="Margin/Box"]
+[node name="Upgrades" type="GridContainer" parent="Margin/Box"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 10
+columns = 2
 
 [node name="SpeedButton" type="Button" parent="Margin/Box/Upgrades"]
 unique_name_in_owner = true
@@ -95,6 +97,15 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"LinkButton2"
 text = "Mehr  25"
+expand_icon = true
+
+[node name="SaverButton" type="Button" parent="Margin/Box/Upgrades"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"LinkButton2"
+text = "Sparsam  25"
 expand_icon = true
 
 [node name="AutoUpgradeButton" type="Button" parent="Margin/Box/Upgrades"]

@@ -372,14 +372,33 @@ func recipe_seconds(recipe: Dictionary) -> float:
 	return maxf(float(rules["min_seconds"]), float(recipe["seconds"]) - faster)
 
 
-## Gibt es dieses Upgrade ("auto", "speed", "amount") für das Rezept noch?
+## Was ein Durchgang mit dieser Menge an Zutaten verbraucht. Das Spar-Upgrade
+## senkt den Anteil des Brennstoffs (Kohle) je Stufe um einen festen Prozentsatz;
+## aufgerundet wird auf ganze Stück, mindestens eines bleibt immer.
+func recipe_input(recipe: Dictionary, batch: int) -> Dictionary:
+	var rules: Dictionary = settings["recipe_upgrades"]
+	var saved_percent: float = float(rules["saver_percent_per_level"]) * int(recipe_state[recipe["id"]]["saver"])
+	var result: Dictionary = {}
+	for id: String in recipe["input"]:
+		var needed: float = float(recipe["input"][id]) * batch
+		if id == rules["saver_resource"] and batch > 0:
+			needed = maxf(1.0, ceilf(needed * (100.0 - saved_percent) / 100.0 - 0.0001))
+		result[id] = needed
+	return result
+
+
+## Gibt es dieses Upgrade ("auto", "speed", "amount", "saver") für das Rezept noch?
 func recipe_upgrade_available(recipe: Dictionary, kind: String) -> bool:
 	var state: Dictionary = recipe_state[recipe["id"]]
+	var rules: Dictionary = settings["recipe_upgrades"]
 	match kind:
 		"auto":
 			return not state["auto_unlocked"]
 		"speed":
-			return recipe_seconds(recipe) > float(settings["recipe_upgrades"]["min_seconds"])
+			return recipe_seconds(recipe) > float(rules["min_seconds"])
+		"saver":
+			# Nur für Rezepte, die den Brennstoff überhaupt brauchen.
+			return recipe["input"].has(rules["saver_resource"]) and int(state["saver"]) < int(rules["saver_max_levels"])
 	return true
 
 
@@ -392,6 +411,8 @@ func recipe_upgrade_max(recipe: Dictionary, kind: String) -> int:
 			return 1
 		"speed":
 			return int(ceil((float(recipe["seconds"]) - float(rules["min_seconds"])) / float(rules["seconds_per_level"])))
+		"saver":
+			return int(rules["saver_max_levels"])
 	return 0
 
 
@@ -420,9 +441,9 @@ func can_start_recipe(recipe: Dictionary) -> bool:
 	var batch: int = recipe_batch(recipe)
 	if batch == 0 or recipe_state[recipe["id"]]["running"]:
 		return false
-	var input: Dictionary = recipe["input"]
+	var input: Dictionary = recipe_input(recipe, batch)
 	for id: String in input:
-		if amounts[id] < float(input[id]) * batch:
+		if amounts[id] < input[id]:
 			return false
 	return true
 
@@ -539,9 +560,9 @@ func start_recipe(recipe: Dictionary) -> bool:
 		return false
 	var state: Dictionary = recipe_state[recipe["id"]]
 	var batch: int = recipe_batch(recipe)
-	var input: Dictionary = recipe["input"]
+	var input: Dictionary = recipe_input(recipe, batch)
 	for id: String in input:
-		amounts[id] -= float(input[id]) * batch
+		amounts[id] -= input[id]
 	state["running"] = true
 	state["progress"] = 0.0
 	state["batch"] = batch
@@ -618,11 +639,11 @@ func _offline_recipe(recipe: Dictionary, seconds: float) -> void:
 		return
 	# Wie viele ganze Durchgänge gehen sich aus? Begrenzt durch Zeit und Zutaten.
 	var cycles: float = floorf(time_left / duration)
-	var input: Dictionary = recipe["input"]
+	var input: Dictionary = recipe_input(recipe, batch)
 	for id: String in input:
-		cycles = minf(cycles, floorf(amounts[id] / (float(input[id]) * batch)))
+		cycles = minf(cycles, floorf(amounts[id] / input[id]))
 	for id: String in input:
-		amounts[id] -= float(input[id]) * batch * cycles
+		amounts[id] -= input[id] * cycles
 	var output: Dictionary = recipe["output"]
 	for id: String in output:
 		amounts[id] += float(output[id]) * batch * cycles
@@ -699,6 +720,7 @@ func load_game() -> void:
 			"auto": bool(saved.get("auto", false)) and bool(saved.get("auto_unlocked", false)),
 			"speed": int(saved.get("speed", 0)),
 			"amount": int(saved.get("amount", 0)),
+			"saver": int(saved.get("saver", 0)),
 			"running": bool(saved.get("running", false)),
 			"progress": float(saved.get("progress", 0.0)),
 			"batch": int(saved.get("batch", 0)),
@@ -926,6 +948,7 @@ func _new_recipe_state() -> Dictionary:
 		"auto": false,           # Auto gerade eingeschaltet?
 		"speed": 0,              # gekaufte Tempo-Stufen
 		"amount": 0,             # gekaufte Mengen-Stufen
+		"saver": 0,              # gekaufte Spar-Stufen (weniger Kohle)
 		"running": false,
 		"progress": 0.0,         # Sekunden im laufenden Durchgang
 		"batch": 0,              # Menge des laufenden Durchgangs

@@ -153,6 +153,15 @@ func _ready() -> void:
 	_check("Fabrik Lv 20: Eisenplatte mit Menge 11, Chips mit Menge 6, Fabrik fertig", [Game.recipe_batch(_recipe("iron_plate")), Game.recipe_batch(_recipe("chip")), Game.is_maxed(_building("factory")), Game.can_buy(_building("factory"), 1)], [11, 6, true, false])
 	Game.levels["smeltery"] = 20
 	_check("Schmelze Lv 20: Goldbarren mit Menge 6", Game.recipe_batch(_recipe("gold_bar")), 6)
+	# Sparsam: je Stufe 20 % weniger Kohle, aufgerundet, andere Zutaten bleiben
+	_check("Sparsam gibt es nur für Rezepte mit Kohle", [Game.recipe_upgrade_available(_recipe("gold_bar"), "saver"), Game.recipe_upgrade_available(_recipe("copper_cable"), "saver")], [true, false])
+	_check("Goldbarren Menge 6 ohne Sparsam: 12 Erz, 12 Kohle", Game.recipe_input(_recipe("gold_bar"), 6), { "gold_ore": 12.0, "coal": 12.0 })
+	Game.recipe_state["gold_bar"]["saver"] = 1
+	_check("Sparsam 1: 12 Kohle -> 10 (aufgerundet), Erz bleibt", Game.recipe_input(_recipe("gold_bar"), 6), { "gold_ore": 12.0, "coal": 10.0 })
+	Game.recipe_state["gold_bar"]["saver"] = 4
+	_check("Sparsam 4: 12 Kohle -> 3, danach keine Stufe mehr", [Game.recipe_input(_recipe("gold_bar"), 6)["coal"], Game.recipe_upgrade_available(_recipe("gold_bar"), "saver")], [3.0, false])
+	_check("Mindestens 1 Kohle bleibt", Game.recipe_input(_recipe("gold_bar"), 1)["coal"], 1.0)
+	Game.recipe_state["gold_bar"]["saver"] = 0
 	Game.levels["smeltery"] = 5
 	Game.levels["factory"] = 0
 	Game.amounts["copper_ore"] = 4.0

@@ -3,6 +3,6 @@
 	"buy_amounts": [1, 10, 100, "max"],
 	"autosave_seconds": 10,
 	"bar_max": 8,
-	"recipe_upgrades": { "auto_cost": 100, "cost_step": 25, "seconds_per_level": 1, "min_seconds": 1 },
+	"recipe_upgrades": { "auto_cost": 100, "cost_step": 25, "seconds_per_level": 1, "min_seconds": 1, "saver_resource": "coal", "saver_percent_per_level": 20, "saver_max_levels": 4 },
 	"offline_min_seconds": 60
 }
