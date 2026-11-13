@@ -175,7 +175,7 @@
 		"name": "Bank",
 		"icon": "res://assets/buildings/bank.svg",
 		"cost": { "coins": 4000, "stone": 2000, "iron_plate": 5 },
-		"cost_per_level": { "gold_bar": 1 },
+		"cost_per_level": { "gold_bar": 5 },
 		"growth": 1.15,
 		"reserves": { "population": 2, "electricity": 2 },
 		"produces": { "coins": 50 }

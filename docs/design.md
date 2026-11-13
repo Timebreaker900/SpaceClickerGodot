@@ -25,7 +25,7 @@ Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Abschnitte mit �
   8. Gewächshaus – mehr Nahrung als die Farm; kostet Coins und Glas, belegt nur Strom (keine Bevölkerung, wie die Farm); 10 Upgrade-Stufen
   9. Solarpanel – Strom; kostet Coins, Kupferkabel und Eisenplatten
   10. Sägewerk – mehr Holz als der Holzfäller
-  11. Bank – 50 Coins pro Sekunde (Vorschlag); kostet Coins, Stein, Eisenplatten und Goldbarren (1 für die erste, je Level einer mehr), belegt Bevölkerung und Strom
+  11. Bank – 50 Coins pro Sekunde (Vorschlag); kostet Coins, Stein, Eisenplatten und Goldbarren (5 für die erste, je Level 5 mehr: 5, 10, 15 …), belegt Bevölkerung und Strom
   12. Forschungslabor – stellt Forschung bereit, eine statische Ressource wie Bevölkerung und Strom (je Level +1). Kostet Coins, Glas und Kupferkabel, belegt Bevölkerung und Strom. Der Titanabbau setzt das Labor voraus; Ölpumpe und Raffinerie belegen je Level 2 Forschung.
   13. Ölpumpe – Öl; kostet Coins, Stahl und Titanbarren, belegt Bevölkerung, Strom und Forschung
   14. Raffinerie – drittes Rezept-Gebäude (Knopf „Raffinieren“): macht aus Öl Treibstoff (ab Lv 1) und Dünger (ab Lv 5); kostet Coins, Stahl, Titanbarren und Eisenplatten, belegt Bevölkerung, Strom und Forschung. Treibstoff wird erst von der Rakete gebraucht.
@@ -67,7 +67,7 @@ Abweichungen vom alten Stand:
 
 - Kostenfaktor 1,15 pro Level für alle Gebäude. Das ist ein Vorschlag, der alte Wert ist unbekannt.
 - Bevölkerung ist technisch ein Gebäude (kostet Nahrung, verbraucht 2 Nahrung/s, liefert 1 Bevölkerung).
-- Menge pro Durchgang: 1 beim Freischalten, +1 je weiterem Level von Schmelze bzw. Fabrik, Größere Menge heißt mehr Zutaten und mehr Ergebnis bei gleicher Dauer. Das Mengen-Upgrade „Mehr“ gibt zusätzlich +1 Ergebnis je Stufe, ohne mehr Zutaten zu verbrauchen.
+- Menge pro Durchgang: 1 beim Freischalten, +1 je weiterem Level von Schmelze bzw. Fabrik, Größere Menge heißt mehr Zutaten und mehr Ergebnis bei gleicher Dauer. Das Mengen-Upgrade „Mehr“ gibt zusätzlich +1 Ergebnis je Stufe, ohne mehr Zutaten zu verbrauchen; es hat höchstens 10 Stufen.
 - Das Level der Schmelze schaltet die Schmelz-Rezepte frei: ab Lv 1 Glas, ab Lv 5 Kupferbarren, ab Lv 10 Eisenbarren, ab Lv 15 Goldbarren, ab Lv 20 Stahl (Eisenbarren und Kohle), ab Lv 25 Titanbarren (Titanerz und Kohle). Glas steht in der Produktionsliste ganz oben.
 - Kohle ist der Brennstoff der Schmelze: Jeder Schmelz-Durchgang verbraucht Kohle als zusätzliche Zutat (Glas und Kupferbarren 1, Eisen- und Goldbarren 2, mal Menge). Die Schmelze belegt dafür keinen Strom.
 - Die Fabrik ist genauso gestaffelt: ab Lv 5 Kupferkabel, ab Lv 10 Eisenplatte, ab Lv 15 Chips (Goldbarren und Kupferkabel; für die Steuerung der Rakete).

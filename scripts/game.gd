@@ -413,6 +413,8 @@ func recipe_upgrade_available(recipe: Dictionary, kind: String) -> bool:
 		"saver":
 			# Nur für Rezepte, die den Brennstoff überhaupt brauchen.
 			return recipe["input"].has(rules["saver_resource"]) and int(state["saver"]) < int(rules["saver_max_levels"])
+		"amount":
+			return int(state["amount"]) < int(rules["amount_max_levels"])
 	return true
 
 
@@ -427,6 +429,8 @@ func recipe_upgrade_max(recipe: Dictionary, kind: String) -> int:
 			return int(ceil((float(recipe["seconds"]) - float(rules["min_seconds"])) / float(rules["seconds_per_level"])))
 		"saver":
 			return int(rules["saver_max_levels"])
+		"amount":
+			return int(rules["amount_max_levels"])
 	return 0
 
 

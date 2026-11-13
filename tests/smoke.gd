@@ -84,7 +84,7 @@ func _ready() -> void:
 	_check("Gewächshaus liefert mehr Nahrung als die Farm und kostet Glas", [_building("greenhouse")["produces"]["food"] > _building("farm")["produces"]["food"], _building("greenhouse")["cost"].has("glass")], [true, true])
 	_check("Schmelze braucht keinen Strom mehr, Sand ab Mine Lv 2, Kohle ab Lv 4", [_building("smeltery")["reserves"].has("electricity"), _building("coal_mining")["requires"]["mine"], _building("sandmine")["requires"]["mine"], _building("sandmine").get("parent", "")], [false, 4.0, 2.0, "mine"])
 	_check("Schmelze erscheint erst mit dem Kohleabbau", _building("smeltery")["requires"], { "coal_mining": 1.0 })
-	_check("Erste Bank kostet 1 Goldbarren, die dritte 3", [Game.cost_for(_building("bank"), 1)["gold_bar"], Game.cost_for(_building("bank"), 3)["gold_bar"]], [1.0, 6.0])
+	_check("Erste Bank kostet 5 Goldbarren, die ersten drei zusammen 30", [Game.cost_for(_building("bank"), 1)["gold_bar"], Game.cost_for(_building("bank"), 3)["gold_bar"]], [5.0, 30.0])
 	_check("Markt liefert 1 Coin, Sägewerk mehr Holz als der Holzfäller", [_building("market")["produces"]["coins"], _building("sawmill")["produces"]["wood"] > _building("lumberjack")["produces"]["wood"]], [1.0, true])
 
 	# Bevölkerung: kostet Nahrung und laufenden Verbrauch
@@ -345,7 +345,10 @@ func _ready() -> void:
 	Game.buy_recipe_upgrade(bar, "speed")
 	Game.buy_recipe_upgrade(bar, "speed")
 	_check("Nach drei Stufen 1 s, mehr gibt es nicht", [Game.recipe_seconds(bar), Game.recipe_upgrade_available(bar, "speed")], [1.0, false])
-	_check("Tempo hat 3 Stufen (4 s bis 1 s), Menge unbegrenzt", [Game.recipe_upgrade_max(bar, "speed"), Game.recipe_upgrade_max(bar, "amount"), Game.recipe_upgrade_max(_recipe("gold_bar"), "speed")], [3, 0, 7])
+	_check("Tempo hat 3 Stufen (4 s bis 1 s), Mehr 10 Stufen", [Game.recipe_upgrade_max(bar, "speed"), Game.recipe_upgrade_max(bar, "amount"), Game.recipe_upgrade_max(_recipe("gold_bar"), "speed")], [3, 10, 7])
+	Game.recipe_state["iron_bar"]["amount"] = 10
+	_check("Mehr: nach 10 Stufen keine weitere", Game.recipe_upgrade_available(_recipe("iron_bar"), "amount"), false)
+	Game.recipe_state["iron_bar"]["amount"] = 0
 	_check("Vierte Stufe wird nicht verkauft", Game.buy_recipe_upgrade(bar, "speed"), false)
 	Game.buy_recipe_upgrade(bar, "amount")
 	_check("Mehr I: 2 Ergebnis pro Durchgang, Zutaten bleiben bei 1 Einheit", [Game.recipe_batch(bar), Game.recipe_input_batch(bar)], [2, 1])
