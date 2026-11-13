@@ -66,6 +66,7 @@
 	{
 		"id": "copper_mining",
 		"parent": "mine",
+		"level_cap": "mine",
 		"name": "Kupferabbau",
 		"icon": "res://assets/icons/copper_ore.svg",
 		"requires": { "mine": 5 },
@@ -76,6 +77,7 @@
 	{
 		"id": "iron_mining",
 		"parent": "mine",
+		"level_cap": "mine",
 		"name": "Eisenabbau",
 		"icon": "res://assets/icons/iron_ore.svg",
 		"requires": { "mine": 10 },
@@ -86,6 +88,7 @@
 	{
 		"id": "gold_mining",
 		"parent": "mine",
+		"level_cap": "mine",
 		"name": "Goldabbau",
 		"icon": "res://assets/icons/gold_ore.svg",
 		"requires": { "mine": 20 },
@@ -100,7 +103,8 @@
 		"cost": { "coins": 100, "stone": 150 },
 		"growth": 1.15,
 		"reserves": { "population": 1, "electricity": 1 },
-		"note": "Schmelzen: Level = Menge pro Durchgang"
+		"note": "Jedes Level: +1 Menge bei allen Schmelz-Rezepten",
+		"recipes_label": "Schmelzen"
 	},
 	{
 		"id": "factory",
@@ -109,6 +113,7 @@
 		"cost": { "coins": 150, "wood": 180, "stone": 225 },
 		"growth": 1.15,
 		"reserves": { "population": 2, "electricity": 3 },
-		"note": "Fertigung: Level = Menge pro Durchgang"
+		"note": "Jedes Level: +1 Menge bei allen Fabrik-Rezepten",
+		"recipes_label": "Herstellen"
 	}
 ]

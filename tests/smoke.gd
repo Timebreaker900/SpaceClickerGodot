@@ -114,6 +114,9 @@ func _ready() -> void:
 	_check("Nach Ablauf 2 Barren", Game.amounts["copper_bar"], 2.0)
 	Game.amounts["copper_ore"] = 4.0
 	Game.set_recipe_auto(copper_bar, true)
+	_check("Auto ohne Upgrade bleibt aus", Game.recipe_state["copper_bar"]["auto"], false)
+	Game.recipe_state["copper_bar"]["auto_unlocked"] = true
+	Game.set_recipe_auto(copper_bar, true)
 	Game._advance_recipe(copper_bar, 0.0)
 	_check("Auto startet von selbst", Game.recipe_state["copper_bar"]["running"], true)
 	Game.set_recipe_auto(copper_bar, false)
@@ -186,6 +189,7 @@ func _ready() -> void:
 	Game.amounts["copper_ore"] = 10.0
 	Game.apply_offline(1000.0)
 	_check("Ohne Auto wird nichts geschmolzen", Game.amounts["copper_bar"], 0.0)
+	Game.recipe_state["copper_bar"]["auto_unlocked"] = true
 	Game.set_recipe_auto(_recipe("copper_bar"), true)
 	Game.apply_offline(15.0)
 	_check("Auto: 15 s zu 80 Prozent reichen für 3 Durchgänge", Game.amounts["copper_bar"], 3.0)
@@ -201,6 +205,61 @@ func _ready() -> void:
 	Sfx.set_volume(0.4)
 	_check("Lautstärke gesetzt", Options.volume, 0.4)
 	Sfx.play("upgrade")
+
+	# Erzabbau darf die Mine nicht überholen
+	_reset()
+	Game.levels.merge({ "farm": 1, "lumberjack": 1, "mine": 5 }, true)
+	for id: String in ["food", "wood", "stone"]:
+		Game.amounts[id] = 1.0e9
+	var copper: Dictionary = _building("copper_mining")
+	_check("Erzabbau: höchstens so viele wie Mine (5)", Game.max_affordable(copper), 5)
+	Game.levels["copper_mining"] = 5
+	_check("Erzabbau auf Minen-Level: gesperrt", Game.can_buy(copper, 1), false)
+	Game.levels["mine"] = 6
+	_check("Mine +1: wieder eins möglich", Game.max_affordable(copper), 1)
+
+	# Rezept-Upgrades: bezahlt mit dem eigenen Erzeugnis
+	_reset()
+	var bar: Dictionary = _recipe("copper_bar")  # 2 Erz -> 1 Barren in 4 s
+	Game.levels["smeltery"] = 1
+	Game.amounts["copper_bar"] = 24.0
+	_check("Tempo I kostet 25, 24 reichen nicht", [Game.recipe_upgrade_cost(bar, "speed")["copper_bar"], Game.can_buy_recipe_upgrade(bar, "speed")], [25.0, false])
+	Game.amounts["copper_bar"] = 1000.0
+	Game.buy_recipe_upgrade(bar, "speed")
+	_check("Tempo I: 3 s, Tempo II kostet 50", [Game.recipe_seconds(bar), Game.recipe_upgrade_cost(bar, "speed")["copper_bar"]], [3.0, 50.0])
+	Game.buy_recipe_upgrade(bar, "speed")
+	Game.buy_recipe_upgrade(bar, "speed")
+	_check("Nach drei Stufen 1 s, mehr gibt es nicht", [Game.recipe_seconds(bar), Game.recipe_upgrade_available(bar, "speed")], [1.0, false])
+	_check("Vierte Stufe wird nicht verkauft", Game.buy_recipe_upgrade(bar, "speed"), false)
+	Game.buy_recipe_upgrade(bar, "amount")
+	_check("Menge I: 2 pro Durchgang (Schmelze 1 + 1)", Game.recipe_batch(bar), 2)
+	Game.amounts["copper_ore"] = 4.0
+	Game.start_recipe(bar)
+	_check("Durchgang nimmt 4 Erz", Game.amounts["copper_ore"], 0.0)
+	Game._advance_recipe(bar, 1.0)
+	var bars_before: float = Game.amounts["copper_bar"]
+	_check("Auto kostet 100", Game.recipe_upgrade_cost(bar, "auto")["copper_bar"], 100.0)
+	Game.buy_recipe_upgrade(bar, "auto")
+	_check("Auto gekauft: 100 weg, eingeschaltet, nicht nochmal kaufbar", [bars_before - Game.amounts["copper_bar"], Game.recipe_state["copper_bar"]["auto"], Game.recipe_upgrade_available(bar, "auto")], [100.0, true, false])
+	Game.save_game()
+	_reset()
+	Game.load_game()
+	_check("Rezept-Upgrades überleben Speichern", [Game.recipe_seconds(bar), Game.recipe_state["copper_bar"]["amount"], Game.recipe_state["copper_bar"]["auto_unlocked"]], [1.0, 1, true])
+	_reset()
+
+	# Rezepte verraten nichts: erst sichtbar, wenn die Zutat entdeckt ist
+	Game.levels["smeltery"] = 1
+	_check("Goldbarren-Rezept ohne Golderz unsichtbar", Game.recipe_visible(_recipe("gold_bar")), false)
+	Game.amounts["gold_ore"] = 1.0
+	Game._update_seen()
+	_check("Mit Golderz sichtbar", Game.recipe_visible(_recipe("gold_bar")), true)
+	_reset()
+	Game._reset_discovery()
+
+	# Kompakte Zahl für die Leiste
+	Options.number_format = "short"
+	_check("Leiste: drei Stellen", [Game.fmt_compact(1234567.0), Game.fmt_compact(12345678.0), Game.fmt_compact(123456789.0)], ["1,23 Mio", "12,3 Mio", "123 Mio"])
+	Options.number_format = "scientific"
 
 	# Zahlenformat
 	_check("Format klein", Game.fmt(1234.9), "1234")
@@ -227,8 +286,9 @@ func _ready() -> void:
 
 	# Für Bildschirmfotos: ein fortgeschrittener Spielstand
 	if OS.get_cmdline_user_args().has("--demo"):
-		Game.levels.merge({ "farm": 12, "housing": 9, "lumberjack": 4, "mine": 6, "watermill": 2 }, true)
-		Game.amounts.merge({ "coins": 4820.0, "wood": 1310.0, "food": 960.0, "stone": 455.0, "copper_ore": 37.0 }, true)
+		Game.levels.merge({ "farm": 12, "housing": 14, "lumberjack": 4, "mine": 6, "watermill": 6, "bank": 1, "sandmine": 2, "smeltery": 2, "factory": 1, "copper_mining": 6, "iron_mining": 2 }, true)
+		Game.amounts.merge({ "coins": 4820.0, "wood": 1310.0, "food": 960.0, "stone": 455.0, "sand": 88.0, "copper_ore": 37.0, "iron_ore": 3.0, "copper_bar": 61.0, "iron_bar": 12.0 }, true)
+		Game.recipe_state["copper_bar"].merge({ "auto_unlocked": true, "auto": true, "speed": 1 }, true)
 		Game.click_counts["coins"] = 140
 		Game._update_seen()
 
@@ -265,7 +325,7 @@ func _ready() -> void:
 	main.get_node("%BuildingList").get_child(0)._on_buy_pressed()
 	await get_tree().create_timer(0.1).timeout
 	_check("Kauf über die Zeile zählt", Game.levels["farm"], farm_level_before + 1)
-	_check("Rezeptzeilen angelegt", main.get_node("%RecipeList").get_child_count(), Game.recipes.size())
+	_check("Rezeptzeilen plus zwei Überschriften angelegt", main.get_node("%RecipeList").get_child_count(), Game.recipes.size() + 2)
 
 	for arg: String in OS.get_cmdline_user_args():
 		if arg == "--notch":

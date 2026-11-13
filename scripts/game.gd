@@ -24,7 +24,12 @@ extends Node
 ## oder andere Upgrades (requires_upgrades).
 ##
 ## Ein Rezept wandelt in "seconds" Sekunden "input" in "output" um. Es gehört zu
-## einem Gebäude; dessen Level bestimmt, wie viel pro Durchgang verarbeitet wird.
+## einem Gebäude. Wie viel pro Durchgang verarbeitet wird, ergibt sich aus dem
+## Level des Gebäudes plus den Mengen-Upgrades des Rezepts.
+## Jedes Rezept hat drei eigene Upgrades, bezahlt mit dem, was es herstellt:
+##   auto   - einmalig: das Rezept startet von selbst
+##   speed  - je Stufe 1 Sekunde schneller, bis zur Mindestdauer
+##   amount - je Stufe 1 Menge mehr (also Zutaten und Ergebnis um den Grundwert)
 
 const SAVE_VERSION := 1
 
@@ -45,7 +50,7 @@ var settings: Dictionary = {}
 
 var amounts: Dictionary = {}       # Ressourcen-ID -> Vorrat
 var levels: Dictionary = {}        # Gebäude-ID -> Level
-var recipe_state: Dictionary = {}  # Rezept-ID -> { auto, running, progress, batch }
+var recipe_state: Dictionary = {}  # Rezept-ID -> Zustand, siehe _new_recipe_state()
 var bought: Dictionary = {}        # Upgrade-ID -> gekauft?
 var click_counts: Dictionary = {}  # Ressourcen-ID -> wie oft dafür geklickt wurde
 var seen: Dictionary = {}          # Ressourcen-ID -> schon einmal besessen? Bleibt für immer wahr.
@@ -260,6 +265,9 @@ func cost_for(building: Dictionary, count: int) -> Dictionary:
 func can_buy(building: Dictionary, count: int) -> bool:
 	if building_visibility(building) != "known":
 		return false
+	# Manche Gebäude dürfen ein anderes nicht überholen (Erzabbau <= Mine).
+	if building.has("level_cap") and levels[building["id"]] + count > levels[building["level_cap"]]:
+		return false
 	var cost: Dictionary = cost_for(building, count)
 	for id: String in cost:
 		if amounts[id] < cost[id]:
@@ -278,9 +286,63 @@ func can_buy(building: Dictionary, count: int) -> bool:
 	return true
 
 
-## Wie viele Einheiten ein Rezept pro Durchgang verarbeitet (= Level des Gebäudes).
+## Wie viele Einheiten ein Rezept pro Durchgang verarbeitet: Level des Gebäudes
+## plus Mengen-Upgrades. Ohne Gebäude 0, das Rezept ist dann nicht verfügbar.
 func recipe_batch(recipe: Dictionary) -> int:
-	return levels[recipe["building"]]
+	var building_level: int = levels[recipe["building"]]
+	if building_level == 0:
+		return 0
+	return building_level + int(recipe_state[recipe["id"]]["amount"])
+
+
+## Ein Rezept taucht erst auf, wenn sein Gebäude steht und der Spieler alle
+## Zutaten schon einmal hatte – sonst verriete es, was noch kommt.
+func recipe_visible(recipe: Dictionary) -> bool:
+	if recipe_batch(recipe) == 0:
+		return false
+	for id: String in recipe["input"]:
+		if not seen[id]:
+			return false
+	return true
+
+
+## Dauer eines Durchgangs nach Tempo-Upgrades, nie unter der Mindestdauer.
+func recipe_seconds(recipe: Dictionary) -> float:
+	var rules: Dictionary = settings["recipe_upgrades"]
+	var faster: float = float(rules["seconds_per_level"]) * int(recipe_state[recipe["id"]]["speed"])
+	return maxf(float(rules["min_seconds"]), float(recipe["seconds"]) - faster)
+
+
+## Gibt es dieses Upgrade ("auto", "speed", "amount") für das Rezept noch?
+func recipe_upgrade_available(recipe: Dictionary, kind: String) -> bool:
+	var state: Dictionary = recipe_state[recipe["id"]]
+	match kind:
+		"auto":
+			return not state["auto_unlocked"]
+		"speed":
+			return recipe_seconds(recipe) > float(settings["recipe_upgrades"]["min_seconds"])
+	return true
+
+
+## Preis des nächsten Upgrades, bezahlt mit dem Erzeugnis des Rezepts.
+## Auto kostet einen festen Betrag; Tempo und Menge kosten 25, 50, 75 ...
+func recipe_upgrade_cost(recipe: Dictionary, kind: String) -> Dictionary:
+	var rules: Dictionary = settings["recipe_upgrades"]
+	var product: String = recipe["output"].keys()[0]
+	if kind == "auto":
+		return { product: float(rules["auto_cost"]) }
+	var level: int = int(recipe_state[recipe["id"]][kind])
+	return { product: float(rules["cost_step"]) * (level + 1) }
+
+
+func can_buy_recipe_upgrade(recipe: Dictionary, kind: String) -> bool:
+	if recipe_batch(recipe) == 0 or not recipe_upgrade_available(recipe, kind):
+		return false
+	var cost: Dictionary = recipe_upgrade_cost(recipe, kind)
+	for id: String in cost:
+		if amounts[id] < cost[id]:
+			return false
+	return true
 
 
 func can_start_recipe(recipe: Dictionary) -> bool:
@@ -416,14 +478,30 @@ func start_recipe(recipe: Dictionary) -> bool:
 
 
 func set_recipe_auto(recipe: Dictionary, enabled: bool) -> void:
-	recipe_state[recipe["id"]]["auto"] = enabled
+	var state: Dictionary = recipe_state[recipe["id"]]
+	state["auto"] = enabled and state["auto_unlocked"]
+
+
+func buy_recipe_upgrade(recipe: Dictionary, kind: String) -> bool:
+	if not can_buy_recipe_upgrade(recipe, kind):
+		return false
+	var cost: Dictionary = recipe_upgrade_cost(recipe, kind)
+	for id: String in cost:
+		amounts[id] -= cost[id]
+	var state: Dictionary = recipe_state[recipe["id"]]
+	if kind == "auto":
+		state["auto_unlocked"] = true
+		state["auto"] = true  # gleich einschalten, dafür wurde es gekauft
+	else:
+		state[kind] = int(state[kind]) + 1
+	return true
 
 
 func _advance_recipe(recipe: Dictionary, delta: float) -> void:
 	var state: Dictionary = recipe_state[recipe["id"]]
 	if state["running"]:
 		state["progress"] += delta
-		if state["progress"] >= float(recipe["seconds"]):
+		if state["progress"] >= recipe_seconds(recipe):
 			_advance_recipe_to_end(recipe)
 	if state["auto"] and not state["running"]:
 		start_recipe(recipe)
@@ -455,7 +533,7 @@ func apply_offline(seconds: float) -> Dictionary:
 
 func _offline_recipe(recipe: Dictionary, seconds: float) -> void:
 	var state: Dictionary = recipe_state[recipe["id"]]
-	var duration: float = float(recipe["seconds"])
+	var duration: float = recipe_seconds(recipe)
 	var time_left: float = seconds
 	if state["running"]:
 		var remaining: float = duration - float(state["progress"])
@@ -546,7 +624,10 @@ func load_game() -> void:
 	for id: String in recipe_state:
 		var saved: Dictionary = saved_recipes.get(id, {})
 		recipe_state[id] = {
-			"auto": bool(saved.get("auto", false)),
+			"auto_unlocked": bool(saved.get("auto_unlocked", false)),
+			"auto": bool(saved.get("auto", false)) and bool(saved.get("auto_unlocked", false)),
+			"speed": int(saved.get("speed", 0)),
+			"amount": int(saved.get("amount", 0)),
 			"running": bool(saved.get("running", false)),
 			"progress": float(saved.get("progress", 0.0)),
 			"batch": int(saved.get("batch", 0)),
@@ -608,6 +689,19 @@ func fmt(value: float) -> String:
 		var mantissa: float = value / pow(10.0, (name_index + 2) * 3)
 		return ("%.2f" % mantissa).replace(".", ",") + " " + NUMBER_NAMES[name_index]
 	return "%.2fe%d" % [value / pow(10.0, exponent), exponent]
+
+
+## Wie fmt, aber ab einer Million mit drei Stellen statt mit festen zwei
+## Nachkommastellen: 1,23 Mio / 12,3 Mio / 123 Mio. Für Stellen mit wenig Platz.
+func fmt_compact(value: float) -> String:
+	if value < 1_000_000.0 or Options.number_format != "short":
+		return fmt(value)
+	var name_index: int = int(floor(log(value) / log(10.0))) / 3 - 2
+	if name_index >= NUMBER_NAMES.size():
+		return fmt(value)
+	var mantissa: float = value / pow(10.0, (name_index + 2) * 3)
+	var decimals: int = 2 if mantissa < 10.0 else (1 if mantissa < 100.0 else 0)
+	return ("%.*f" % [decimals, mantissa]).replace(".", ",") + " " + NUMBER_NAMES[name_index]
 
 
 ## 1234567 -> 1.234.567
@@ -726,7 +820,15 @@ func _update_seen() -> void:
 
 
 func _new_recipe_state() -> Dictionary:
-	return { "auto": false, "running": false, "progress": 0.0, "batch": 0 }
+	return {
+		"auto_unlocked": false,  # Auto-Upgrade gekauft?
+		"auto": false,           # Auto gerade eingeschaltet?
+		"speed": 0,              # gekaufte Tempo-Stufen
+		"amount": 0,             # gekaufte Mengen-Stufen
+		"running": false,
+		"progress": 0.0,         # Sekunden im laufenden Durchgang
+		"batch": 0,              # Menge des laufenden Durchgangs
+	}
 
 
 func _sum_over_buildings(key: String, id: String) -> float:
