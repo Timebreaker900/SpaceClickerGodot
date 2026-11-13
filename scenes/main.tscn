@@ -52,7 +52,7 @@ theme_override_constants/h_separation = 28
 theme_override_constants/v_separation = 12
 
 [node name="PlanetArea" type="CenterContainer" parent="Margin/Layout"]
-custom_minimum_size = Vector2(0, 620)
+custom_minimum_size = Vector2(0, 580)
 layout_mode = 2
 
 [node name="Planet" type="TextureButton" parent="Margin/Layout/PlanetArea"]
@@ -84,28 +84,58 @@ layout_mode = 2
 toggle_mode = true
 text = "Holz"
 
-[node name="Header" type="HBoxContainer" parent="Margin/Layout"]
+[node name="Tabs" type="TabContainer" parent="Margin/Layout"]
 layout_mode = 2
+size_flags_vertical = 3
+tab_alignment = 1
+current_tab = 0
 
-[node name="Title" type="Label" parent="Margin/Layout/Header"]
+[node name="Gebäude" type="VBoxContainer" parent="Margin/Layout/Tabs"]
 layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 44
-text = "Gebäude"
+theme_override_constants/separation = 12
+metadata/_tab_index = 0
 
-[node name="BuyAmountButton" type="Button" parent="Margin/Layout/Header"]
+[node name="Header" type="HBoxContainer" parent="Margin/Layout/Tabs/Gebäude"]
+layout_mode = 2
+alignment = 2
+
+[node name="BuyAmountButton" type="Button" parent="Margin/Layout/Tabs/Gebäude/Header"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(240, 84)
+custom_minimum_size = Vector2(240, 76)
 layout_mode = 2
 text = "Kaufen: 1"
 
-[node name="Scroll" type="ScrollContainer" parent="Margin/Layout"]
+[node name="Scroll" type="ScrollContainer" parent="Margin/Layout/Tabs/Gebäude"]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="BuildingList" type="VBoxContainer" parent="Margin/Layout/Scroll"]
+[node name="BuildingList" type="VBoxContainer" parent="Margin/Layout/Tabs/Gebäude/Scroll"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 14
+
+[node name="Produktion" type="ScrollContainer" parent="Margin/Layout/Tabs"]
+visible = false
+layout_mode = 2
+horizontal_scroll_mode = 0
+metadata/_tab_index = 1
+
+[node name="RecipeList" type="VBoxContainer" parent="Margin/Layout/Tabs/Produktion"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 14
+
+[node name="Ressourcen" type="ScrollContainer" parent="Margin/Layout/Tabs"]
+visible = false
+layout_mode = 2
+horizontal_scroll_mode = 0
+metadata/_tab_index = 2
+
+[node name="ResourceList" type="VBoxContainer" parent="Margin/Layout/Tabs/Ressourcen"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
