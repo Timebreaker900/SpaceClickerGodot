@@ -4,6 +4,22 @@ Der gültige Stand. Gebaut wird nur, was hier steht. Neue Ideen kommen über `id
 
 Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Noch nichts davon ist für die Godot-Version bestätigt.
 
+## Umgesetzt in Godot
+
+- Klicken auf den Planeten (Coins oder Holz, umschaltbar)
+- Ressourcenleiste mit Vorrat und Produktion pro Sekunde
+- Gebäude: Farm, Bevölkerung, Holzfäller, Mine, Wassermühle, Bank – Werte in `data/buildings.json`
+- Kaufmenge 1 / 10 / 100
+- Speichern alle 10 Sekunden und beim Schließen
+
+Abweichungen vom alten Stand:
+
+- Kostenfaktor 1,15 pro Level für alle Gebäude. Das ist ein Vorschlag, der alte Wert ist unbekannt.
+- Bevölkerung ist technisch ein Gebäude (kostet Nahrung, verbraucht 2 Nahrung/s, liefert 1 Bevölkerung).
+- Die Erde ist eine sich drehende Kugel statt eines flachen Bildes.
+
+Noch nicht portiert: Schmelze, Fabrik, Sandmine, Solarpanel, Erzabbau, Rezepte, Upgrades, weitere Planeten.
+
 ## Rahmen
 
 - Engine: Godot 4, GDScript
