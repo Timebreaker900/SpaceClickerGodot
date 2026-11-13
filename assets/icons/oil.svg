@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+<!-- Öltropfen -->
+<path d="M64 8C64 8 22 58 22 84a42 42 0 0 0 84 0C106 58 64 8 64 8z" fill="#6b7890"/>
+<path d="M64 8s42 50 42 76a42 42 0 0 1-42 42z" fill="#465263"/>
+<path d="M40 84c0-12 10-28 18-40-2 14-8 26-8 40a16 16 0 0 0 10 15c-11 2-20-5-20-15z" fill="#c3ccd6" opacity=".8"/>
+<circle cx="80" cy="94" r="6" fill="#3fd0ff"/>
+</svg>

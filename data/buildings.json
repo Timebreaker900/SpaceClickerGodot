@@ -107,10 +107,9 @@
 		"level_cap": "mine",
 		"name": "Titanabbau",
 		"icon": "res://assets/icons/titanium_ore.svg",
-		"requires": { "mine": 30 },
+		"requires": { "mine": 30, "lab": 1 },
 		"cost": { "food": 800, "wood": 800, "stone": 800 },
 		"growth": 1.15,
-		"reserves": { "research": 1 },
 		"produces": { "titanium_ore": 0.1 }
 	},
 	{
@@ -190,5 +189,25 @@
 		"reserves": { "population": 3, "electricity": 5 },
 		"provides": { "research": 1 },
 		"note": "Forschung wird von späteren Gebäuden belegt"
+	},
+	{
+		"id": "oil_pump",
+		"name": "Ölpumpe",
+		"icon": "res://assets/buildings/oil_pump.svg",
+		"cost": { "coins": 100000, "steel": 20, "titanium_bar": 10 },
+		"growth": 1.2,
+		"reserves": { "population": 2, "electricity": 10, "research": 2 },
+		"produces": { "oil": 1 }
+	},
+	{
+		"id": "refinery",
+		"name": "Raffinerie",
+		"icon": "res://assets/buildings/refinery.svg",
+		"cost": { "coins": 150000, "steel": 30, "titanium_bar": 15, "iron_plate": 50 },
+		"growth": 1.2,
+		"reserves": { "population": 3, "electricity": 15, "research": 2 },
+		"levels_after_last_recipe": 5,
+		"note": "Jedes Level: +1 Menge bei allen Raffinerie-Rezepten",
+		"recipes_label": "Raffinieren"
 	}
 ]

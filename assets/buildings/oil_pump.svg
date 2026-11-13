@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="256" height="256">
+<ellipse cx="64" cy="114" rx="56" ry="7" fill="#000" opacity=".28"/>
+<!-- Stützbock -->
+<path d="M52 110 66 44l14 66h-8L66 78l-6 32z" fill="#7d8ea3"/>
+<path d="M66 44l14 66h-8L66 78z" fill="#4c5a6b"/>
+<!-- Schwingbalken -->
+<path d="M12 40 108 26l2 10L14 50z" fill="#ff7a2e"/>
+<path d="M13 45 109 31l1 5L14 50z" fill="#d95a14"/>
+<!-- Pferdekopf -->
+<path d="M100 18h14a8 8 0 0 1 8 8v26h-12V40l-10-2z" fill="#ff7a2e"/>
+<path d="M114 18a8 8 0 0 1 8 8v26h-8z" fill="#d95a14"/>
+<!-- Gestänge ins Bohrloch -->
+<rect x="115" y="52" width="3" height="50" fill="#c3ccd6"/>
+<rect x="108" y="100" width="16" height="12" rx="2" fill="#4c5a6b"/>
+<rect x="108" y="100" width="16" height="4" rx="2" fill="#7d8ea3"/>
+<!-- Gegengewicht und Motor -->
+<circle cx="24" cy="76" r="16" fill="#4c5a6b"/>
+<path d="M24 60a16 16 0 0 1 0 32z" fill="#2f3945"/>
+<circle cx="24" cy="76" r="5" fill="#3fd0ff"/>
+<rect x="21" y="46" width="5" height="30" fill="#c3ccd6"/>
+<rect x="8" y="92" width="38" height="20" rx="3" fill="#7d8ea3"/>
+<rect x="8" y="92" width="38" height="6" rx="3" fill="#9fb0c4"/>
+<circle cx="66" cy="44" r="6" fill="#2f3945"/>
+</svg>

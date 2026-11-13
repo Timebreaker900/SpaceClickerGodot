@@ -125,7 +125,7 @@ func _current_target() -> Dictionary:
 ## selbst; fehlt dafür aber Bevölkerung oder Strom, dann das Gebäude, das sie
 ## liefert; und fehlt dem wiederum die laufende Nahrung, dann das Gebäude, das
 ## Nahrung herstellt.
-func _resolve(goal: Dictionary) -> Dictionary:
+func _resolve(goal: Dictionary, depth: int = 0) -> Dictionary:
 	var reserves: Dictionary = goal.get("reserves", {})
 	for capacity_id: String in reserves:
 		if Game.capacity_free(capacity_id) >= float(reserves[capacity_id]):
@@ -139,7 +139,8 @@ func _resolve(goal: Dictionary) -> Dictionary:
 				for building: Dictionary in Game.buildings:
 					if float(building.get("produces", {}).get(id, 0.0)) > 0.0 and Game.building_visibility(building) == "known":
 						return building
-		return provider
+		# Der Versorger kann selbst etwas belegen (das Labor braucht Strom und Bevölkerung).
+		return _resolve(provider, depth + 1) if depth < 3 else provider
 	return goal
 
 ## Das bekannte Gebäude, das diese Versorgung am schnellsten liefert.

@@ -77,5 +77,14 @@
 		"input": { "iron_bar": 2 },
 		"output": { "iron_plate": 1 },
 		"seconds": 6
+	},
+	{
+		"id": "fuel",
+		"name": "Treibstoff",
+		"icon": "res://assets/icons/fuel.svg",
+		"building": "refinery",
+		"input": { "oil": 5 },
+		"output": { "fuel": 1 },
+		"seconds": 8
 	}
 ]

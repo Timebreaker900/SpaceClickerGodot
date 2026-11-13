@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+<!-- Kanister -->
+<path d="M26 34h44l12-14h20v18l-6 6v66a8 8 0 0 1-8 8H34a8 8 0 0 1-8-8z" fill="#ff7a2e"/>
+<path d="M64 34h6l12-14h20v18l-6 6v66a8 8 0 0 1-8 8H64z" fill="#d95a14"/>
+<rect x="34" y="18" width="24" height="16" rx="3" fill="#4c5a6b"/>
+<rect x="34" y="18" width="24" height="6" rx="3" fill="#7d8ea3"/>
+<rect x="84" y="24" width="12" height="8" rx="2" fill="#1f252e"/>
+<!-- Flamme als Zeichen -->
+<path d="M62 56c10 10 16 18 16 28a16 16 0 0 1-32 0c0-6 3-10 7-14 0 5 2 8 5 8 2-6 1-14 4-22z" fill="#ffd93b"/>
+<path d="M62 76c4 4 7 8 7 12a7 7 0 0 1-14 0c0-4 4-7 7-12z" fill="#fff" opacity=".8"/>
+<circle cx="38" cy="106" r="4" fill="#3fd0ff"/>
+</svg>

@@ -76,8 +76,9 @@ func _ready() -> void:
 	for building: Dictionary in Game.buildings:
 		if not building.has("parent") and building.get("placement", "list") == "list":
 			order.append(building["id"])
-	_check("Gebäude-Reihenfolge", order, ["farm", "lumberjack", "market", "mine", "smeltery", "watermill", "factory", "greenhouse", "solarpanel", "sawmill", "bank", "lab"])
-	_check("Titanabbau ab Mine Lv 30, belegt Forschung; Stahl ab Schmelze 20, Titanbarren ab 25", [_building("titanium_mining")["requires"]["mine"], _building("titanium_mining")["reserves"]["research"], _recipe("steel")["requires_level"], _recipe("titanium_bar")["requires_level"]], [30.0, 1.0, 20.0, 25.0])
+	_check("Gebäude-Reihenfolge", order, ["farm", "lumberjack", "market", "mine", "smeltery", "watermill", "factory", "greenhouse", "solarpanel", "sawmill", "bank", "lab", "oil_pump", "refinery"])
+	_check("Ölpumpe und Raffinerie belegen Forschung; Treibstoff kommt aus der Raffinerie", [_building("oil_pump")["reserves"]["research"], _building("refinery")["reserves"]["research"], _recipe("fuel")["building"], _building("refinery")["max_level"]], [2.0, 2.0, "refinery", 6])
+	_check("Titanabbau ab Mine Lv 30 und Labor Lv 1; Stahl ab Schmelze 20, Titanbarren ab 25", [_building("titanium_mining")["requires"]["mine"], _building("titanium_mining")["requires"]["lab"], _recipe("steel")["requires_level"], _recipe("titanium_bar")["requires_level"]], [30.0, 1.0, 20.0, 25.0])
 	_check("Forschungslabor stellt Forschung bereit (statisch wie Strom)", [_building("lab")["provides"]["research"], Game.resource_def("research")["type"]], [1.0, "capacity"])
 	_check("Gewächshaus liefert mehr Nahrung als die Farm und kostet Glas", [_building("greenhouse")["produces"]["food"] > _building("farm")["produces"]["food"], _building("greenhouse")["cost"].has("glass")], [true, true])
 	_check("Schmelze braucht keinen Strom mehr, Sand ab Mine Lv 2, Kohle ab Lv 4", [_building("smeltery")["reserves"].has("electricity"), _building("coal_mining")["requires"]["mine"], _building("sandmine")["requires"]["mine"], _building("sandmine").get("parent", "")], [false, 4.0, 2.0, "mine"])
@@ -349,7 +350,7 @@ func _ready() -> void:
 
 	# Für Bildschirmfotos: ein fortgeschrittener Spielstand
 	if OS.get_cmdline_user_args().has("--demo"):
-		Game.levels.merge({ "farm": 12, "housing": 14, "lumberjack": 4, "mine": 6, "market": 3, "watermill": 6, "sandmine": 2, "smeltery": 10, "factory": 5, "solarpanel": 1, "bank": 1, "lab": 2, "coal_mining": 6, "copper_mining": 6, "iron_mining": 2 }, true)
+		Game.levels.merge({ "farm": 12, "housing": 14, "lumberjack": 4, "mine": 6, "market": 3, "watermill": 6, "sandmine": 2, "smeltery": 10, "factory": 5, "solarpanel": 1, "bank": 1, "lab": 6, "oil_pump": 2, "refinery": 1, "coal_mining": 6, "copper_mining": 6, "iron_mining": 2 }, true)
 		Game.amounts.merge({ "coins": 4820.0, "wood": 1310.0, "food": 960.0, "stone": 455.0, "sand": 88.0, "coal": 240.0, "copper_ore": 37.0, "iron_ore": 3.0, "copper_bar": 61.0, "iron_bar": 12.0 }, true)
 		Game.recipe_state["copper_bar"].merge({ "auto_unlocked": true, "auto": true, "speed": 1 }, true)
 		Game.click_counts["coins"] = 140
@@ -388,7 +389,7 @@ func _ready() -> void:
 	main.get_node("%BuildingList").get_child(0)._on_buy_pressed()
 	await get_tree().create_timer(0.1).timeout
 	_check("Kauf über die Zeile zählt", Game.levels["farm"], farm_level_before + 1)
-	_check("Rezeptzeilen angelegt, zwei Gruppen im Umschalter", [main.get_node("%RecipeList").get_child_count(), main.get_node("%RecipeGroups").get_child_count()], [Game.recipes.size(), 2])
+	_check("Rezeptzeilen angelegt, drei Gruppen im Umschalter", [main.get_node("%RecipeList").get_child_count(), main.get_node("%RecipeGroups").get_child_count()], [Game.recipes.size(), 3])
 
 	for arg: String in OS.get_cmdline_user_args():
 		if arg == "--group2":

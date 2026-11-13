@@ -22,5 +22,8 @@
 
 	{ "id": "glass", "name": "Glas", "type": "stock", "group": "Bauteile", "icon": "res://assets/icons/glass.svg" },
 	{ "id": "copper_cable", "name": "Kupferkabel", "type": "stock", "group": "Bauteile", "icon": "res://assets/icons/copper_cable.svg" },
-	{ "id": "iron_plate", "name": "Eisenplatte", "type": "stock", "group": "Bauteile", "icon": "res://assets/icons/iron_plate.svg" }
+	{ "id": "iron_plate", "name": "Eisenplatte", "type": "stock", "group": "Bauteile", "icon": "res://assets/icons/iron_plate.svg" },
+
+	{ "id": "oil", "name": "Öl", "type": "stock", "group": "Raumfahrt", "icon": "res://assets/icons/oil.svg" },
+	{ "id": "fuel", "name": "Treibstoff", "type": "stock", "group": "Raumfahrt", "icon": "res://assets/icons/fuel.svg" }
 ]
