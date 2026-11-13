@@ -23,8 +23,15 @@ const DISABLED_BORDER := Color(0.45, 0.55, 0.70, 0.25)
 func _init() -> void:
 	var theme := Theme.new()
 	theme.default_font_size = 34
+	theme.default_font = _exo(500)
 
 	theme.set_color("font_color", "Label", TEXT)
+
+	# Überschriften (Gebäude- und Rezeptnamen): dieselbe Schrift, nur fetter.
+	theme.set_type_variation("HeadingLabel", "Label")
+	theme.set_font("font", "HeadingLabel", _exo(700))
+	theme.set_font("font", "Button", _exo(600))
+	theme.set_font("font", "TabContainer", _exo(600))
 
 	# Flächen (Gebäudezeilen, Ressourcenleiste)
 	theme.set_stylebox("panel", "PanelContainer", _box(PANEL, PANEL_BORDER, 2, 20))
@@ -89,6 +96,17 @@ func _init() -> void:
 	var error: int = ResourceSaver.save(theme, "res://ui/theme.tres")
 	print("Theme gespeichert" if error == OK else "Fehler beim Speichern: %d" % error)
 	quit(0 if error == OK else 1)
+
+
+## Exo 2 in einer bestimmten Strichstärke (400 = normal, 700 = fett).
+## Die Datei ist eine "variable" Schrift: Sie enthält alle Stärken, hier wird
+## eine davon ausgewählt.
+func _exo(weight: int) -> FontVariation:
+	const WEIGHT_AXIS := 2003265652  # OpenType-Kennung "wght"
+	var font := FontVariation.new()
+	font.base_font = load("res://ui/fonts/Exo2-Variable.ttf")
+	font.variation_opentype = { WEIGHT_AXIS: weight }
+	return font
 
 
 func _box(background: Color, border: Color, border_width: int, radius: int,
