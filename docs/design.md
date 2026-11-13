@@ -189,4 +189,22 @@ Verstärktes Glas wird vom Solarpanel verlangt, hat aber kein Rezept.
 
 ## Später
 
-Noch nichts.
+### Rakete als Abschluss der Erde (Todo, noch nicht bauen)
+
+Die Rakete wird einmal gebaut und schaltet den Mond frei. Geplante Tiefe: mittel.
+
+- Die Rakete besteht aus vier Teilen, die einzeln gebaut werden und in einer eigenen Ansicht zu sehen sind:
+  - Rumpf – Stahl, Eisenplatten
+  - Triebwerk – Stahl, Kupferkabel
+  - Steuerung – Chips, Glas
+  - Treibstoff – viel Treibstoff
+- Neue Rezepte:
+  - Stahl in der Schmelze ab Lv 20 (Eisenbarren plus mehr Kohle)
+  - Chips in der Fabrik ab Lv 15 (Goldbarren plus Kupferkabel)
+- Neue Gebäude:
+  - Ölpumpe – liefert Öl
+  - Raffinerie – macht aus Öl Treibstoff, drittes Rezept-Gebäude mit eigenem Knopf im Umschalter der Produktion
+  - Startrampe – einmalig kaufbar, schaltet die Raketen-Ansicht frei
+- Durch die neuen Rezepte wandert das Höchstlevel von Schmelze und Fabrik von selbst um fünf nach oben.
+- Offen: ob zwischen Fabrik und Kupfer bzw. Kupfer und Eisen noch ein Gebäude eingeschoben wird. Erst entscheiden, wenn die Rakete steht und die Simulation den ganzen Bogen zeigt.
+- Offen: Namen und Materialien (Stahl, Chips, Öl, Treibstoff) sind ein Vorschlag und vom Nutzer noch nicht bestätigt.
