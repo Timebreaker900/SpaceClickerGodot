@@ -525,6 +525,22 @@ func _test_swipe(main: Node) -> void:
 		await get_tree().process_frame
 		_check("Antippen kauft weiterhin", Game.levels["mine"], int(levels_before["mine"]) + 1)
 	list_scroll.scroll_vertical = 0
+
+	# Dasselbe im Fenster "Leiste anpassen": mit allen Ressourcen ist die Liste
+	# länger als das Fenster und muss sich wischen lassen, auch auf einem Schalter.
+	for id: String in Game.seen:
+		Game.seen[id] = true
+	main._open_bar_picker()
+	for i: int in 3:
+		await get_tree().process_frame
+	var popup_scroll: ScrollContainer = main.get_node("%Popup").scroll
+	var popup_rows: Array = main.get_node("%Popup").content.get_children()
+	var selection_before: Array = Game.bar_selection.duplicate()
+	_check("Auswahlliste ist länger als das Fenster", main.get_node("%Popup").content.size.y > popup_scroll.size.y, true)
+	await _swipe(popup_rows[5].get_child(1).get_global_rect().get_center())
+	_check("Wischen scrollt die Auswahlliste", popup_scroll.scroll_vertical > 150, true)
+	_check("Beim Wischen wird kein Schalter umgelegt", Game.bar_selection, selection_before)
+	main.get_node("%Popup").hide()
 	Input.emulate_touch_from_mouse = false
 
 
