@@ -72,7 +72,7 @@ Wird Punkt für Punkt abgearbeitet: Nach jedem Punkt testet der Nutzer und gibt 
 - [x] Zahlenformat als Einstellung (kurz: 12.345 / 1,23 Mio, oder wissenschaftlich: 1.23e6; kurz ist Standard)
 - [x] Bevölkerungs-Knopf erklärt, wofür Bevölkerung gebraucht wird (Beschriftung, Hinweis beim ersten Gebäude mit Bedarf, „3 frei von 9“ im Reiter)
 - [x] Handy-Ränder (Notch, runde Ecken) – eingebaut und mit simulierten Rändern geprüft; am echten Handy noch zu testen
-- [ ] Ruhigerer Hintergrund
+- [x] Ruhigerer Hintergrund (untere Hälfte abgedunkelt, Flächen deckender; das Hintergrundbild selbst ist unverändert)
 - [ ] Solarpanel samt Rezept für verstärktes Glas
 - [ ] Auto bei Rezepten als Upgrade
 - [ ] Mehr Verwendung für Strom und Goldbarren

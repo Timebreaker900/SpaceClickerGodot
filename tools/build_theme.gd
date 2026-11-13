@@ -10,7 +10,7 @@ const TEXT := Color("e8f4ff")
 const TEXT_MUTED := Color("8fb2d6")
 const TEXT_DARK := Color("04121f")
 const ACCENT := Color("3fd0ff")
-const PANEL := Color(0.04, 0.07, 0.15, 0.84)
+const PANEL := Color(0.05, 0.09, 0.19, 0.93)
 const PANEL_BORDER := Color(0.25, 0.82, 1.0, 0.30)
 const BUTTON := Color(0.08, 0.19, 0.34, 0.95)
 const BUTTON_HOVER := Color(0.11, 0.27, 0.46, 0.98)
@@ -38,7 +38,7 @@ func _init() -> void:
 
 	# Große Fläche hinter den Reitern: dunkler und ruhiger als die Zeilen darauf.
 	theme.set_type_variation("SheetPanel", "PanelContainer")
-	theme.set_stylebox("panel", "SheetPanel", _box(Color(0.02, 0.04, 0.10, 0.72), Color(ACCENT, 0.18), 2, 30))
+	theme.set_stylebox("panel", "SheetPanel", _box(Color(0.02, 0.04, 0.10, 0.80), Color(ACCENT, 0.18), 2, 30))
 
 	# Kleine, unauffällige Knöpfe (z. B. Untermenü auf- und zuklappen)
 	theme.set_type_variation("LinkButton2", "Button")
