@@ -17,8 +17,8 @@ Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Abschnitte mit �
 - Gebäude in dieser Reihenfolge (Werte in `data/buildings.json`):
   1. Farm – Nahrung
   2. Holzfäller – Holz
-  3. Mine – Stein, darunter der Bergbau: Kohle ab Mine Lv 2, dann Kupfer, Eisen, Gold
-  4. Markt – 1 Coin pro Sekunde, die erste Coin-Quelle ohne Klicken
+  3. Markt – 1 Coin pro Sekunde, die erste Coin-Quelle ohne Klicken; kostet Coins und Holz
+  4. Mine – Stein, darunter der Bergbau: Kohle ab Mine Lv 2, dann Kupfer, Eisen, Gold
   5. Sandmine – Sand
   6. Schmelze – schaltet Schmelz-Rezepte frei; braucht Kohle statt Strom
   7. Wassermühle – Strom, zuerst für die Fabrik

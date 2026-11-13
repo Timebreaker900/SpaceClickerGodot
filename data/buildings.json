@@ -28,6 +28,15 @@
 		"produces": { "wood": 1 }
 	},
 	{
+		"id": "market",
+		"name": "Markt",
+		"icon": "res://assets/buildings/market.svg",
+		"cost": { "coins": 80, "wood": 40 },
+		"growth": 1.15,
+		"reserves": { "population": 1 },
+		"produces": { "coins": 1 }
+	},
+	{
 		"id": "mine",
 		"name": "Mine",
 		"icon": "res://assets/buildings/mine.svg",
@@ -80,15 +89,6 @@
 		"cost": { "food": 400, "wood": 400, "stone": 400 },
 		"growth": 1.15,
 		"produces": { "gold_ore": 0.2 }
-	},
-	{
-		"id": "market",
-		"name": "Markt",
-		"icon": "res://assets/buildings/market.svg",
-		"cost": { "coins": 80, "stone": 40 },
-		"growth": 1.15,
-		"reserves": { "population": 1 },
-		"produces": { "coins": 1 }
 	},
 	{
 		"id": "sandmine",
