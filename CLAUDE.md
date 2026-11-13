@@ -25,5 +25,8 @@ Ziel: Handy (Android, iOS) im Hochformat mit Monetarisierung, später Steam als 
 - Datengetrieben: ein generisches Skript pro Art (Gebäude, Upgrade, Rezept), Inhalte kommen aus `data/`. Kein Skript pro Gebäude.
 - GDScript, kein C#.
 - Ein System pro Schritt, ein Commit pro System, dazu eine kurze Erklärung, was gebaut wurde und warum – der Nutzer will mitlernen.
+- Nach jeder Änderung am Spiel das Debug-Fenster neu starten: `pwsh tools/restart_game.ps1`. Das Skript schließt das Fenster normal, damit der Spielstand gespeichert wird – der Nutzer spielt nebenbei. Nie den Prozess abschießen und nie `user://save.json` anfassen; Tests laufen mit eigener Speicherdatei.
+- Aussehen der Oberfläche steht in `tools/build_theme.gd`, das `ui/theme.tres` erzeugt. Nicht `theme.tres` von Hand ändern.
+- Vor dem Commit: `godot_console --headless --path . res://tests/smoke.tscn` muss „ALLE TESTS OK“ melden.
 - Vorhandene Icons aus dem Unity-Projekt wiederverwenden (`SpaceClicker/Assets/Sprites`). Neue Icons im selben flachen Vektorstil.
 - Antworten auf Deutsch.
