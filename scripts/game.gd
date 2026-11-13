@@ -94,6 +94,7 @@ func _ready() -> void:
 		levels[building["id"]] = 0
 	for recipe: Dictionary in recipes:
 		recipe_state[recipe["id"]] = _new_recipe_state()
+	_set_recipe_building_caps()
 	_expand_upgrade_series(_load_json("res://data/upgrade_series.json"))  # braucht die Gebäude von oben
 	for upgrade: Dictionary in upgrades:
 		bought[upgrade["id"]] = false
@@ -244,6 +245,21 @@ func upgrade_visibility(upgrade: Dictionary) -> String:
 		if levels[id] == 0:
 			return "hidden"
 	return "mystery"
+
+
+## Gebäude mit Rezepten lassen sich noch ein Stück über ihre letzte Freischaltung
+## hinaus ausbauen, damit auch das letzte Rezept größere Durchgänge bekommt:
+## Höchstlevel = höchstes "requires_level" + "levels_after_last_recipe".
+## Kommt später ein Rezept dazu, wandert die Grenze von selbst mit.
+func _set_recipe_building_caps() -> void:
+	for building: Dictionary in buildings:
+		if not building.has("levels_after_last_recipe"):
+			continue
+		var last_unlock: int = 0
+		for recipe: Dictionary in recipes:
+			if recipe["building"] == building["id"]:
+				last_unlock = maxi(last_unlock, int(recipe.get("requires_level", 1)))
+		building["max_level"] = last_unlock + int(building["levels_after_last_recipe"])
 
 
 ## Hat das Gebäude sein Höchstlevel erreicht? Dann gibt es nichts mehr zu kaufen.

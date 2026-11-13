@@ -135,11 +135,16 @@ func _ready() -> void:
 	_check("Vor Ablauf noch kein Barren", Game.amounts["copper_bar"], 0.0)
 	Game._advance_recipe(copper_bar, 0.2)
 	_check("Nach Ablauf 1 Barren", Game.amounts["copper_bar"], 1.0)
-	_check("Höchstlevel: Fabrik 10, Schmelze 15", [_building("factory")["max_level"], _building("smeltery")["max_level"]], [10.0, 15.0])
+	_check("Höchstlevel = letzte Freischaltung + 5: Fabrik 15, Schmelze 20", [_building("factory")["max_level"], _building("smeltery")["max_level"]], [15, 20])
 	Game.levels["factory"] = 5
 	_check("Fabrik Lv 5: Kupferkabel ja, Eisenplatte nein", [Game.recipe_batch(_recipe("copper_cable")), Game.recipe_batch(_recipe("iron_plate"))], [1, 0])
 	Game.levels["factory"] = 10
-	_check("Fabrik Lv 10: Eisenplatte da, Fabrik fertig", [Game.recipe_batch(_recipe("iron_plate")), Game.is_maxed(_building("factory"))], [1, true])
+	_check("Fabrik Lv 10: Eisenplatte da, Fabrik noch nicht fertig", [Game.recipe_batch(_recipe("iron_plate")), Game.is_maxed(_building("factory"))], [1, false])
+	Game.levels["factory"] = 15
+	_check("Fabrik Lv 15: Eisenplatte mit Menge 6, Fabrik fertig", [Game.recipe_batch(_recipe("iron_plate")), Game.is_maxed(_building("factory")), Game.can_buy(_building("factory"), 1)], [6, true, false])
+	Game.levels["smeltery"] = 20
+	_check("Schmelze Lv 20: Goldbarren mit Menge 6", Game.recipe_batch(_recipe("gold_bar")), 6)
+	Game.levels["smeltery"] = 5
 	Game.levels["factory"] = 0
 	Game.amounts["copper_ore"] = 4.0
 	Game.set_recipe_auto(copper_bar, true)

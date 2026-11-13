@@ -103,7 +103,7 @@
 		"cost": { "coins": 100, "stone": 150 },
 		"growth": 1.15,
 		"reserves": { "population": 1, "electricity": 1 },
-		"max_level": 15,
+		"levels_after_last_recipe": 5,
 		"note": "Jedes Level: +1 Menge bei allen Schmelz-Rezepten",
 		"recipes_label": "Schmelzen"
 	},
@@ -115,7 +115,7 @@
 		"cost_per_level": { "glass": 1 },
 		"growth": 1.15,
 		"reserves": { "population": 2, "electricity": 3 },
-		"max_level": 10,
+		"levels_after_last_recipe": 5,
 		"note": "Jedes Level: +1 Menge bei allen Fabrik-Rezepten",
 		"recipes_label": "Herstellen"
 	},
