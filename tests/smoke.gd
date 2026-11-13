@@ -71,6 +71,14 @@ func _ready() -> void:
 	Game.amounts["coins"] = saved_coins
 	Game.amounts["wood"] = saved_wood
 
+	# Reihenfolge der Gebäude in der Liste
+	var order: Array = []
+	for building: Dictionary in Game.buildings:
+		if not building.has("parent") and building.get("placement", "list") == "list":
+			order.append(building["id"])
+	_check("Gebäude-Reihenfolge", order, ["farm", "lumberjack", "mine", "market", "watermill", "sandmine", "smeltery", "factory", "solarpanel", "bank", "sawmill"])
+	_check("Markt liefert 1 Coin, Sägewerk mehr Holz als der Holzfäller", [_building("market")["produces"]["coins"], _building("sawmill")["produces"]["wood"] > _building("lumberjack")["produces"]["wood"]], [1.0, true])
+
 	# Bevölkerung: kostet Nahrung und laufenden Verbrauch
 	Game.amounts["food"] = 250.0
 	_check("Bevölkerung nicht leistbar bei +1/s", Game.can_buy(housing, 1), false)
@@ -306,7 +314,7 @@ func _ready() -> void:
 
 	# Für Bildschirmfotos: ein fortgeschrittener Spielstand
 	if OS.get_cmdline_user_args().has("--demo"):
-		Game.levels.merge({ "farm": 12, "housing": 14, "lumberjack": 4, "mine": 6, "watermill": 6, "bank": 1, "sandmine": 2, "smeltery": 10, "factory": 5, "copper_mining": 6, "iron_mining": 2 }, true)
+		Game.levels.merge({ "farm": 12, "housing": 14, "lumberjack": 4, "mine": 6, "market": 3, "watermill": 6, "sandmine": 2, "smeltery": 10, "factory": 5, "solarpanel": 1, "bank": 1, "copper_mining": 6, "iron_mining": 2 }, true)
 		Game.amounts.merge({ "coins": 4820.0, "wood": 1310.0, "food": 960.0, "stone": 455.0, "sand": 88.0, "copper_ore": 37.0, "iron_ore": 3.0, "copper_bar": 61.0, "iron_bar": 12.0 }, true)
 		Game.recipe_state["copper_bar"].merge({ "auto_unlocked": true, "auto": true, "speed": 1 }, true)
 		Game.click_counts["coins"] = 140

@@ -7,9 +7,12 @@
 		{ "building": "farm", "name": "Farm-Upgrade" },
 		{ "building": "lumberjack", "name": "Holzfäller-Upgrade" },
 		{ "building": "mine", "name": "Minen-Upgrade" },
+		{ "building": "market", "name": "Markt-Upgrade" },
 		{ "building": "watermill", "name": "Wassermühlen-Upgrade" },
+		{ "building": "sandmine", "name": "Sandminen-Upgrade" },
+		{ "building": "solarpanel", "name": "Solarpanel-Upgrade" },
 		{ "building": "bank", "name": "Bank-Upgrade" },
-		{ "building": "sandmine", "name": "Sandminen-Upgrade" }
+		{ "building": "sawmill", "name": "Sägewerk-Upgrade" }
 	],
 	"clicks": {
 		"every_clicks": 250,

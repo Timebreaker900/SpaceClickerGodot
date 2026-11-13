@@ -14,7 +14,19 @@ Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Abschnitte mit �
 ## Bestätigt für die Erde
 
 - Klicken gibt Coins oder Holz. Beide haben unterschiedliche Verwendungszwecke.
-- Alle Gebäude aus dem alten Stand bleiben (Liste unter „Gebäude Erde“).
+- Gebäude in dieser Reihenfolge (Werte in `data/buildings.json`):
+  1. Farm – Nahrung
+  2. Holzfäller – Holz
+  3. Mine – Stein, darunter der Erzabbau
+  4. Markt – 1 Coin pro Sekunde, die erste Coin-Quelle ohne Klicken
+  5. Wassermühle – Strom
+  6. Sandmine – Sand
+  7. Schmelze – schaltet Schmelz-Rezepte frei
+  8. Fabrik – schaltet Fabrik-Rezepte frei
+  9. Solarpanel – Strom; kostet Coins, Kupferkabel und Eisenplatten
+  10. Bank – 2 Coins pro Sekunde; teuer, kostet Coins, Stein und Eisenplatten, belegt Bevölkerung und Strom
+  11. Sägewerk – mehr Holz als der Holzfäller
+- Verstärktes Glas entfällt: Das Solarpanel braucht es nicht mehr.
 - Es gibt eine eigene Sicht, die alle Währungen auf einmal zeigt.
 
 ## Umgesetzt in Godot
@@ -74,7 +86,7 @@ Wird Punkt für Punkt abgearbeitet: Nach jedem Punkt testet der Nutzer und gibt 
 - [x] Bevölkerungs-Knopf erklärt, wofür Bevölkerung gebraucht wird (Beschriftung, Hinweis beim ersten Gebäude mit Bedarf, „3 frei von 9“ im Reiter)
 - [x] Handy-Ränder (Notch, runde Ecken) – eingebaut und mit simulierten Rändern geprüft; am echten Handy noch zu testen
 - [x] Ruhigerer Hintergrund (untere Hälfte abgedunkelt, Flächen deckender; das Hintergrundbild selbst ist unverändert)
-- [ ] Solarpanel samt Rezept für verstärktes Glas
+- [x] Solarpanel (kostet Coins, Kupferkabel, Eisenplatten; verstärktes Glas entfällt)
 - [x] Auto bei Rezepten als Upgrade (100 vom eigenen Erzeugnis)
 - [x] Erzabbau darf das Level der Mine nie übersteigen
 - [x] Rezept-Upgrades, bezahlt mit dem eigenen Erzeugnis: „Schneller“ (je Stufe −1 s, mindestens 1 s) und „Mehr“ (je Stufe +1 Menge, also Zutaten und Ergebnis um den Grundwert); Preis 25, 50, 75 …
@@ -165,7 +177,6 @@ Verstärktes Glas wird vom Solarpanel verlangt, hat aber kein Rezept.
 
 ## Offene Fragen
 
-- Solarpanel: Es verlangt verstärktes Glas, für das es kein Rezept gibt. Woraus wird es hergestellt?
 - Wofür werden Goldbarren und Glas gebraucht?
 - Was ist das ultimative Ziel? Gibt es Prestige?
 - Was heißt „futuristisch“ konkret: nur das Aussehen der Oberfläche, oder auch Inhalte (spätere Gebäude, Technologien)? Die Erde beginnt mit Farm und Holzfäller.

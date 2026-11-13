@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="256" height="256">
+<ellipse cx="64" cy="114" rx="56" ry="7" fill="#000" opacity=".28"/>
+<!-- Sägeblatt hinter dem Tisch -->
+<g fill="#aab5c2">
+  <path d="M64 22l6 10h-12zM64 22l6 10h-12z" transform="rotate(0 64 62)"/>
+  <path d="M64 22l6 10h-12z" transform="rotate(30 64 62)"/>
+  <path d="M64 22l6 10h-12z" transform="rotate(60 64 62)"/>
+  <path d="M64 22l6 10h-12z" transform="rotate(90 64 62)"/>
+  <path d="M64 22l6 10h-12z" transform="rotate(-30 64 62)"/>
+  <path d="M64 22l6 10h-12z" transform="rotate(-60 64 62)"/>
+  <path d="M64 22l6 10h-12z" transform="rotate(-90 64 62)"/>
+</g>
+<circle cx="64" cy="62" r="32" fill="#c3ccd6"/>
+<path d="M64 30a32 32 0 0 1 0 64z" fill="#9aa7b5"/>
+<circle cx="64" cy="62" r="20" fill="none" stroke="#7d8ea3" stroke-width="2.500"/>
+<circle cx="64" cy="62" r="7" fill="#4c5a6b"/>
+<circle cx="64" cy="62" r="3" fill="#3fd0ff"/>
+<!-- Stamm auf dem Tisch -->
+<rect x="8" y="60" width="78" height="24" rx="12" fill="#8a5a33"/>
+<rect x="8" y="72" width="78" height="12" rx="6" fill="#6b4226"/>
+<ellipse cx="86" cy="72" rx="7" ry="12" fill="#ecd8ae"/>
+<ellipse cx="86" cy="72" rx="3.500" ry="6" fill="none" stroke="#c9a66b" stroke-width="2"/>
+<!-- Bretter -->
+<rect x="94" y="66" width="28" height="6" rx="1.500" fill="#ecd8ae"/>
+<rect x="96" y="73" width="28" height="6" rx="1.500" fill="#e2c996"/>
+<rect x="93" y="80" width="28" height="6" rx="1.500" fill="#ecd8ae"/>
+<!-- Tisch -->
+<rect x="4" y="84" width="120" height="10" rx="2" fill="#7d8ea3"/>
+<rect x="4" y="84" width="120" height="4" rx="2" fill="#9fb0c4"/>
+<rect x="14" y="94" width="9" height="20" fill="#4c5a6b"/>
+<rect x="105" y="94" width="9" height="20" fill="#4c5a6b"/>
+</svg>

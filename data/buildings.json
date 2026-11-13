@@ -38,32 +38,6 @@
 		"children_label": "Erzabbau"
 	},
 	{
-		"id": "watermill",
-		"name": "Wassermühle",
-		"icon": "res://assets/buildings/watermill.svg",
-		"cost": { "coins": 100, "wood": 100 },
-		"growth": 1.15,
-		"provides": { "electricity": 1 }
-	},
-	{
-		"id": "bank",
-		"name": "Bank",
-		"icon": "res://assets/buildings/bank.svg",
-		"cost": { "coins": 125, "stone": 125 },
-		"growth": 1.15,
-		"reserves": { "population": 2, "electricity": 2 },
-		"produces": { "coins": 2 }
-	},
-	{
-		"id": "sandmine",
-		"name": "Sandmine",
-		"icon": "res://assets/buildings/sandmine.svg",
-		"cost": { "coins": 60 },
-		"growth": 1.15,
-		"reserves": { "population": 1 },
-		"produces": { "sand": 1 }
-	},
-	{
 		"id": "copper_mining",
 		"parent": "mine",
 		"level_cap": "mine",
@@ -97,6 +71,32 @@
 		"produces": { "gold_ore": 0.2 }
 	},
 	{
+		"id": "market",
+		"name": "Markt",
+		"icon": "res://assets/buildings/market.svg",
+		"cost": { "coins": 80, "stone": 40 },
+		"growth": 1.15,
+		"reserves": { "population": 1 },
+		"produces": { "coins": 1 }
+	},
+	{
+		"id": "watermill",
+		"name": "Wassermühle",
+		"icon": "res://assets/buildings/watermill.svg",
+		"cost": { "coins": 100, "wood": 100 },
+		"growth": 1.15,
+		"provides": { "electricity": 1 }
+	},
+	{
+		"id": "sandmine",
+		"name": "Sandmine",
+		"icon": "res://assets/buildings/sandmine.svg",
+		"cost": { "coins": 60 },
+		"growth": 1.15,
+		"reserves": { "population": 1 },
+		"produces": { "sand": 1 }
+	},
+	{
 		"id": "smeltery",
 		"name": "Schmelze",
 		"icon": "res://assets/buildings/smeltery.svg",
@@ -115,5 +115,31 @@
 		"reserves": { "population": 2, "electricity": 3 },
 		"max_level": 10,
 		"recipes_label": "Herstellen"
+	},
+	{
+		"id": "solarpanel",
+		"name": "Solarpanel",
+		"icon": "res://assets/buildings/solarpanel.svg",
+		"cost": { "coins": 1500, "copper_cable": 4, "iron_plate": 3 },
+		"growth": 1.15,
+		"provides": { "electricity": 2 }
+	},
+	{
+		"id": "bank",
+		"name": "Bank",
+		"icon": "res://assets/buildings/bank.svg",
+		"cost": { "coins": 4000, "stone": 2000, "iron_plate": 5 },
+		"growth": 1.15,
+		"reserves": { "population": 2, "electricity": 2 },
+		"produces": { "coins": 2 }
+	},
+	{
+		"id": "sawmill",
+		"name": "Sägewerk",
+		"icon": "res://assets/buildings/sawmill.svg",
+		"cost": { "coins": 2500, "wood": 1500, "iron_plate": 2 },
+		"growth": 1.15,
+		"reserves": { "population": 2, "electricity": 2 },
+		"produces": { "wood": 5 }
 	}
 ]

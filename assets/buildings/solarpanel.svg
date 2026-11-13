@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="256" height="256">
+<ellipse cx="64" cy="114" rx="54" ry="7" fill="#000" opacity=".28"/>
+<!-- Ständer -->
+<path d="M64 74v38" stroke="#4c5a6b" stroke-width="9" stroke-linecap="round"/>
+<path d="M64 74v38" stroke="#7d8ea3" stroke-width="4" stroke-linecap="round"/>
+<rect x="44" y="106" width="40" height="8" rx="3" fill="#4c5a6b"/>
+<!-- Paneel, schräg von vorne -->
+<path d="M14 78 34 26h80L94 78z" fill="#c3ccd6"/>
+<path d="M20 74 37 30h71L91 74z" fill="#16407a"/>
+<path d="M37 30h71l-6 14H31.600z" fill="#1f5fb0"/>
+<path d="M31.600 44H102l-6 15H25.800z" fill="#1a4f96"/>
+<g stroke="#3fd0ff" stroke-width="2" opacity=".85">
+  <path d="M31.600 44H102M25.800 59H96"/>
+  <path d="M54.750 30 37.750 74M72.500 30 55.500 74M90.250 30 73.250 74"/>
+</g>
+<path d="M40 33h18l-4 9H36.500z" fill="#fff" opacity=".28"/>
+<!-- Sonne -->
+<circle cx="108" cy="18" r="9" fill="#ffd93b"/>
+<g stroke="#ffd93b" stroke-width="3" stroke-linecap="round"><path d="M108 3v4M123 18h-4M118.600 7.400l-2.800 2.800M97.400 7.400l2.800 2.800"/></g>
+</svg>
