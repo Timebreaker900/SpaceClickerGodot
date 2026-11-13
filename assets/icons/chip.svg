@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+<!-- Beinchen -->
+<g fill="#f5c542">
+  <rect x="38" y="10" width="8" height="22" rx="2"/><rect x="60" y="10" width="8" height="22" rx="2"/><rect x="82" y="10" width="8" height="22" rx="2"/>
+  <rect x="38" y="96" width="8" height="22" rx="2"/><rect x="60" y="96" width="8" height="22" rx="2"/><rect x="82" y="96" width="8" height="22" rx="2"/>
+  <rect x="10" y="38" width="22" height="8" rx="2"/><rect x="10" y="60" width="22" height="8" rx="2"/><rect x="10" y="82" width="22" height="8" rx="2"/>
+</g>
+<g fill="#d99a1c">
+  <rect x="96" y="38" width="22" height="8" rx="2"/><rect x="96" y="60" width="22" height="8" rx="2"/><rect x="96" y="82" width="22" height="8" rx="2"/>
+</g>
+<!-- Gehäuse -->
+<rect x="26" y="26" width="76" height="76" rx="8" fill="#4c5a6b"/>
+<path d="M64 26h30a8 8 0 0 1 8 8v60a8 8 0 0 1-8 8H64z" fill="#2f3945"/>
+<!-- Kern -->
+<rect x="44" y="44" width="40" height="40" rx="4" fill="#3fd0ff"/>
+<path d="M64 44h16a4 4 0 0 1 4 4v32a4 4 0 0 1-4 4H64z" fill="#1ea7d8"/>
+<path d="M48 48h14L48 62z" fill="#bff0ff" opacity=".8"/>
+<circle cx="35" cy="35" r="3" fill="#9fb0c4"/>
+</svg>

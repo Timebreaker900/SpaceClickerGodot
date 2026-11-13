@@ -68,8 +68,8 @@ Abweichungen vom alten Stand:
 - Menge pro Durchgang: 1 beim Freischalten, +1 je weiterem Level von Schmelze bzw. Fabrik, +1 je Mengen-Upgrade des Rezepts. Größere Menge heißt mehr Zutaten und mehr Ergebnis bei gleicher Dauer.
 - Das Level der Schmelze schaltet die Schmelz-Rezepte frei: ab Lv 1 Glas, ab Lv 5 Kupferbarren, ab Lv 10 Eisenbarren, ab Lv 15 Goldbarren, ab Lv 20 Stahl (Eisenbarren und Kohle), ab Lv 25 Titanbarren (Titanerz und Kohle). Glas steht in der Produktionsliste ganz oben.
 - Kohle ist der Brennstoff der Schmelze: Jeder Schmelz-Durchgang verbraucht Kohle als zusätzliche Zutat (Glas und Kupferbarren 1, Eisen- und Goldbarren 2, mal Menge). Die Schmelze belegt dafür keinen Strom.
-- Die Fabrik ist genauso gestaffelt: ab Lv 5 Kupferkabel, ab Lv 10 Eisenplatte.
-- Höchstlevel von Schmelze und Fabrik: immer 5 Level über der letzten Freischaltung (Schmelze 30, Fabrik 15), damit auch das letzte Rezept noch größere Durchgänge bekommt.
+- Die Fabrik ist genauso gestaffelt: ab Lv 5 Kupferkabel, ab Lv 10 Eisenplatte, ab Lv 15 Chips (Goldbarren und Kupferkabel; für die Steuerung der Rakete).
+- Höchstlevel von Schmelze und Fabrik: immer 5 Level über der letzten Freischaltung (Schmelze 30, Fabrik 20), damit auch das letzte Rezept noch größere Durchgänge bekommt.
 - Die Fabrik kostet zusätzlich Glas: das erste Level 1, jedes weitere eines mehr (bis Lv 10 zusammen 55).
 
 Vorschlagswerte, weil die alten nur im Unity-Editor standen: Kosten und Ertrag der Sandmine, Kosten und Freischalt-Level des Erzabbaus (Mine Lv 5 / 10 / 20), Mengen und Zeiten aller Rezepte. Die Erz-Raten 0,8 / 0,5 / 0,2 pro Sekunde stammen aus dem alten Code.
@@ -206,7 +206,7 @@ Geplante Kette nach der Bank: Forschungslabor → Titanabbau → Ölpumpe → Ra
 Offen:
 
 - Stahl und Titan gibt es beide (vom Nutzer bestätigt). Wofür sie gebraucht werden, kommt mit Ölpumpe und Rakete.
-- Bleiben Chips (Goldbarren plus Kupferkabel) für die Steuerung?
+- Chips bleiben (vom Nutzer bestätigt) und sind gebaut.
 - Startet der Mond bei null, bis der Lift steht, oder gelten die Erd-Ressourcen dort sofort?
 - Was bietet der Mond überhaupt (Gebäude, Ressourcen)?
 

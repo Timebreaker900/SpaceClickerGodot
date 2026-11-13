@@ -77,6 +77,7 @@ func _ready() -> void:
 		if not building.has("parent") and building.get("placement", "list") == "list":
 			order.append(building["id"])
 	_check("Gebäude-Reihenfolge", order, ["farm", "lumberjack", "market", "mine", "smeltery", "watermill", "factory", "greenhouse", "solarpanel", "sawmill", "bank", "lab", "oil_pump", "refinery"])
+	_check("Chips in der Fabrik ab Lv 15 aus Goldbarren und Kupferkabel", [_recipe("chip")["building"], _recipe("chip")["requires_level"], _recipe("chip")["input"].keys()], ["factory", 15.0, ["gold_bar", "copper_cable"]])
 	_check("Ölpumpe und Raffinerie belegen Forschung; Treibstoff kommt aus der Raffinerie", [_building("oil_pump")["reserves"]["research"], _building("refinery")["reserves"]["research"], _recipe("fuel")["building"], _building("refinery")["max_level"]], [2.0, 2.0, "refinery", 6])
 	_check("Titanabbau ab Mine Lv 30 und Labor Lv 1; Stahl ab Schmelze 20, Titanbarren ab 25", [_building("titanium_mining")["requires"]["mine"], _building("titanium_mining")["requires"]["lab"], _recipe("steel")["requires_level"], _recipe("titanium_bar")["requires_level"]], [30.0, 1.0, 20.0, 25.0])
 	_check("Forschungslabor stellt Forschung bereit (statisch wie Strom)", [_building("lab")["provides"]["research"], Game.resource_def("research")["type"]], [1.0, "capacity"])
@@ -143,13 +144,13 @@ func _ready() -> void:
 	_check("Vor Ablauf noch kein Barren", Game.amounts["copper_bar"], 0.0)
 	Game._advance_recipe(copper_bar, 0.2)
 	_check("Nach Ablauf 1 Barren", Game.amounts["copper_bar"], 1.0)
-	_check("Höchstlevel = letzte Freischaltung + 5: Fabrik 15, Schmelze 30", [_building("factory")["max_level"], _building("smeltery")["max_level"]], [15, 30])
+	_check("Höchstlevel = letzte Freischaltung + 5: Fabrik 20, Schmelze 30", [_building("factory")["max_level"], _building("smeltery")["max_level"]], [20, 30])
 	Game.levels["factory"] = 5
 	_check("Fabrik Lv 5: Kupferkabel ja, Eisenplatte nein", [Game.recipe_batch(_recipe("copper_cable")), Game.recipe_batch(_recipe("iron_plate"))], [1, 0])
 	Game.levels["factory"] = 10
 	_check("Fabrik Lv 10: Eisenplatte da, Fabrik noch nicht fertig", [Game.recipe_batch(_recipe("iron_plate")), Game.is_maxed(_building("factory"))], [1, false])
-	Game.levels["factory"] = 15
-	_check("Fabrik Lv 15: Eisenplatte mit Menge 6, Fabrik fertig", [Game.recipe_batch(_recipe("iron_plate")), Game.is_maxed(_building("factory")), Game.can_buy(_building("factory"), 1)], [6, true, false])
+	Game.levels["factory"] = 20
+	_check("Fabrik Lv 20: Eisenplatte mit Menge 11, Chips mit Menge 6, Fabrik fertig", [Game.recipe_batch(_recipe("iron_plate")), Game.recipe_batch(_recipe("chip")), Game.is_maxed(_building("factory")), Game.can_buy(_building("factory"), 1)], [11, 6, true, false])
 	Game.levels["smeltery"] = 20
 	_check("Schmelze Lv 20: Goldbarren mit Menge 6", Game.recipe_batch(_recipe("gold_bar")), 6)
 	Game.levels["smeltery"] = 5

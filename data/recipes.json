@@ -79,6 +79,16 @@
 		"seconds": 6
 	},
 	{
+		"id": "chip",
+		"requires_level": 15,
+		"name": "Chip",
+		"icon": "res://assets/icons/chip.svg",
+		"building": "factory",
+		"input": { "gold_bar": 1, "copper_cable": 2 },
+		"output": { "chip": 1 },
+		"seconds": 10
+	},
+	{
 		"id": "fuel",
 		"name": "Treibstoff",
 		"icon": "res://assets/icons/fuel.svg",
