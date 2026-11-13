@@ -110,6 +110,7 @@ func _ready() -> void:
 			Sfx.play("buy")
 			Ui.pop(pop_button, 1.12))
 	buy_amount_button.pressed.connect(_on_buy_amount_pressed)
+	buy_amount_button.text = tr("Kaufen: Max") if Game.buy_max else tr("Kaufen: %d") % Game.buy_amount
 	settings_button.pressed.connect(_open_settings)
 	resources_button.pressed.connect(_open_bar_picker)
 	_set_click_target(Game.click_target)
@@ -125,6 +126,7 @@ func _ready() -> void:
 	# Abwesenheit: beim Start steht der Bericht schon bereit, bei der Rückkehr in
 	# die App (Handy) kommt er über das Signal.
 	offline_close.pressed.connect(func() -> void: offline_popup.visible = false)
+	Ui.close_on_outside_tap(offline_popup, offline_popup.get_node("Center"), offline_popup.get_node("Center/Panel"))
 	Game.offline_applied.connect(_show_offline_report)
 	if not Game.offline_report.is_empty():
 		_show_offline_report(Game.offline_report)
@@ -133,7 +135,7 @@ func _ready() -> void:
 ## Übersicht ganz oben im Reiter "Upgrades": was die gekauften Upgrades gerade
 ## bewirken (Stärke pro Klick, Abwesenheit). Die Zahlen füllt _update_stats().
 func _build_stats() -> void:
-	upgrade_list.add_child(_heading("Aktuell"))
+	upgrade_list.add_child(_heading(tr("Aktuell")))
 	var panel := PanelContainer.new()
 	var margin := MarginContainer.new()
 	for side: String in ["left", "right"]:
@@ -164,11 +166,11 @@ func _add_stat_line(parent: Container, icon_path: String) -> Label:
 
 func _update_stats() -> void:
 	for id: String in Game.settings["click"]:
-		_stat_labels["click_" + id].text = "%s pro Klick: %s" % [Game.resource_def(id)["name"], Game.fmt(Game.click_gain(id))]
+		_stat_labels["click_" + id].text = tr("%s pro Klick: %s") % [Game.resource_def(id)["name"], Game.fmt(Game.click_gain(id))]
 	if Game.offline_hours() <= 0.0 or Game.offline_percent() <= 0.0:
-		_stat_labels["offline"].text = "Abwesenheit: noch nicht freigeschaltet"
+		_stat_labels["offline"].text = tr("Abwesenheit: noch nicht freigeschaltet")
 	else:
-		_stat_labels["offline"].text = "Abwesenheit: bis %s h, %s %% Ertrag" % [Game.fmt(Game.offline_hours()), Game.fmt(Game.offline_percent())]
+		_stat_labels["offline"].text = tr("Abwesenheit: bis %s h, %s %% Ertrag") % [Game.fmt(Game.offline_hours()), Game.fmt(Game.offline_percent())]
 
 
 ## Legt die Gebäudezeilen an. Drei Fälle, gesteuert über data/buildings.json:
@@ -280,12 +282,12 @@ func _hint_text() -> String:
 		var capacity_hint: String = _capacity_hint()
 		return capacity_hint if capacity_hint != "" else _fuel_hint()
 	if Game.can_buy(first, 1):
-		return "Kaufe unten: %s" % first["name"]
+		return tr("Kaufe unten: %s") % first["name"]
 	var total_clicks: int = 0
 	for id: String in Game.click_counts:
 		total_clicks += Game.click_counts[id]
 	if total_clicks == 0:
-		return "Tippe auf den Planeten"
+		return tr("Tippe auf den Planeten")
 	# Wovon ist schon genug da, wovon fehlt noch? Der Hinweis kommt nur, wenn
 	# gerade das Falsche geklickt wird.
 	var cost: Dictionary = Game.cost_for(first, 1)
@@ -293,7 +295,7 @@ func _hint_text() -> String:
 	if cost.has(target) and Game.amounts[target] >= float(cost[target]):
 		for id: String in cost:
 			if id != target and Game.amounts[id] < float(cost[id]):
-				return "Genug %s. Schalte links um auf %s" % [Game.resource_def(target)["name"], Game.resource_def(id)["name"]]
+				return tr("Genug %s. Schalte links um auf %s") % [Game.resource_def(target)["name"], Game.resource_def(id)["name"]]
 	return ""
 
 
@@ -309,7 +311,7 @@ func _capacity_hint() -> String:
 			if building.get("reserves", {}).has(capacity_id) and Game.building_visibility(building) == "known":
 				var cost: Dictionary = _planet_building.get("cost", {})
 				var paid_with: String = Game.resource_def(cost.keys()[0])["name"] if not cost.is_empty() else ""
-				return "%s braucht %s. Kaufe sie rechts mit %s" % [
+				return tr("%s braucht %s. Kaufe sie rechts mit %s") % [
 					building["name"], Game.resource_def(capacity_id)["name"], paid_with]
 	return ""
 
@@ -329,8 +331,8 @@ func _fuel_hint() -> String:
 					var where: String = building["name"]
 					if building.has("parent"):
 						var parent: Dictionary = Game.building_def(building["parent"])
-						where = "%s unter %s" % [parent.get("children_label", ""), parent["name"]]
-					return "%s braucht %s: %s" % [Game.building_def(recipe["building"])["name"], Game.resource_def(id)["name"], where]
+						where = tr("%s unter %s") % [parent.get("children_label", ""), parent["name"]]
+					return tr("%s braucht %s: %s") % [Game.building_def(recipe["building"])["name"], Game.resource_def(id)["name"], where]
 	return ""
 
 
@@ -352,7 +354,7 @@ func _update_resource_views(rates: Dictionary) -> void:
 		if seen and not _seen_before.get(id, false):
 			# Gerade entdeckt: Einblendung, und der Eintrag in der Leiste hüpft.
 			_seen_before[id] = true
-			_show_toast(res["icon"], "Entdeckt: %s" % res["name"])
+			_show_toast(res["icon"], tr("Entdeckt: %s") % res["name"])
 			Sfx.play("discover")
 			if bar_entry["node"].visible:
 				Ui.pop.call_deferred(bar_entry["node"], 1.4)
@@ -387,7 +389,7 @@ func _update_population_button(rates: Dictionary) -> void:
 ## Versorgung: in der Leiste knapp "3 / 9", im Reiter ausgeschrieben "3 frei von 9".
 func _resource_text(id: String, rates: Dictionary, with_rate: bool) -> String:
 	if Game.resource_def(id)["type"] == "capacity":
-		var pattern: String = "%s frei von %s" if with_rate else "%s / %s"
+		var pattern: String = tr("%s frei von %s") if with_rate else "%s / %s"
 		return pattern % [Game.fmt(Game.capacity_free(id)), Game.fmt(Game.capacity_total(id))]
 	# In der Leiste ist wenig Platz, dort steht die Zahl mit drei Stellen (12,3 Mio).
 	var text: String = Game.fmt(Game.amounts[id]) if with_rate else Game.fmt_compact(Game.amounts[id])
@@ -480,14 +482,14 @@ func _show_toast(icon_path: String, text: String) -> void:
 ## Auswahl, welche Vorräte die Leiste oben zeigt. Zur Wahl steht nur, was der
 ## Spieler schon entdeckt hat; die Obergrenze kommt aus data/settings.json.
 func _open_bar_picker() -> void:
-	popup.open("Leiste anpassen", 760)
+	popup.open(tr("Leiste anpassen"), 760)
 	var limit: int = int(Game.settings.get("bar_max", 8))
 	var counter := Label.new()
 	counter.add_theme_color_override("font_color", Color(0.25, 0.82, 1.0))
 	popup.content.add_child(counter)
 	var boxes: Dictionary = {}  # Ressourcen-ID -> Schalter
 	var refresh := func() -> void:
-		counter.text = "%d von höchstens %d Vorräten gewählt. Bevölkerung und Strom sind immer zu sehen." % [
+		counter.text = tr("%d von höchstens %d Vorräten gewählt. Bevölkerung und Strom sind immer zu sehen.") % [
 			Game.bar_selection.size(), limit]
 		for id: String in boxes:
 			# Ist die Grenze erreicht, lassen sich nur noch gewählte abwählen.
@@ -514,14 +516,14 @@ func _open_bar_picker() -> void:
 
 
 func _open_settings() -> void:
-	popup.open("Einstellungen", 680)
+	popup.open(tr("Einstellungen"), 900)
 	var version := Label.new()
 	version.text = "Space Clicker – Version %s" % GAME_VERSION
 	version.add_theme_color_override("font_color", Color(0.56, 0.70, 0.84))
 	popup.content.add_child(version)
 
 	var hint := Label.new()
-	hint.text = "Der Spielstand wird alle 10 Sekunden und beim Schließen gespeichert."
+	hint.text = tr("Der Spielstand wird alle 10 Sekunden und beim Schließen gespeichert.")
 	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	popup.content.add_child(hint)
 
@@ -533,7 +535,7 @@ func _open_settings() -> void:
 	slider.value = Options.volume * 100.0
 	slider.custom_minimum_size.y = 64
 	var show_volume := func() -> void:
-		volume_label.text = "Ton: aus" if slider.value == 0 else "Ton: %d %%" % int(slider.value)
+		volume_label.text = tr("Ton: aus") if slider.value == 0 else tr("Ton: %d %%") % int(slider.value)
 	slider.value_changed.connect(func(value: float) -> void:
 		Sfx.set_volume(value / 100.0)
 		Sfx.play("buy")  # gleich hören, wie laut es ist
@@ -545,7 +547,7 @@ func _open_settings() -> void:
 	var format_button := Button.new()
 	format_button.custom_minimum_size.y = 96
 	var show_format := func() -> void:
-		format_button.text = "Zahlen: %s" % Game.fmt(1234567.0)
+		format_button.text = tr("Zahlen: %s") % Game.fmt(1234567.0)
 	format_button.pressed.connect(func() -> void:
 		Options.number_format = "scientific" if Options.number_format == "short" else "short"
 		Options.save()
@@ -554,15 +556,34 @@ func _open_settings() -> void:
 	show_format.call()
 	popup.content.add_child(format_button)
 
-	# Zurücksetzen braucht zwei Klicks, damit es nicht aus Versehen passiert.
+	# Sprache: wechselt zwischen den vorhandenen Sprachen. Danach wird der
+	# Bildschirm neu aufgebaut, damit jede Zeile ihren Text neu holt.
+	var language_button := Button.new()
+	language_button.custom_minimum_size.y = 96
+	language_button.text = tr("Sprache: Deutsch")
+	language_button.pressed.connect(func() -> void:
+		var codes: Array = Options.LANGUAGES.keys()
+		Options.set_language(codes[(codes.find(Options.language) + 1) % codes.size()])
+		Game.localize()
+		Sfx.play("tap")
+		get_tree().reload_current_scene())
+	popup.content.add_child(language_button)
+
+	# Zurücksetzen steht abgesetzt ganz unten, ist rot und braucht zwei Tipps,
+	# damit es nicht aus Versehen passiert.
+	var gap := Control.new()
+	gap.custom_minimum_size.y = 90
+	popup.content.add_child(gap)
+	popup.content.add_child(HSeparator.new())
 	var reset := Button.new()
-	reset.text = "Spielstand zurücksetzen"
+	reset.text = tr("Spielstand zurücksetzen")
 	reset.custom_minimum_size.y = 96
+	reset.theme_type_variation = &"DangerButton"
 	var armed := [false]
 	reset.pressed.connect(func() -> void:
 		if not armed[0]:
 			armed[0] = true
-			reset.text = "Wirklich alles löschen? Nochmal tippen"
+			reset.text = tr("Wirklich alles löschen? Nochmal tippen")
 			return
 		Game.reset_game()
 		get_tree().reload_current_scene())
@@ -570,8 +591,8 @@ func _open_settings() -> void:
 
 
 func _show_offline_report(report: Dictionary) -> void:
-	offline_time.text = "Du warst %s weg." % _duration_text(report["seconds"])
-	offline_time.text += " Angerechnet: %s zu %d %%." % [_duration_text(report["counted"]), int(report["percent"])]
+	offline_time.text = tr("Du warst %s weg.") % _duration_text(report["seconds"])
+	offline_time.text += tr(" Angerechnet: %s zu %d %%.") % [_duration_text(report["counted"]), int(report["percent"])]
 	var lines: PackedStringArray = []
 	var gains: Dictionary = report["gains"]
 	for res: Dictionary in Game.resources:  # Reihenfolge wie in der Ressourcenliste
@@ -586,11 +607,11 @@ func _show_offline_report(report: Dictionary) -> void:
 func _duration_text(seconds: float) -> String:
 	var total: int = int(seconds)
 	if total < 60:
-		return "%d Sek" % total
+		return tr("%d Sek") % total
 	if total < 3600:
-		return "%d Min" % (total / 60)
+		return tr("%d Min") % (total / 60)
 	var minutes: int = (total % 3600) / 60
-	return "%d Std" % (total / 3600) if minutes == 0 else "%d Std %d Min" % [total / 3600, minutes]
+	return tr("%d Std") % (total / 3600) if minutes == 0 else tr("%d Std %d Min") % [total / 3600, minutes]
 
 
 # --- Rakete -------------------------------------------------------------------
@@ -603,7 +624,7 @@ func _build_rocket_button() -> void:
 	_rocket_button.custom_minimum_size = Vector2(130, 130)
 	_rocket_button.size = Vector2(130, 130)
 	_rocket_button.position = Vector2(planet.custom_minimum_size.x - 110, -10)
-	_rocket_button.tooltip_text = "Rakete"
+	_rocket_button.tooltip_text = tr("Rakete")
 	_rocket_button.visible = false
 	_rocket_button.pressed.connect(func() -> void:
 		Sfx.play("tap")
@@ -614,7 +635,7 @@ func _build_rocket_button() -> void:
 ## Die Raketen-Ansicht: oben das Bild (fehlende Teile als dunkler Umriss),
 ## darunter die Teile mit Kosten und Bauknopf, ganz unten der Start.
 func _open_rocket() -> void:
-	popup.open("Rakete", 1000)
+	popup.open(tr("Rakete"), 1000)
 	var picture := Control.new()
 	picture.custom_minimum_size = Vector2(380, 380)
 	picture.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
@@ -638,15 +659,15 @@ func _open_rocket() -> void:
 			var line: String = Ui.cost_line(part["cost"])
 			if costs[id].text != line:
 				costs[id].text = line
-			buttons[id].text = "Gebaut" if built else "Bauen"
+			buttons[id].text = tr("Gebaut") if built else tr("Bauen")
 			buttons[id].disabled = not Game.can_build_rocket_part(part)
 		var total: int = Game.rocket_built.size()
 		if Game.rocket_launched:
-			status.text = "Die Rakete ist gestartet. Der Mond ist freigeschaltet; sein Inhalt folgt in einer späteren Version."
-			launch.text = "Gestartet"
+			status.text = tr("Die Rakete ist gestartet. Der Mond ist freigeschaltet; sein Inhalt folgt in einer späteren Version.")
+			launch.text = tr("Gestartet")
 		else:
-			status.text = "%d von %d Teilen gebaut" % [Game.rocket_parts_built(), total]
-			launch.text = "Rakete starten"
+			status.text = tr("%d von %d Teilen gebaut") % [Game.rocket_parts_built(), total]
+			launch.text = tr("Rakete starten")
 		launch.disabled = Game.rocket_launched or not Game.rocket_complete()
 
 	# Die Teile liegen deckungsgleich übereinander; die Reihenfolge der Datei
@@ -699,7 +720,8 @@ func _open_rocket() -> void:
 	launch.pressed.connect(func() -> void:
 		if Ui.tap_allowed() and Game.launch_rocket():
 			Sfx.play("discover")
-			_show_toast(Game.rocket["icon"], "Rakete gestartet – der Mond ist frei")
+			_show_toast(Game.rocket["icon"], tr("Rakete gestartet – der Mond ist frei"))
+			get_tree().create_timer(1.8).timeout.connect(_show_victory)
 			# Die Rakete hebt ab: nach oben aus dem Bild und dabei ausblenden.
 			var tween: Tween = picture.create_tween().set_parallel(true)
 			tween.tween_property(picture, "position:y", picture.position.y - 900.0, 1.6).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
@@ -717,6 +739,38 @@ func _open_rocket() -> void:
 	Ui.pass_touches(popup.content)
 
 
+## Siegbildschirm: Mit dem Start der Rakete ist die Erde abgeschlossen.
+func _show_victory() -> void:
+	popup.open(tr("Geschafft!"), 760)
+	popup.close_button.text = tr("Weiterspielen")
+	var picture: TextureRect = _icon(Game.rocket["icon"], 300)
+	picture.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	popup.content.add_child(picture)
+	var total_clicks: int = 0
+	for id: String in Game.click_counts:
+		total_clicks += Game.click_counts[id]
+	var total_levels: int = 0
+	for id: String in Game.levels:
+		total_levels += Game.levels[id]
+	var lines: Array = [
+		[tr("Du hast den Mond erreicht."), true],
+		[tr("Damit ist die Erde abgeschlossen. Der Mond folgt in einer späteren Version."), false],
+		[tr("Klicks insgesamt: %s") % Game.fmt(total_clicks), false],
+		[tr("Gebäude-Level insgesamt: %s") % Game.fmt(total_levels), false],
+	]
+	for line: Array in lines:
+		var label := Label.new()
+		label.text = line[0]
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		if line[1]:
+			label.theme_type_variation = &"HeadingLabel"
+			label.add_theme_font_size_override("font_size", 44)
+			label.add_theme_color_override("font_color", Color(0.25, 0.82, 1.0))
+		popup.content.add_child(label)
+	Sfx.play("discover")
+
+
 # --- Eingaben -----------------------------------------------------------------
 
 func _set_click_target(id: String) -> void:
@@ -727,7 +781,7 @@ func _set_click_target(id: String) -> void:
 
 func _on_buy_amount_pressed() -> void:
 	Game.cycle_buy_amount()
-	buy_amount_button.text = "Kaufen: Max" if Game.buy_max else "Kaufen: %d" % Game.buy_amount
+	buy_amount_button.text = tr("Kaufen: Max") if Game.buy_max else tr("Kaufen: %d") % Game.buy_amount
 
 
 func _on_planet_pressed() -> void:

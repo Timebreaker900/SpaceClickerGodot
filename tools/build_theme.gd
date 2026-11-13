@@ -73,6 +73,13 @@ func _init() -> void:
 	theme.set_stylebox("pressed", "PrimaryButton", _box(ACCENT, Color.WHITE, 2, 16, 24, 10))
 	theme.set_color("font_color", "PrimaryButton", Color.WHITE)
 
+	# Gefährliche Knöpfe (Spielstand zurücksetzen): rot, damit man stutzt.
+	theme.set_type_variation("DangerButton", "Button")
+	theme.set_stylebox("normal", "DangerButton", _box(Color(0.55, 0.12, 0.14), Color(1.0, 0.45, 0.45), 2, 16, 24, 10))
+	theme.set_stylebox("hover", "DangerButton", _box(Color(0.68, 0.16, 0.18), Color.WHITE, 2, 16, 24, 10))
+	theme.set_stylebox("pressed", "DangerButton", _box(Color(0.85, 0.22, 0.22), Color.WHITE, 2, 16, 24, 10))
+	theme.set_color("font_color", "DangerButton", Color.WHITE)
+
 	# Reiter: der gewählte bekommt eine leuchtende Unterkante.
 	var tab_selected := _box(Color(ACCENT, 0.14), ACCENT, 0, 12, 30, 14)
 	tab_selected.border_width_bottom = 5

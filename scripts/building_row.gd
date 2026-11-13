@@ -60,7 +60,7 @@ func _process(_delta: float) -> void:
 		_reveal_until = now + 0.6
 		Sfx.play("reveal")
 		Ui.reveal($Panel, icon)
-		Game.announcement.emit(building["icon"], "Neu: %s" % building["name"])
+		Game.announcement.emit(building["icon"], tr("Neu: %s") % building["name"])
 	elif previous_state == "hidden":
 		Ui.fade_in(self)
 	# Als Rätsel bleibt vom Icon nur der schwarze Umriss.
@@ -80,7 +80,7 @@ func _process(_delta: float) -> void:
 		# Fertig ausgebaut: kein Level, kein Preis, kein Kaufknopf.
 		name_label.text = building["name"]
 		info_label.text = _describe_effects()
-		cost_text = "Gebaut"
+		cost_text = tr("Gebaut")
 	elif known:
 		name_label.text = "%s  Lv %d" % [building["name"], Game.levels[building["id"]]]
 		info_label.text = _describe_effects()  # jedes Bild neu, weil Upgrades die Werte ändern
@@ -94,7 +94,7 @@ func _process(_delta: float) -> void:
 
 func _on_expand_toggled(open: bool) -> void:
 	sub_margin.visible = open
-	expand_button.text = "%s %s" % [building.get("children_label", "Mehr"), "▲" if open else "▼"]
+	expand_button.text = "%s %s" % [building.get("children_label", tr("Mehr")), "▲" if open else "▼"]
 
 
 ## Was ein Level bringt, z. B. "+1 Nahrung/s" oder "+1 Strom".
@@ -111,7 +111,7 @@ func _describe_effects() -> String:
 	# Gebäude mit Rezepten sagen, wann das nächste dazukommt – aber nicht welches.
 	if building.has("recipes_label"):
 		var next_level: int = Game.next_recipe_level(building)
-		parts.append("Neues Rezept ab Lv %d" % next_level if next_level > 0 else "Alle Rezepte freigeschaltet")
+		parts.append(tr("Neues Rezept ab Lv %d") % next_level if next_level > 0 else tr("Alle Rezepte freigeschaltet"))
 	return ", ".join(parts)
 
 
@@ -123,13 +123,13 @@ func _describe_cost() -> String:
 	var reserves: Dictionary = building.get("reserves", {})
 	for id: String in reserves:
 		var needed: float = float(reserves[id]) * count
-		text += "   " + Ui.amount(id, needed, Game.capacity_free(id) >= needed, "belegt ")
+		text += "   " + Ui.amount(id, needed, Game.capacity_free(id) >= needed, tr("belegt "))
 	# Darf dieses Gebäude ein anderes nicht überholen, steht die Grenze dabei –
 	# rot, sobald sie erreicht ist.
 	if building.has("level_cap"):
 		var cap: Dictionary = Game.building_def(building["level_cap"])
 		var limit: int = Game.levels[cap["id"]]
-		var note: String = "höchstens %s-Level (%d)" % [cap["name"], limit]
+		var note: String = tr("höchstens %s-Level (%d)") % [cap["name"], limit]
 		if Game.levels[building["id"]] + count > limit:
 			note = "[color=#%s]%s[/color]" % [Ui.MISSING_COLOR, note]
 		text += "   " + note
@@ -141,9 +141,9 @@ func _describe_cost() -> String:
 func _describe_hint() -> String:
 	var previous: Dictionary = Game.previous_building(building)
 	if not previous.is_empty() and Game.levels[previous["id"]] == 0:
-		return "Kaufe zuerst: %s" % previous["name"]
+		return tr("Kaufe zuerst: %s") % previous["name"]
 	var parts: PackedStringArray = []
 	var requires: Dictionary = building.get("requires", {})
 	for id: String in requires:
 		parts.append("%s Lv %d" % [Game.building_def(id)["name"], int(requires[id])])
-	return "Ab " + ", ".join(parts)
+	return tr("Ab ") + ", ".join(parts)

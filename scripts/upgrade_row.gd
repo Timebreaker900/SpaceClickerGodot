@@ -47,7 +47,7 @@ func _process(_delta: float) -> void:
 	badge.visible = known
 	info_label.visible = known
 	name_label.text = upgrade["name"] if known else "???"
-	buy_button.text = "Kaufen" if known else "?"
+	buy_button.text = tr("Kaufen") if known else "?"
 	buy_button.disabled = not Game.can_buy_upgrade(upgrade)
 	var cost_text: String = Ui.cost_line(upgrade.get("cost", {})) if known else _describe_requirements()
 	if cost_label.text != cost_text:
@@ -75,20 +75,20 @@ func _describe_effects() -> String:
 	var produces: Dictionary = upgrade.get("add_produces", {})
 	for building_id: String in produces:
 		for id: String in produces[building_id]:
-			parts.append("%s: %s %s/s je Level" % [Game.building_def(building_id)["name"],
+			parts.append(tr("%s: %s %s/s je Level") % [Game.building_def(building_id)["name"],
 				Game.fmt_signed(produces[building_id][id]), Game.resource_def(id)["name"]])
 	var provides: Dictionary = upgrade.get("add_provides", {})
 	for building_id: String in provides:
 		for id: String in provides[building_id]:
-			parts.append("%s: %s %s je Level" % [Game.building_def(building_id)["name"],
+			parts.append(tr("%s: %s %s je Level") % [Game.building_def(building_id)["name"],
 				Game.fmt_signed(provides[building_id][id]), Game.resource_def(id)["name"]])
 	if upgrade.has("add_offline_hours"):
-		parts.append("Abwesenheit: +%d Std anrechenbar" % int(upgrade["add_offline_hours"]))
+		parts.append(tr("Abwesenheit: +%d Std anrechenbar") % int(upgrade["add_offline_hours"]))
 	if upgrade.has("add_offline_percent"):
-		parts.append("Abwesenheit: +%d %% Ertrag" % int(upgrade["add_offline_percent"]))
+		parts.append(tr("Abwesenheit: +%d %% Ertrag") % int(upgrade["add_offline_percent"]))
 	var click: Dictionary = upgrade.get("add_click", {})
 	for id: String in click:
-		parts.append("%s %s pro Klick" % [Game.fmt_signed(click[id]), Game.resource_def(id)["name"]])
+		parts.append(tr("%s %s pro Klick") % [Game.fmt_signed(click[id]), Game.resource_def(id)["name"]])
 	return ", ".join(parts)
 
 
@@ -100,5 +100,5 @@ func _describe_requirements() -> String:
 		parts.append("%s Lv %d" % [Game.building_def(id)["name"], int(requires[id])])
 	var clicks: Dictionary = upgrade.get("requires_clicks", {})
 	for id: String in clicks:
-		parts.append("%d Klicks für %s (%d)" % [int(clicks[id]), Game.resource_def(id)["name"], Game.click_counts[id]])
-	return "Ab " + ", ".join(parts)
+		parts.append(tr("%d Klicks für %s (%d)") % [int(clicks[id]), Game.resource_def(id)["name"], Game.click_counts[id]])
+	return tr("Ab ") + ", ".join(parts)

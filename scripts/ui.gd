@@ -81,3 +81,14 @@ static func set_scrolling(active: bool) -> void:
 ## sonst kauft man beim Scrollen versehentlich, wo der Finger gerade liegt.
 static func tap_allowed() -> bool:
 	return not _scrolling and Time.get_ticks_msec() >= _tap_block_until
+
+
+## Fenster über dem Spiel schließen sich, wenn man daneben tippt. "area" ist die
+## Fläche um das Fenster, "panel" das Fenster selbst: Es hält Tipps fest, damit
+## ein Tipp auf seinen Rand nicht als "daneben" zählt.
+static func close_on_outside_tap(window: Control, area: Control, panel: Control) -> void:
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	area.mouse_filter = Control.MOUSE_FILTER_STOP
+	area.gui_input.connect(func(event: InputEvent) -> void:
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			window.hide())

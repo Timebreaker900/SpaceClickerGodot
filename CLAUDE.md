@@ -23,6 +23,7 @@ Ziel: Handy (Android, iOS) im Hochformat mit Monetarisierung, später Steam als 
 
 - Gebaut wird nur, was in `design.md` steht.
 - Datengetrieben: ein generisches Skript pro Art (Gebäude, Upgrade, Rezept), Inhalte kommen aus `data/`. Kein Skript pro Gebäude.
+- Texte: Deutsch steht im Code (in `tr("…")`) und in `data/*.json`. Jeder neue sichtbare Text braucht einen Eintrag in `data/lang_en.json`, sonst bleibt er im Englischen deutsch. Der Test prüft das für alle Namen aus den Datendateien.
 - GDScript, kein C#.
 - Ein System pro Schritt, ein Commit pro System, dazu eine kurze Erklärung, was gebaut wurde und warum – der Nutzer will mitlernen.
 - Nach jeder Änderung am Spiel das Debug-Fenster neu starten: `pwsh tools/restart_game.ps1`. Das Skript schließt das Fenster normal, damit der Spielstand gespeichert wird – der Nutzer spielt nebenbei. Nie den Prozess abschießen und nie `user://save.json` anfassen; Tests laufen mit eigener Speicherdatei.

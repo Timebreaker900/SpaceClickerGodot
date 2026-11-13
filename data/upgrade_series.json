@@ -22,7 +22,7 @@
 		"cost_per_click": 1,
 		"other_cost_per_click": 0.5,
 		"resources": [
-			{ "resource": "coins", "other": "wood", "name": "Stärkerer Klick: Coins" },
+			{ "resource": "coins", "other": "wood", "name": "Stärkerer Klick: Geld" },
 			{ "resource": "wood", "other": "coins", "name": "Stärkerer Klick: Holz" }
 		]
 	}

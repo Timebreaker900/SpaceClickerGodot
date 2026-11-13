@@ -424,6 +424,10 @@ func _ready() -> void:
 	_check("Rezeptzeilen angelegt, drei Gruppen im Umschalter", [main.get_node("%RecipeList").get_child_count(), main.get_node("%RecipeGroups").get_child_count()], [Game.recipes.size(), 3])
 
 	for arg: String in OS.get_cmdline_user_args():
+		if arg == "--english":
+			Options.language = "en"
+			TranslationServer.set_locale("en")
+			Game.localize()
 		if arg == "--group2":
 			main._recipe_group = "factory"
 			await get_tree().process_frame
@@ -447,6 +451,8 @@ func _ready() -> void:
 		if arg == "--picker":
 			main._open_bar_picker()
 			await get_tree().process_frame
+		if arg == "--victory":
+			main._show_victory()
 		if arg == "--rocket":
 			Game.levels["launchpad"] = 1
 			Game.rocket_built["hull"] = true
@@ -493,14 +499,45 @@ func _ready() -> void:
 		Game.bought[id] = false
 	Game._rebuild_bonuses()
 	main._update_stats()
-	_check("Übersicht ohne Upgrades", [main._stat_labels["click_coins"].text, main._stat_labels["offline"].text], ["Coins pro Klick: 1", "Abwesenheit: noch nicht freigeschaltet"])
+	_check("Übersicht ohne Upgrades", [main._stat_labels["click_coins"].text, main._stat_labels["offline"].text], ["Geld pro Klick: 1", "Abwesenheit: noch nicht freigeschaltet"])
 	Game.bought["offline_1"] = true
 	Game.bought["click_coins_1"] = true
 	Game._rebuild_bonuses()
 	main._update_stats()
-	_check("Übersicht mit Upgrades", [main._stat_labels["click_coins"].text, main._stat_labels["offline"].text], ["Coins pro Klick: 2", "Abwesenheit: bis 1 h, 20 % Ertrag"])
+	_check("Übersicht mit Upgrades", [main._stat_labels["click_coins"].text, main._stat_labels["offline"].text], ["Geld pro Klick: 2", "Abwesenheit: bis 1 h, 20 % Ertrag"])
 	Game.bought = bought_before
 	Game._rebuild_bonuses()
+
+	# Sprache: Englisch übersetzt Daten-Namen, Reihen-Upgrades, Texte und Zahlen
+	var untranslated: PackedStringArray = []
+	var same_in_english: Array = ["Sand", "Farm", "Mine", "Bank", "Chip", "Chips", "Solarpanel"]
+	var format_before: String = Options.number_format
+	Options.number_format = "short"
+	Options.language = "en"
+	TranslationServer.set_locale("en")
+	Game.localize()
+	for list: Array in [Game.resources, Game.buildings, Game.recipes, Game.upgrades, Game.rocket["parts"]]:
+		for entry: Dictionary in list:
+			for field: String in Game.TEXT_FIELDS:
+				if entry.has("_de_" + field) and not entry.has("name_base") and entry[field] == entry["_de_" + field] and not same_in_english.has(entry[field]):
+					untranslated.append(entry[field])
+	_check("Englisch: alle Daten-Texte übersetzt", untranslated, PackedStringArray())
+	_check("Englisch: Namen, Reihen-Upgrade, Text, Zahl", [Game.resource_def("coins")["name"], _upgrade("farm_2")["name"], main.tr("Kaufen"), Game.fmt(1234567.0), Game.fmt(12345.0)], ["Money", "Farm upgrade II", "Buy", "1.23 M", "12,345"])
+	Options.language = "de"
+	TranslationServer.set_locale("de")
+	Game.localize()
+	_check("Zurück auf Deutsch", [Game.resource_def("coins")["name"], _upgrade("farm_2")["name"], Game.fmt(1234567.0)], ["Geld", "Farm-Upgrade II", "1,23 Mio"])
+	Options.number_format = format_before
+
+	# Fenster schließen sich beim Tippen daneben, nicht beim Tippen ins Fenster
+	main._open_settings()
+	var tap := InputEventMouseButton.new()
+	tap.button_index = MOUSE_BUTTON_LEFT
+	tap.pressed = true
+	main.popup.get_node("Center/Panel").gui_input.emit(tap)
+	var open_after_inside: bool = main.popup.visible
+	main.popup.get_node("Center").gui_input.emit(tap)
+	_check("Fenster: Tipp hinein lässt offen, Tipp daneben schließt", [open_after_inside, main.popup.visible], [true, false])
 
 	# Handy-Ränder: Zusatzrand kommt zum normalen Abstand dazu
 	main.set_insets(0.0, 130.0, 0.0, 70.0)
@@ -527,7 +564,7 @@ func _ready() -> void:
 	Game.click_counts["coins"] = 25
 	Game.amounts["coins"] = 25.0
 	Game.click_target = "coins"
-	_check("Genug Coins: auf Holz umschalten", main._hint_text(), "Genug Coins. Schalte links um auf Holz")
+	_check("Genug Geld: auf Holz umschalten", main._hint_text(), "Genug Geld. Schalte links um auf Holz")
 	Game.click_target = "wood"
 	_check("Beim Holzsammeln kein Hinweis", main._hint_text(), "")
 	Game.amounts["wood"] = 25.0

@@ -1,5 +1,5 @@
 [
-	{ "id": "coins", "name": "Coins", "type": "stock", "group": "Basis", "bar": true, "icon": "res://assets/icons/coins.svg" },
+	{ "id": "coins", "name": "Geld", "type": "stock", "group": "Basis", "bar": true, "icon": "res://assets/icons/coins.svg" },
 	{ "id": "wood", "name": "Holz", "type": "stock", "group": "Basis", "bar": true, "icon": "res://assets/icons/wood.svg" },
 	{ "id": "food", "name": "Nahrung", "type": "stock", "group": "Basis", "bar": true, "icon": "res://assets/icons/food.svg" },
 	{ "id": "stone", "name": "Stein", "type": "stock", "group": "Basis", "bar": true, "icon": "res://assets/icons/stone.svg" },

@@ -32,6 +32,10 @@ window/stretch/mode="canvas_items"
 window/stretch/aspect="keep_width"
 window/handheld/orientation=1
 
+[internationalization]
+
+locale/fallback="de"
+
 [gui]
 
 theme/custom="res://ui/theme.tres"

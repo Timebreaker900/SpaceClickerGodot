@@ -109,6 +109,7 @@ func _ready() -> void:
 	for id: String in settings["click"]:
 		click_counts[id] = 0
 	_reset_discovery()
+	localize()
 	load_game()
 	_rebuild_bonuses()
 	_catch_up()
@@ -606,6 +607,26 @@ func _advance_recipe(recipe: Dictionary, delta: float) -> void:
 
 
 
+# --- Sprache ----------------------------------------------------------------
+
+const TEXT_FIELDS: Array = ["name", "note", "caption", "children_label", "recipes_label", "group"]
+
+## Übersetzt alle Texte aus den Datendateien in die gewählte Sprache. Der
+## deutsche Ausgangstext wird gemerkt, damit ein Sprachwechsel jederzeit geht.
+## Namen von Upgrade-Reihen bestehen aus übersetztem Grundnamen und Stufe.
+func localize() -> void:
+	for list: Array in [resources, buildings, recipes, upgrades, rocket["parts"]]:
+		for entry: Dictionary in list:
+			for field: String in TEXT_FIELDS:
+				if not entry.has(field):
+					continue
+				if not entry.has("_de_" + field):
+					entry["_de_" + field] = entry[field]
+				entry[field] = tr(entry["_de_" + field])
+			if entry.has("name_base"):
+				entry["name"] = "%s %s" % [tr(entry["name_base"]), entry["name_suffix"]]
+
+
 # --- Rakete -----------------------------------------------------------------
 # Die Rakete besteht aus Teilen (data/rocket.json), die einzeln und einmalig
 # gebaut werden, sobald die Startrampe steht. Sind alle da, kann sie starten;
@@ -828,6 +849,20 @@ func reset_game() -> void:
 
 ## Namen für je drei Stellen mehr, beginnend bei der Million.
 const NUMBER_NAMES: Array = ["Mio", "Mrd", "Bio", "Brd", "Trio", "Trd", "Quad", "Qrd"]
+const NUMBER_NAMES_EN: Array = ["M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc"]
+
+
+## Deutsch schreibt 1.234,5 – Englisch 1,234.5.
+func _english() -> bool:
+	return Options.language == "en"
+
+
+func _number_name(index: int) -> String:
+	return NUMBER_NAMES_EN[index] if _english() else NUMBER_NAMES[index]
+
+
+func _decimal(text: String) -> String:
+	return text if _english() else text.replace(".", ",")
 
 
 ## Zahl für die Anzeige, je nach Einstellung:
@@ -843,7 +878,7 @@ func fmt(value: float) -> String:
 	var name_index: int = exponent / 3 - 2
 	if short and name_index < NUMBER_NAMES.size():
 		var mantissa: float = value / pow(10.0, (name_index + 2) * 3)
-		return ("%.2f" % mantissa).replace(".", ",") + " " + NUMBER_NAMES[name_index]
+		return _decimal("%.2f" % mantissa) + " " + _number_name(name_index)
 	return "%.2fe%d" % [value / pow(10.0, exponent), exponent]
 
 
@@ -857,7 +892,7 @@ func fmt_compact(value: float) -> String:
 		return fmt(value)
 	var mantissa: float = value / pow(10.0, (name_index + 2) * 3)
 	var decimals: int = 2 if mantissa < 10.0 else (1 if mantissa < 100.0 else 0)
-	return ("%.*f" % [decimals, mantissa]).replace(".", ",") + " " + NUMBER_NAMES[name_index]
+	return _decimal("%.*f" % [decimals, mantissa]) + " " + _number_name(name_index)
 
 
 ## 1234567 -> 1.234.567
@@ -865,7 +900,7 @@ func _group_thousands(digits: String) -> String:
 	var result: String = ""
 	for i: int in digits.length():
 		if i > 0 and (digits.length() - i) % 3 == 0:
-			result += "."
+			result += "," if _english() else "."
 		result += digits[i]
 	return result
 
@@ -877,7 +912,7 @@ func fmt_signed(value: float) -> String:
 	var magnitude: float = absf(value)
 	if magnitude < 100.0 and not is_equal_approx(magnitude, roundf(magnitude)):
 		var text: String = "%.1f" % magnitude
-		return sign_text + (text.replace(".", ",") if Options.number_format == "short" else text)
+		return sign_text + (_decimal(text) if Options.number_format == "short" else text)
 	return sign_text + fmt(magnitude)
 
 
@@ -924,6 +959,8 @@ func _expand_upgrade_series(series: Dictionary) -> void:
 			var upgrade: Dictionary = {
 				"id": "%s_%d" % [building["id"], tier],
 				"name": "%s %s" % [entry["name"], _roman(tier)],
+				"name_base": entry["name"],
+				"name_suffix": _roman(tier),
 				"icon": building["icon"],
 				"requires": { building["id"]: every * tier },
 				"cost": {},
@@ -954,6 +991,8 @@ func _expand_upgrade_series(series: Dictionary) -> void:
 			var upgrade: Dictionary = {
 				"id": "click_%s_%d" % [id, tier],
 				"name": "%s %s" % [entry["name"], _roman(tier)],
+				"name_base": entry["name"],
+				"name_suffix": _roman(tier),
 				"icon": _resource_by_id[id]["icon"],
 				"requires_clicks": { id: needed },
 				"cost": {
