@@ -47,12 +47,23 @@
 		"children_label": "Bergbau"
 	},
 	{
+		"id": "sandmine",
+		"parent": "mine",
+		"level_cap": "mine",
+		"name": "Sandabbau",
+		"icon": "res://assets/icons/sand.svg",
+		"requires": { "mine": 2 },
+		"cost": { "food": 25, "wood": 25, "stone": 25 },
+		"growth": 1.15,
+		"produces": { "sand": 1 }
+	},
+	{
 		"id": "coal_mining",
 		"parent": "mine",
 		"level_cap": "mine",
 		"name": "Kohleabbau",
 		"icon": "res://assets/icons/coal.svg",
-		"requires": { "mine": 2 },
+		"requires": { "mine": 4 },
 		"cost": { "food": 40, "wood": 40, "stone": 40 },
 		"growth": 1.15,
 		"produces": { "coal": 1 }
@@ -63,7 +74,7 @@
 		"level_cap": "mine",
 		"name": "Kupferabbau",
 		"icon": "res://assets/icons/copper_ore.svg",
-		"requires": { "mine": 5 },
+		"requires": { "mine": 6 },
 		"cost": { "food": 100, "wood": 100, "stone": 100 },
 		"growth": 1.15,
 		"produces": { "copper_ore": 0.8 }
@@ -89,15 +100,6 @@
 		"cost": { "food": 400, "wood": 400, "stone": 400 },
 		"growth": 1.15,
 		"produces": { "gold_ore": 0.2 }
-	},
-	{
-		"id": "sandmine",
-		"name": "Sandmine",
-		"icon": "res://assets/buildings/sandmine.svg",
-		"cost": { "coins": 60 },
-		"growth": 1.15,
-		"reserves": { "population": 1 },
-		"produces": { "sand": 1 }
 	},
 	{
 		"id": "smeltery",

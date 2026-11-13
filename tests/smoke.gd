@@ -76,9 +76,9 @@ func _ready() -> void:
 	for building: Dictionary in Game.buildings:
 		if not building.has("parent") and building.get("placement", "list") == "list":
 			order.append(building["id"])
-	_check("Gebäude-Reihenfolge", order, ["farm", "lumberjack", "market", "mine", "sandmine", "smeltery", "watermill", "factory", "greenhouse", "solarpanel", "sawmill", "bank"])
+	_check("Gebäude-Reihenfolge", order, ["farm", "lumberjack", "market", "mine", "smeltery", "watermill", "factory", "greenhouse", "solarpanel", "sawmill", "bank"])
 	_check("Gewächshaus liefert mehr Nahrung als die Farm und kostet Glas", [_building("greenhouse")["produces"]["food"] > _building("farm")["produces"]["food"], _building("greenhouse")["cost"].has("glass")], [true, true])
-	_check("Schmelze braucht keinen Strom mehr, Kohleabbau ab Mine Lv 2", [_building("smeltery")["reserves"].has("electricity"), _building("coal_mining")["requires"]["mine"]], [false, 2.0])
+	_check("Schmelze braucht keinen Strom mehr, Sand ab Mine Lv 2, Kohle ab Lv 4", [_building("smeltery")["reserves"].has("electricity"), _building("coal_mining")["requires"]["mine"], _building("sandmine")["requires"]["mine"], _building("sandmine").get("parent", "")], [false, 4.0, 2.0, "mine"])
 	_check("Erste Bank kostet 1 Goldbarren, die dritte 3", [Game.cost_for(_building("bank"), 1)["gold_bar"], Game.cost_for(_building("bank"), 3)["gold_bar"]], [1.0, 6.0])
 	_check("Markt liefert 1 Coin, Sägewerk mehr Holz als der Holzfäller", [_building("market")["produces"]["coins"], _building("sawmill")["produces"]["wood"] > _building("lumberjack")["produces"]["wood"]], [1.0, true])
 
@@ -109,8 +109,8 @@ func _ready() -> void:
 	# Freischaltung über Gebäude-Level
 	var copper_mining: Dictionary = _building("copper_mining")
 	_check("Kupferabbau anfangs gesperrt", Game.is_unlocked(copper_mining), false)
-	Game.levels["mine"] = 5
-	_check("Kupferabbau ab Mine Lv 5 frei", Game.is_unlocked(copper_mining), true)
+	Game.levels["mine"] = 6
+	_check("Kupferabbau ab Mine Lv 6 frei", Game.is_unlocked(copper_mining), true)
 
 	# Rezepte: Zutaten sofort weg, Ergebnis nach Ablauf, Menge = Gebäude-Level
 	var copper_bar: Dictionary = _recipe("copper_bar")
@@ -261,16 +261,16 @@ func _ready() -> void:
 
 	# Erzabbau darf die Mine nicht überholen
 	_reset()
-	Game.levels.merge({ "farm": 1, "lumberjack": 1, "mine": 5 }, true)
+	Game.levels.merge({ "farm": 1, "lumberjack": 1, "mine": 6, "sandmine": 1 }, true)
 	_check("Kupferabbau bleibt Rätsel, bis der Kohleabbau steht", Game.building_visibility(_building("copper_mining")), "mystery")
 	Game.levels["coal_mining"] = 1
 	for id: String in ["food", "wood", "stone"]:
 		Game.amounts[id] = 1.0e9
 	var copper: Dictionary = _building("copper_mining")
-	_check("Erzabbau: höchstens so viele wie Mine (5)", Game.max_affordable(copper), 5)
-	Game.levels["copper_mining"] = 5
+	_check("Erzabbau: höchstens so viele wie Mine (6)", Game.max_affordable(copper), 6)
+	Game.levels["copper_mining"] = 6
 	_check("Erzabbau auf Minen-Level: gesperrt", Game.can_buy(copper, 1), false)
-	Game.levels["mine"] = 6
+	Game.levels["mine"] = 7
 	_check("Mine +1: wieder eins möglich", Game.max_affordable(copper), 1)
 
 	# Rezept-Upgrades: bezahlt mit dem eigenen Erzeugnis

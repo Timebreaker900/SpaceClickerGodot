@@ -18,15 +18,14 @@ Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Abschnitte mit �
   1. Farm – Nahrung
   2. Holzfäller – Holz
   3. Markt – 1 Coin pro Sekunde, die erste Coin-Quelle ohne Klicken; kostet Coins und Holz
-  4. Mine – Stein, darunter der Bergbau: Kohle ab Mine Lv 2, dann Kupfer, Eisen, Gold
-  5. Sandmine – Sand
-  6. Schmelze – schaltet Schmelz-Rezepte frei; braucht Kohle statt Strom
-  7. Wassermühle – Strom, zuerst für die Fabrik
-  8. Fabrik – schaltet Fabrik-Rezepte frei
-  9. Gewächshaus – mehr Nahrung als die Farm; kostet Coins und Glas, belegt nur Strom (keine Bevölkerung, wie die Farm); 10 Upgrade-Stufen
-  10. Solarpanel – Strom; kostet Coins, Kupferkabel und Eisenplatten
-  11. Sägewerk – mehr Holz als der Holzfäller
-  12. Bank – das letzte und teuerste Gebäude der Erde: 50 Coins pro Sekunde (Vorschlag); kostet Coins, Stein, Eisenplatten und Goldbarren (1 für die erste, je Level einer mehr), belegt Bevölkerung und Strom
+  4. Mine – Stein, darunter der Bergbau: Sand ab Mine Lv 2, Kohle ab Lv 4, Kupfer ab Lv 6, Eisen ab Lv 10, Gold ab Lv 20. Die Sandmine ist kein eigenes Gebäude mehr.
+  5. Schmelze – schaltet Schmelz-Rezepte frei; braucht Kohle statt Strom
+  6. Wassermühle – Strom, zuerst für die Fabrik
+  7. Fabrik – schaltet Fabrik-Rezepte frei
+  8. Gewächshaus – mehr Nahrung als die Farm; kostet Coins und Glas, belegt nur Strom (keine Bevölkerung, wie die Farm); 10 Upgrade-Stufen
+  9. Solarpanel – Strom; kostet Coins, Kupferkabel und Eisenplatten
+  10. Sägewerk – mehr Holz als der Holzfäller
+  11. Bank – das letzte und teuerste Gebäude der Erde: 50 Coins pro Sekunde (Vorschlag); kostet Coins, Stein, Eisenplatten und Goldbarren (1 für die erste, je Level einer mehr), belegt Bevölkerung und Strom
 - Verstärktes Glas entfällt: Das Solarpanel braucht es nicht mehr.
 - Es gibt eine eigene Sicht, die alle Währungen auf einmal zeigt.
 
@@ -190,7 +189,25 @@ Verstärktes Glas wird vom Solarpanel verlangt, hat aber kein Rezept.
 
 ## Später
 
-### Rakete als Abschluss der Erde (Todo, noch nicht bauen)
+### Weg zur Rakete (Stand 13.11.2026, noch nicht bauen)
+
+Vom Nutzer bestätigt:
+
+- Die Rakete ist der Abschluss der Erde und schaltet den Mond frei.
+- Vor der Ölpumpe kommt ein Forschungslabor. Forschung ist eine statische Ressource wie Bevölkerung und Strom: Das Labor stellt sie bereit, spätere Gebäude verlangen bzw. belegen sie. Jeder Planet hat seine eigene Forschung.
+- Titan: Titanabbau im Bergbau der Mine, sobald die Ölpumpe Titan braucht (Vorschlag: ab Mine Lv 30), dazu Titanbarren in der Schmelze.
+- Weltraumlift: wird gebaut, damit man die Ressourcen der Erde am Mond verwenden kann.
+
+Geplante Kette nach der Bank: Forschungslabor → Titanabbau → Ölpumpe → Raffinerie → Startrampe → Rakete → Mond → Weltraumlift.
+
+Offen:
+
+- Ersetzt Titan den Stahl aus dem alten Plan unten, oder gibt es beides?
+- Bleiben Chips (Goldbarren plus Kupferkabel) für die Steuerung?
+- Startet der Mond bei null, bis der Lift steht, oder gelten die Erd-Ressourcen dort sofort?
+- Was bietet der Mond überhaupt (Gebäude, Ressourcen)?
+
+### Rakete als Abschluss der Erde (alter Plan, Todo)
 
 Die Rakete wird einmal gebaut und schaltet den Mond frei. Geplante Tiefe: mittel.
 
