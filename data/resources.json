@@ -6,6 +6,7 @@
 	{ "id": "sand", "name": "Sand", "type": "stock", "group": "Basis", "icon": "res://assets/icons/sand.svg" },
 	{ "id": "population", "name": "Bevölkerung", "type": "capacity", "group": "Versorgung", "icon": "res://assets/icons/population.svg" },
 	{ "id": "electricity", "name": "Strom", "type": "capacity", "group": "Versorgung", "icon": "res://assets/icons/electricity.svg" },
+	{ "id": "research", "name": "Forschung", "type": "capacity", "group": "Versorgung", "icon": "res://assets/icons/research.svg" },
 
 	{ "id": "coal", "name": "Kohle", "type": "stock", "group": "Bergbau", "icon": "res://assets/icons/coal.svg" },
 	{ "id": "copper_ore", "name": "Kupfererz", "type": "stock", "group": "Bergbau", "icon": "res://assets/icons/copper_ore.svg" },

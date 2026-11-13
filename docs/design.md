@@ -25,7 +25,8 @@ Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Abschnitte mit �
   8. Gewächshaus – mehr Nahrung als die Farm; kostet Coins und Glas, belegt nur Strom (keine Bevölkerung, wie die Farm); 10 Upgrade-Stufen
   9. Solarpanel – Strom; kostet Coins, Kupferkabel und Eisenplatten
   10. Sägewerk – mehr Holz als der Holzfäller
-  11. Bank – das letzte und teuerste Gebäude der Erde: 50 Coins pro Sekunde (Vorschlag); kostet Coins, Stein, Eisenplatten und Goldbarren (1 für die erste, je Level einer mehr), belegt Bevölkerung und Strom
+  11. Bank – 50 Coins pro Sekunde (Vorschlag); kostet Coins, Stein, Eisenplatten und Goldbarren (1 für die erste, je Level einer mehr), belegt Bevölkerung und Strom
+  12. Forschungslabor – stellt Forschung bereit, eine statische Ressource wie Bevölkerung und Strom (je Level +1). Kostet Coins, Glas und Kupferkabel, belegt Bevölkerung und Strom. Noch belegt nichts die Forschung; das kommt mit Titanabbau und Ölpumpe.
 - Verstärktes Glas entfällt: Das Solarpanel braucht es nicht mehr.
 - Es gibt eine eigene Sicht, die alle Währungen auf einmal zeigt.
 

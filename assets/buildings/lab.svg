@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="256" height="256">
+<ellipse cx="64" cy="114" rx="56" ry="7" fill="#000" opacity=".28"/>
+<!-- Antenne -->
+<rect x="98" y="30" width="4" height="34" fill="#7d8ea3"/>
+<circle cx="100" cy="28" r="5" fill="#3fd0ff"/>
+<!-- Kuppel mit Spalt fürs Teleskop -->
+<path d="M18 64a30 30 0 0 1 60 0z" fill="#e3e9f0"/>
+<path d="M48 34a30 30 0 0 1 30 30H48z" fill="#b9c4d1"/>
+<path d="M42 35h12v29H42z" fill="#2f3945"/>
+<!-- Teleskop -->
+<path d="M44 52 66 16l10 6-22 36z" fill="#7d8ea3"/>
+<path d="M49 55 71 19l5 3-22 36z" fill="#4c5a6b"/>
+<path d="M63 13l16 10-3 5-16-10z" fill="#3fd0ff"/>
+<!-- Gebäude: helle Seite links, dunkle rechts -->
+<rect x="10" y="62" width="108" height="50" rx="3" fill="#c3ccd6"/>
+<path d="M64 62h51a3 3 0 0 1 3 3v44a3 3 0 0 1-3 3H64z" fill="#9aa7b5"/>
+<rect x="8" y="60" width="112" height="8" rx="2" fill="#7d8ea3"/>
+<rect x="8" y="60" width="112" height="3" rx="1.500" fill="#9fb0c4"/>
+<!-- Fenster -->
+<rect x="20" y="76" width="16" height="14" rx="2" fill="#3fd0ff"/>
+<rect x="42" y="76" width="16" height="14" rx="2" fill="#3fd0ff"/>
+<rect x="92" y="76" width="16" height="14" rx="2" fill="#1ea7d8"/>
+<path d="M20 90 34 76h-12a2 2 0 0 0-2 2z" fill="#bff0ff" opacity=".7"/>
+<path d="M42 90 56 76H44a2 2 0 0 0-2 2z" fill="#bff0ff" opacity=".7"/>
+<!-- Tür -->
+<rect x="66" y="82" width="18" height="30" rx="2" fill="#4c5a6b"/>
+<rect x="74" y="82" width="2" height="30" fill="#2f3945"/>
+</svg>

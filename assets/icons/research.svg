@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+<!-- Kolben: Glas -->
+<path d="M50 14h28v34l30 54a10 10 0 0 1-9 14H29a10 10 0 0 1-9-14l30-54z" fill="#d9eef7"/>
+<path d="M64 14h14v34l30 54a10 10 0 0 1-9 14H64z" fill="#b5d9e8"/>
+<!-- Flüssigkeit -->
+<path d="M39 74h50l15 27a7 7 0 0 1-6 10H30a7 7 0 0 1-6-10z" fill="#3fd0ff"/>
+<path d="M64 74h25l15 27a7 7 0 0 1-6 10H64z" fill="#1ea7d8"/>
+<circle cx="52" cy="92" r="6" fill="#bff0ff"/>
+<circle cx="74" cy="100" r="4" fill="#bff0ff"/>
+<circle cx="70" cy="62" r="4" fill="#3fd0ff"/>
+<circle cx="58" cy="46" r="3" fill="#3fd0ff"/>
+<!-- Rand oben -->
+<rect x="44" y="8" width="40" height="10" rx="4" fill="#7d8ea3"/>
+<rect x="44" y="8" width="40" height="4" rx="2" fill="#9fb0c4"/>
+</svg>

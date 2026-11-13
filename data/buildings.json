@@ -168,5 +168,15 @@
 		"growth": 1.15,
 		"reserves": { "population": 2, "electricity": 2 },
 		"produces": { "coins": 50 }
+	},
+	{
+		"id": "lab",
+		"name": "Forschungslabor",
+		"icon": "res://assets/buildings/lab.svg",
+		"cost": { "coins": 50000, "glass": 100, "copper_cable": 50 },
+		"growth": 1.3,
+		"reserves": { "population": 3, "electricity": 5 },
+		"provides": { "research": 1 },
+		"note": "Forschung wird von späteren Gebäuden belegt"
 	}
 ]

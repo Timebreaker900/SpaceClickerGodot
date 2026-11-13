@@ -76,7 +76,8 @@ func _ready() -> void:
 	for building: Dictionary in Game.buildings:
 		if not building.has("parent") and building.get("placement", "list") == "list":
 			order.append(building["id"])
-	_check("Gebäude-Reihenfolge", order, ["farm", "lumberjack", "market", "mine", "smeltery", "watermill", "factory", "greenhouse", "solarpanel", "sawmill", "bank"])
+	_check("Gebäude-Reihenfolge", order, ["farm", "lumberjack", "market", "mine", "smeltery", "watermill", "factory", "greenhouse", "solarpanel", "sawmill", "bank", "lab"])
+	_check("Forschungslabor stellt Forschung bereit (statisch wie Strom)", [_building("lab")["provides"]["research"], Game.resource_def("research")["type"]], [1.0, "capacity"])
 	_check("Gewächshaus liefert mehr Nahrung als die Farm und kostet Glas", [_building("greenhouse")["produces"]["food"] > _building("farm")["produces"]["food"], _building("greenhouse")["cost"].has("glass")], [true, true])
 	_check("Schmelze braucht keinen Strom mehr, Sand ab Mine Lv 2, Kohle ab Lv 4", [_building("smeltery")["reserves"].has("electricity"), _building("coal_mining")["requires"]["mine"], _building("sandmine")["requires"]["mine"], _building("sandmine").get("parent", "")], [false, 4.0, 2.0, "mine"])
 	_check("Schmelze erscheint erst mit dem Kohleabbau", _building("smeltery")["requires"], { "coal_mining": 1.0 })
@@ -347,7 +348,7 @@ func _ready() -> void:
 
 	# Für Bildschirmfotos: ein fortgeschrittener Spielstand
 	if OS.get_cmdline_user_args().has("--demo"):
-		Game.levels.merge({ "farm": 12, "housing": 14, "lumberjack": 4, "mine": 6, "market": 3, "watermill": 6, "sandmine": 2, "smeltery": 10, "factory": 5, "solarpanel": 1, "bank": 1, "coal_mining": 6, "copper_mining": 6, "iron_mining": 2 }, true)
+		Game.levels.merge({ "farm": 12, "housing": 14, "lumberjack": 4, "mine": 6, "market": 3, "watermill": 6, "sandmine": 2, "smeltery": 10, "factory": 5, "solarpanel": 1, "bank": 1, "lab": 2, "coal_mining": 6, "copper_mining": 6, "iron_mining": 2 }, true)
 		Game.amounts.merge({ "coins": 4820.0, "wood": 1310.0, "food": 960.0, "stone": 455.0, "sand": 88.0, "coal": 240.0, "copper_ore": 37.0, "iron_ore": 3.0, "copper_bar": 61.0, "iron_bar": 12.0 }, true)
 		Game.recipe_state["copper_bar"].merge({ "auto_unlocked": true, "auto": true, "speed": 1 }, true)
 		Game.click_counts["coins"] = 140
