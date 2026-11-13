@@ -105,6 +105,7 @@
 		"id": "smeltery",
 		"name": "Schmelze",
 		"icon": "res://assets/buildings/smeltery.svg",
+		"requires": { "coal_mining": 1 },
 		"cost": { "coins": 100, "stone": 150 },
 		"growth": 1.15,
 		"reserves": { "population": 1 },

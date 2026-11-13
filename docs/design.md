@@ -19,7 +19,7 @@ Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Abschnitte mit �
   2. Holzfäller – Holz
   3. Markt – 1 Coin pro Sekunde, die erste Coin-Quelle ohne Klicken; kostet Coins und Holz
   4. Mine – Stein, darunter der Bergbau: Sand ab Mine Lv 2, Kohle ab Lv 4, Kupfer ab Lv 6, Eisen ab Lv 10, Gold ab Lv 20. Die Sandmine ist kein eigenes Gebäude mehr.
-  5. Schmelze – schaltet Schmelz-Rezepte frei; braucht Kohle statt Strom
+  5. Schmelze – schaltet Schmelz-Rezepte frei; braucht Kohle statt Strom und erscheint deshalb erst, wenn der Kohleabbau steht
   6. Wassermühle – Strom, zuerst für die Fabrik
   7. Fabrik – schaltet Fabrik-Rezepte frei
   8. Gewächshaus – mehr Nahrung als die Farm; kostet Coins und Glas, belegt nur Strom (keine Bevölkerung, wie die Farm); 10 Upgrade-Stufen
