@@ -5,7 +5,7 @@ extends Control
 const BuildingRow := preload("res://scenes/building_row.tscn")
 const RecipeRow := preload("res://scenes/recipe_row.tscn")
 const UpgradeRow := preload("res://scenes/upgrade_row.tscn")
-const GAME_VERSION := "0.1"
+const GAME_VERSION := "0.2"
 const BASE_MARGIN := 28       # normaler Abstand zum Bildschirmrand
 const HINT_TOP := 700.0       # Lage des Hinweisfelds ohne Zusatzrand
 const TOASTS_TOP := 250.0     # Lage der Einblendungen ohne Zusatzrand
@@ -88,6 +88,14 @@ func _ready() -> void:
 		var row: Node = UpgradeRow.instantiate()
 		upgrade_list.add_child(row)
 		row.setup(upgrade)
+
+	# Wischen am Handy: Alle Listen reichen Berührungen weiter und melden, wenn
+	# gewischt wird (siehe Ui.pass_touches und Ui.tap_allowed).
+	for list: Control in [building_list, recipe_list, upgrade_list, resource_list]:
+		Ui.pass_touches(list)
+		var scroll: ScrollContainer = list.get_parent()
+		scroll.scroll_started.connect(Ui.set_scrolling.bind(true))
+		scroll.scroll_ended.connect(Ui.set_scrolling.bind(false))
 
 	planet.pivot_offset = planet.custom_minimum_size / 2.0
 	planet.button_down.connect(_on_planet_pressed)
@@ -454,6 +462,7 @@ func _open_bar_picker() -> void:
 		popup.content.add_child(row)
 		boxes[res["id"]] = box
 	refresh.call()
+	Ui.pass_touches(popup.content)
 
 
 func _open_settings() -> void:

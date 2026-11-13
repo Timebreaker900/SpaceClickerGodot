@@ -820,6 +820,8 @@ func _rebuild_bonuses() -> void:
 ## Der Preis ist das cost_factor-Fache dessen, was das Gebäude auf dem
 ## Freischalt-Level kostet, und wächst damit von selbst mit.
 func _expand_upgrade_series(series: Dictionary) -> void:
+	var building_upgrades: Array = []
+	var click_upgrades: Array = []
 	var every: int = int(series["every_levels"])
 	var step: float = float(series["step"])
 	for entry: Dictionary in series["buildings"]:
@@ -847,7 +849,7 @@ func _expand_upgrade_series(series: Dictionary) -> void:
 			var provides: Dictionary = building.get("provides", {})
 			for id: String in provides:
 				upgrade["add_provides"] = { building["id"]: { id: ceilf(step * tier * float(provides[id])) } }
-			upgrades.append(upgrade)
+			building_upgrades.append(upgrade)
 
 	# Klick-Upgrades nach demselben Muster: alle "every_clicks" Klicks eine Stufe,
 	# jede bringt "amount" mehr pro Klick. Der Preis wächst mit der Klickzahl.
@@ -870,7 +872,11 @@ func _expand_upgrade_series(series: Dictionary) -> void:
 			}
 			if tier > 1:
 				upgrade["requires_upgrades"] = ["click_%s_%d" % [id, tier - 1]]
-			upgrades.append(upgrade)
+			click_upgrades.append(upgrade)
+
+	# Reihenfolge im Reiter: Klick-Upgrades, dann die aus data/upgrades.json
+	# (Abwesenheit), dann die Gebäude-Upgrades.
+	upgrades = click_upgrades + upgrades + building_upgrades
 
 
 ## 1 -> I, 4 -> IV, 14 -> XIV
