@@ -24,7 +24,7 @@ Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Abschnitte mit �
   7. Schmelze – schaltet Schmelz-Rezepte frei
   8. Fabrik – schaltet Fabrik-Rezepte frei
   9. Solarpanel – Strom; kostet Coins, Kupferkabel und Eisenplatten
-  10. Bank – 2 Coins pro Sekunde; teuer, kostet Coins, Stein und Eisenplatten, belegt Bevölkerung und Strom
+  10. Bank – 25 Coins pro Sekunde (Vorschlag); teuer, kostet Coins, Stein und Eisenplatten, belegt Bevölkerung und Strom
   11. Sägewerk – mehr Holz als der Holzfäller
 - Verstärktes Glas entfällt: Das Solarpanel braucht es nicht mehr.
 - Es gibt eine eigene Sicht, die alle Währungen auf einmal zeigt.

@@ -131,7 +131,7 @@
 		"cost": { "coins": 4000, "stone": 2000, "iron_plate": 5 },
 		"growth": 1.15,
 		"reserves": { "population": 2, "electricity": 2 },
-		"produces": { "coins": 2 }
+		"produces": { "coins": 25 }
 	},
 	{
 		"id": "sawmill",

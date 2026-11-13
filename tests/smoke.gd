@@ -158,7 +158,7 @@ func _ready() -> void:
 	_check("Stufe III erst nach II sichtbar, dann Rätsel", Game.upgrade_visibility(_upgrade("farm_3")), "mystery")
 	_check("Stufe IV noch unsichtbar", Game.upgrade_visibility(_upgrade("farm_4")), "hidden")
 	_check("Strom-Upgrade in ganzen Einheiten", _upgrade("watermill_1")["add_provides"]["watermill"]["electricity"], 1.0)
-	_check("Bank-Upgrade I: halbe Grundproduktion", _upgrade("bank_1")["add_produces"]["bank"]["coins"], 1.0)
+	_check("Bank-Upgrade I: halbe Grundproduktion", _upgrade("bank_1")["add_produces"]["bank"]["coins"], 12.5)
 	_check("Upgrade nur einmal kaufbar", Game.can_buy_upgrade(farm_upgrade), false)
 	var click_upgrade: Dictionary = _upgrade("click_coins_1")
 	Game.amounts["coins"] = 5000.0
