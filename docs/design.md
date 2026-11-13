@@ -1,0 +1,99 @@
+# Spielentwurf
+
+Der gültige Stand. Gebaut wird nur, was hier steht. Neue Ideen kommen über `ideen.md` herein.
+
+Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Noch nichts davon ist für die Godot-Version bestätigt.
+
+## Rahmen
+
+- Engine: Godot 4, GDScript
+- Plattform: Handy im Hochformat (Android, iOS), später Steam als Kaufversion
+- Genre: Incremental/Clicker
+
+## Kernablauf (alt)
+
+1. Planet antippen gibt Coins oder Holz (umschaltbar), anfangs 1 pro Klick.
+2. Mit Coins und Holz Gebäude kaufen, die Ressourcen pro Sekunde liefern.
+3. Nahrung in Bevölkerung umwandeln; Gebäude belegen Bevölkerung und Strom dauerhaft.
+4. Erze abbauen, zu Barren schmelzen, zu Bauteilen verarbeiten.
+5. Mit Bauteilen weitere Gebäude und (geplant) neue Planeten freischalten.
+
+Kaufmenge umschaltbar: 1 / 10 / 100.
+
+## Ressourcen (alt)
+
+| Gruppe | Ressourcen |
+|---|---|
+| Basis | Coins, Holz, Nahrung, Stein, Sand |
+| Laufend belegt | Bevölkerung, Strom |
+| Erze | Kupfererz, Eisenerz, Golderz |
+| Barren | Kupferbarren, Eisenbarren, Goldbarren |
+| Bauteile | Kupferkabel, Eisenplatte, Glas, verstärktes Glas |
+
+Bevölkerung: 1 Person kostet 250 Nahrung einmalig und 2 Nahrung/s dauerhaft.
+
+## Gebäude Erde (alt)
+
+Werte aus dem alten Code. Sie dienen als Ausgangspunkt und wandern beim Bauen nach `data/`; danach wird diese Tabelle auf Namen und Funktion gekürzt.
+
+| Gebäude | Liefert | Kaufkosten (Start) | Belegt dauerhaft | Basis/s |
+|---|---|---|---|---|
+| Farm | Nahrung | 25 Coins, 25 Holz | – | 1 |
+| Holzfäller | Holz | 50 Coins | 1 Bevölkerung | 1 |
+| Mine | Stein | 75 Coins, 75 Holz | 2 Bevölkerung | 1 |
+| Wassermühle | Strom | 100 Coins, 100 Holz | – | 1 |
+| Bank | Coins | 125 Coins, 125 Stein | 2 Bevölkerung, 2 Strom | 2 |
+| Schmelze | schaltet Schmelzen frei | 100 Coins, 150 Stein | 1 Bevölkerung, 1 Strom | – |
+| Fabrik | schaltet Crafting frei | 150 Coins, 180 Holz, 225 Stein | 2 Bevölkerung, 3 Strom | – |
+| Sandmine | Sand | Coins (Wert unbekannt) | Bevölkerung (Wert unbekannt) | unbekannt |
+| Solarpanel | Strom | 4 Kupferkabel, 3 Eisenplatten, 3 verstärktes Glas | – | 2 |
+
+Erzabbau (Kupfer, Eisen, Gold): je eine eigene Stufe, kostet Nahrung, Holz und Stein, wird ab einem bestimmten Minen-Level freigeschaltet. Im alten Code auskommentiert, Werte unbekannt.
+
+„Unbekannt“ heißt: Der Wert war nur im Unity-Editor eingestellt und ist nicht aus dem Code ablesbar.
+
+## Rezepte (alt)
+
+Jedes Rezept hat eine Dauer und lässt sich auf automatisch stellen. Mengen und Zeiten waren im Unity-Editor eingestellt (unbekannt).
+
+| Wo | Aus | Wird |
+|---|---|---|
+| Schmelze | Kupfererz | Kupferbarren |
+| Schmelze | Eisenerz | Eisenbarren |
+| Schmelze | Golderz | Goldbarren |
+| Schmelze | Sand | Glas |
+| Fabrik | Kupferbarren | Kupferkabel |
+| Fabrik | Eisenbarren | Eisenplatte |
+
+Verstärktes Glas wird vom Solarpanel verlangt, hat aber kein Rezept.
+
+## Upgrades (alt)
+
+- Je ein Upgrade für Farm, Holzfäller, Mine, Wassermühle, Bank, Sandmine. Freischaltung ab einem Gebäude-Level. Farm-Upgrade: +1 Basisproduktion; die anderen wurden nicht einzeln geprüft.
+- Klick-Upgrades für Coins und Holz: +1 pro Klick, Freischaltung nach Anzahl Klicks.
+- Auto-Schmelzen/-Craften als Upgrade-Icons vorhanden.
+
+## Planeten (alt)
+
+- Erde: spielbar.
+- Mond: als gesperrter Planet mit Kaufknopf angelegt, ohne Inhalt.
+- Mars: gesperrt, ohne Inhalt und ohne Freischaltung.
+
+## Bekannte Schwächen des alten Stands
+
+- Der Kostenfaktor wurde pro Kauf zweimal angewendet (Kosten × Faktor²).
+- Kein Offline-Fortschritt gefunden.
+- Kein Prestige, kein Endziel.
+- Goldbarren und Glas haben keinen erkennbaren Verwendungszweck.
+
+## Offene Fragen
+
+- Wie groß soll das Spiel werden (ein paar Stunden oder Wochen)?
+- Was ist das Ziel bzw. gibt es Prestige?
+- Was bringen Mond und Mars, und wie schaltet man sie frei?
+- Monetarisierung am Handy: welche Art? Was unterscheidet die Steam-Version?
+- Was vom alten Stand bleibt, was fliegt raus?
+
+## Später
+
+Noch nichts.
