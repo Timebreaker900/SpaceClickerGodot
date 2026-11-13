@@ -124,7 +124,10 @@ func _ready() -> void:
 	Game.levels["smeltery"] = 4
 	_check("Schmelze Lv 4: noch kein Kupferbarren", Game.can_start_recipe(copper_bar), false)
 	Game.levels["smeltery"] = 5
-	_check("Schmelze Lv 5: Glas ja, Eisenbarren nein", [Game.recipe_batch(_recipe("glass")), Game.recipe_batch(_recipe("iron_bar"))], [1, 0])
+	_check("Schmelze Lv 5: Glas mit Menge 5, Kupferbarren neu mit 1, Eisenbarren noch nicht", [Game.recipe_batch(_recipe("glass")), Game.recipe_batch(copper_bar), Game.recipe_batch(_recipe("iron_bar"))], [5, 1, 0])
+	Game.levels["smeltery"] = 8
+	_check("Schmelze Lv 8: Kupferbarren mit Menge 4", Game.recipe_batch(copper_bar), 4)
+	Game.levels["smeltery"] = 5
 	_check("Nächstes Rezept ab Lv 10", Game.next_recipe_level(_building("smeltery")), 10)
 	_check("Mit Schmelze startbar", Game.start_recipe(copper_bar), true)
 	_check("Erz sofort abgezogen", Game.amounts["copper_ore"], 0.0)

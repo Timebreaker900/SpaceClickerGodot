@@ -27,8 +27,9 @@ extends Node
 ##
 ## Ein Rezept wandelt in "seconds" Sekunden "input" in "output" um. Es gehört zu
 ## einem Gebäude und wird ab dessen Level "requires_level" freigeschaltet
-## (ohne Angabe ab Level 1). Wie viel pro Durchgang verarbeitet wird, bestimmen
-## allein die Mengen-Upgrades des Rezepts.
+## (ohne Angabe ab Level 1). Jedes Gebäude-Level darüber und jedes Mengen-Upgrade
+## vergrößert den Durchgang um 1: mehr Zutaten hinein, mehr Ergebnis heraus, bei
+## gleicher Dauer.
 ## Jedes Rezept hat drei eigene Upgrades, bezahlt mit dem, was es herstellt:
 ##   auto   - einmalig: das Rezept startet von selbst
 ##   speed  - je Stufe 1 Sekunde schneller, bis zur Mindestdauer
@@ -309,12 +310,15 @@ func can_buy(building: Dictionary, count: int) -> bool:
 	return true
 
 
-## Wie viele Einheiten ein Rezept pro Durchgang verarbeitet: 1 plus Mengen-
-## Upgrades. Ohne Gebäude 0, das Rezept ist dann nicht verfügbar.
+## Wie viele Einheiten ein Rezept pro Durchgang verarbeitet: 1 beim Freischalten,
+## dazu +1 je weiterem Gebäude-Level und +1 je Mengen-Upgrade. Unter dem
+## Freischalt-Level 0, das Rezept ist dann nicht verfügbar.
 func recipe_batch(recipe: Dictionary) -> int:
-	if levels[recipe["building"]] < int(recipe.get("requires_level", 1)):
+	var unlock_level: int = int(recipe.get("requires_level", 1))
+	var building_level: int = levels[recipe["building"]]
+	if building_level < unlock_level:
 		return 0
-	return 1 + int(recipe_state[recipe["id"]]["amount"])
+	return 1 + (building_level - unlock_level) + int(recipe_state[recipe["id"]]["amount"])
 
 
 ## Ab welchem Level das Gebäude sein nächstes Rezept freischaltet (0 = keines mehr).

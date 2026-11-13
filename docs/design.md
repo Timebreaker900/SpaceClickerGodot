@@ -62,7 +62,7 @@ Abweichungen vom alten Stand:
 
 - Kostenfaktor 1,15 pro Level für alle Gebäude. Das ist ein Vorschlag, der alte Wert ist unbekannt.
 - Bevölkerung ist technisch ein Gebäude (kostet Nahrung, verbraucht 2 Nahrung/s, liefert 1 Bevölkerung).
-- Menge pro Durchgang kommt allein aus den Mengen-Upgrades des Rezepts (Start: 1).
+- Menge pro Durchgang: 1 beim Freischalten, +1 je weiterem Level von Schmelze bzw. Fabrik, +1 je Mengen-Upgrade des Rezepts. Größere Menge heißt mehr Zutaten und mehr Ergebnis bei gleicher Dauer.
 - Das Level der Schmelze schaltet die Schmelz-Rezepte frei: ab Lv 1 Glas, ab Lv 5 Kupferbarren, ab Lv 10 Eisenbarren, ab Lv 15 Goldbarren. Darüber gibt es kein Level (Höchstlevel 15, Vorschlag). Glas steht in der Produktionsliste ganz oben.
 - Die Fabrik ist genauso gestaffelt: ab Lv 5 Kupferkabel, ab Lv 10 Eisenplatte, Höchstlevel 10.
 - Die Fabrik kostet zusätzlich Glas: das erste Level 1, jedes weitere eines mehr (bis Lv 10 zusammen 55).
