@@ -153,17 +153,27 @@ func _ready() -> void:
 	_check("Bank-Upgrade I: halbe Grundproduktion", _upgrade("bank_1")["add_produces"]["bank"]["coins"], 1.0)
 	_check("Upgrade nur einmal kaufbar", Game.can_buy_upgrade(farm_upgrade), false)
 	var click_upgrade: Dictionary = _upgrade("click_coins_1")
-	Game.click_counts["coins"] = 99
-	_check("Klick-Upgrade unter 100 Klicks gesperrt", Game.upgrade_unlocked(click_upgrade), false)
+	Game.amounts["coins"] = 5000.0
+	Game.amounts["wood"] = 5000.0
+	Game.click_counts["coins"] = 249
+	_check("Klick-Upgrade I unter 250 Klicks gesperrt", Game.upgrade_unlocked(click_upgrade), false)
 	Game.click_target = "coins"
 	Game.click()
-	_check("Klick-Upgrade ab 100 Klicks frei", Game.buy_upgrade(click_upgrade), true)
+	_check("Klick-Upgrade I kostet 250 Coins und 125 Holz", [click_upgrade["cost"]["coins"], click_upgrade["cost"]["wood"]], [250.0, 125.0])
+	_check("Klick-Upgrade I ab 250 Klicks frei", Game.buy_upgrade(click_upgrade), true)
 	_check("Klick bringt 2 Coins", Game.click(), 2.0)
+	var click_upgrade_2: Dictionary = _upgrade("click_coins_2")
+	_check("Stufe II braucht 500 Klicks", [click_upgrade_2["requires_clicks"]["coins"], Game.can_buy_upgrade(click_upgrade_2)], [500, false])
+	Game.click_counts["coins"] = 500
+	Game.buy_upgrade(click_upgrade_2)
+	_check("Nach Stufe II bringt ein Klick 3 Coins", Game.click_gain("coins"), 3.0)
+	_check("Holz-Klick bleibt bei 1", Game.click_gain("wood"), 1.0)
+	_check("Stufe XL heißt XL", _upgrade("click_wood_40")["name"], "Stärkerer Klick: Holz XL")
 	Game.save_game()
 	_reset()
 	Game.load_game()
 	Game._rebuild_bonuses()
-	_check("Upgrade nach Laden noch gekauft", Game.click_gain("coins"), 2.0)
+	_check("Upgrades nach Laden noch gekauft", Game.click_gain("coins"), 3.0)
 
 	# Abwesenheit: Gebäude liefern weiter, Auto-Rezepte laufen, Obergrenze greift
 	_reset()

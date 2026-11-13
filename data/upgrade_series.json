@@ -10,5 +10,16 @@
 		{ "building": "watermill", "name": "Wassermühlen-Upgrade" },
 		{ "building": "bank", "name": "Bank-Upgrade" },
 		{ "building": "sandmine", "name": "Sandminen-Upgrade" }
-	]
+	],
+	"clicks": {
+		"every_clicks": 250,
+		"amount": 1,
+		"tiers": 40,
+		"cost_per_click": 1,
+		"other_cost_per_click": 0.5,
+		"resources": [
+			{ "resource": "coins", "other": "wood", "name": "Stärkerer Klick: Coins" },
+			{ "resource": "wood", "other": "coins", "name": "Stärkerer Klick: Holz" }
+		]
+	}
 }

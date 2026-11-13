@@ -802,11 +802,34 @@ func _expand_upgrade_series(series: Dictionary) -> void:
 				upgrade["add_provides"] = { building["id"]: { id: ceilf(step * tier * float(provides[id])) } }
 			upgrades.append(upgrade)
 
+	# Klick-Upgrades nach demselben Muster: alle "every_clicks" Klicks eine Stufe,
+	# jede bringt "amount" mehr pro Klick. Der Preis wächst mit der Klickzahl.
+	var clicks: Dictionary = series["clicks"]
+	var every_clicks: int = int(clicks["every_clicks"])
+	for entry: Dictionary in clicks["resources"]:
+		var id: String = entry["resource"]
+		for tier: int in range(1, int(clicks["tiers"]) + 1):
+			var needed: int = every_clicks * tier
+			var upgrade: Dictionary = {
+				"id": "click_%s_%d" % [id, tier],
+				"name": "%s %s" % [entry["name"], _roman(tier)],
+				"icon": _resource_by_id[id]["icon"],
+				"requires_clicks": { id: needed },
+				"cost": {
+					id: roundf(needed * float(clicks["cost_per_click"])),
+					entry["other"]: roundf(needed * float(clicks["other_cost_per_click"])),
+				},
+				"add_click": { id: float(clicks["amount"]) },
+			}
+			if tier > 1:
+				upgrade["requires_upgrades"] = ["click_%s_%d" % [id, tier - 1]]
+			upgrades.append(upgrade)
+
 
 ## 1 -> I, 4 -> IV, 14 -> XIV
 func _roman(number: int) -> String:
-	var values: Array = [10, 9, 5, 4, 1]
-	var symbols: Array = ["X", "IX", "V", "IV", "I"]
+	var values: Array = [50, 40, 10, 9, 5, 4, 1]
+	var symbols: Array = ["L", "XL", "X", "IX", "V", "IV", "I"]
 	var result: String = ""
 	for i: int in values.size():
 		while number >= values[i]:

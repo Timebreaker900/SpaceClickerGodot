@@ -1,21 +1,5 @@
 [
 	{
-		"id": "click_coins_1",
-		"name": "Stärkerer Klick: Coins",
-		"icon": "res://assets/icons/coins.svg",
-		"requires_clicks": { "coins": 100 },
-		"cost": { "coins": 100, "wood": 50 },
-		"add_click": { "coins": 1 }
-	},
-	{
-		"id": "click_wood_1",
-		"name": "Stärkerer Klick: Holz",
-		"icon": "res://assets/icons/wood.svg",
-		"requires_clicks": { "wood": 100 },
-		"cost": { "coins": 50, "wood": 100 },
-		"add_click": { "wood": 1 }
-	},
-	{
 		"id": "offline_1",
 		"name": "Nachtschicht",
 		"icon": "res://assets/icons/offline_rate.svg",
