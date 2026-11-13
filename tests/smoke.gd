@@ -106,11 +106,8 @@ func _ready() -> void:
 	# Freischaltung über Gebäude-Level
 	var copper_mining: Dictionary = _building("copper_mining")
 	_check("Kupferabbau anfangs gesperrt", Game.is_unlocked(copper_mining), false)
-	Game.levels["mine"] = 2
-	_check("Kupferabbau bei Mine Lv 2 noch gesperrt", Game.is_unlocked(copper_mining), false)
-	Game.levels["mine"] = 3
-	_check("Kupferabbau ab Mine Lv 3 frei", Game.is_unlocked(copper_mining), true)
 	Game.levels["mine"] = 5
+	_check("Kupferabbau ab Mine Lv 5 frei", Game.is_unlocked(copper_mining), true)
 
 	# Rezepte: Zutaten sofort weg, Ergebnis nach Ablauf, Menge = Gebäude-Level
 	var copper_bar: Dictionary = _recipe("copper_bar")

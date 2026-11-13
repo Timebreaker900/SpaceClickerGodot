@@ -43,7 +43,7 @@
 		"level_cap": "mine",
 		"name": "Kupferabbau",
 		"icon": "res://assets/icons/copper_ore.svg",
-		"requires": { "mine": 3 },
+		"requires": { "mine": 5 },
 		"cost": { "food": 100, "wood": 100, "stone": 100 },
 		"growth": 1.15,
 		"produces": { "copper_ore": 0.8 }
