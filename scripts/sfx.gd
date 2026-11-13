@@ -6,25 +6,16 @@ extends Node
 ## Um einen Ton später gegen eine echte Sounddatei zu tauschen, genügt es,
 ## _streams["name"] mit load("res://...") zu füllen.
 ##
-## Die Lautstärke liegt in einer eigenen Datei und überlebt damit das
-## Zurücksetzen des Spielstands.
+## Die Lautstärke steht in den Einstellungen (Autoload "Options").
 
 const RATE := 44100  # Messwerte pro Sekunde
-
-var volume: float = 0.7  # 0 = stumm, 1 = voll
 
 var _streams: Dictionary = {}
 var _players: Array[AudioStreamPlayer] = []
 var _next_player: int = 0
-var _options_path: String = "user://options.json"
 
 
 func _ready() -> void:
-	for arg: String in OS.get_cmdline_args():
-		if arg.begins_with("res://tests/"):
-			_options_path = "user://test_options.json"
-	_load_options()
-
 	# Ein Ton ist eine Liste aus [Start in s, Tonhöhe von, Tonhöhe bis, Dauer in s, Stärke].
 	# Tonhöhen in Hertz; 523 / 659 / 784 / 1047 sind die Noten C, E, G, C.
 	_streams["click"] = _build([[0.0, 900, 520, 0.08, 0.55]])
@@ -49,13 +40,13 @@ func _ready() -> void:
 		var player := AudioStreamPlayer.new()
 		add_child(player)
 		_players.append(player)
-	set_volume(volume, false)
+	set_volume(Options.volume, false)
 
 
 ## Spielt einen Ton. "pitch_variation" verstimmt ihn zufällig ein wenig, damit
 ## viele gleiche Klicks hintereinander nicht eintönig klingen.
 func play(sound: String, pitch_variation: float = 0.0) -> void:
-	if volume <= 0.0 or not _streams.has(sound):
+	if Options.volume <= 0.0 or not _streams.has(sound):
 		return
 	var player: AudioStreamPlayer = _players[_next_player]
 	_next_player = (_next_player + 1) % _players.size()
@@ -65,21 +56,11 @@ func play(sound: String, pitch_variation: float = 0.0) -> void:
 
 
 func set_volume(value: float, save: bool = true) -> void:
-	volume = clampf(value, 0.0, 1.0)
+	Options.volume = clampf(value, 0.0, 1.0)
 	for player: AudioStreamPlayer in _players:
-		player.volume_db = linear_to_db(maxf(volume, 0.0001))
+		player.volume_db = linear_to_db(maxf(Options.volume, 0.0001))
 	if save:
-		var file: FileAccess = FileAccess.open(_options_path, FileAccess.WRITE)
-		if file != null:
-			file.store_string(JSON.stringify({ "volume": volume }))
-
-
-func _load_options() -> void:
-	if not FileAccess.file_exists(_options_path):
-		return
-	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(_options_path))
-	if typeof(data) == TYPE_DICTIONARY:
-		volume = clampf(float(data.get("volume", volume)), 0.0, 1.0)
+		Options.save()
 
 
 # --- Tonerzeugung -------------------------------------------------------------
