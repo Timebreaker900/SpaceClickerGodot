@@ -131,6 +131,15 @@
 		"recipes_label": "Herstellen"
 	},
 	{
+		"id": "greenhouse",
+		"name": "Gewächshaus",
+		"icon": "res://assets/buildings/greenhouse.svg",
+		"cost": { "coins": 800, "glass": 20 },
+		"growth": 1.15,
+		"reserves": { "population": 1, "electricity": 2 },
+		"produces": { "food": 5 }
+	},
+	{
 		"id": "solarpanel",
 		"name": "Solarpanel",
 		"icon": "res://assets/buildings/solarpanel.svg",

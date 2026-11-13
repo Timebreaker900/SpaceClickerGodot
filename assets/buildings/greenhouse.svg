@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="256" height="256">
+<ellipse cx="64" cy="114" rx="56" ry="7" fill="#000" opacity=".28"/>
+<!-- Glaskörper: helle Seite links, dunkle rechts -->
+<path d="M14 58 64 22 114 58V104H14z" fill="#bfe9f7"/>
+<path d="M64 22 114 58V104H64z" fill="#8fcbe0"/>
+<!-- Spiegelung -->
+<path d="M22 60 44 44V60z" fill="#fff" opacity=".55"/>
+<path d="M22 66h10l-10 16z" fill="#fff" opacity=".35"/>
+<!-- Beete -->
+<rect x="20" y="92" width="38" height="12" fill="#6b4226"/>
+<rect x="70" y="92" width="38" height="12" fill="#55331c"/>
+<!-- Pflanzen -->
+<g fill="#4fb35a">
+  <path d="M30 92c-8-6-8-16-2-22 5 7 6 14 2 22z"/>
+  <path d="M40 92c-2-12 3-22 10-26 2 10-1 20-10 26z"/>
+  <path d="M82 92c-8-6-8-16-2-22 5 7 6 14 2 22z"/>
+  <path d="M92 92c-2-12 3-22 10-26 2 10-1 20-10 26z"/>
+</g>
+<g fill="#2f8a43">
+  <path d="M36 92c-1-8 1-14 5-18-1 8-2 13-5 18z"/>
+  <path d="M88 92c-1-8 1-14 5-18-1 8-2 13-5 18z"/>
+</g>
+<circle cx="47" cy="76" r="4" fill="#ff5d5d"/>
+<circle cx="99" cy="76" r="4" fill="#e04646"/>
+<circle cx="29" cy="80" r="3.500" fill="#ff5d5d"/>
+<!-- Rahmen -->
+<g fill="none" stroke="#4c5a6b" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+  <path d="M14 58 64 22 114 58V104H14z"/>
+  <path d="M64 22V104M14 58H114"/>
+</g>
+<g stroke="#7d8ea3" stroke-width="3" stroke-linecap="round">
+  <path d="M39 45V56M89 45V56"/>
+</g>
+<!-- Sockel -->
+<rect x="8" y="102" width="112" height="10" rx="2" fill="#7d8ea3"/>
+<rect x="8" y="102" width="112" height="4" rx="2" fill="#9fb0c4"/>
+<!-- Akzent: Lüftung im Giebel -->
+<circle cx="64" cy="22" r="5" fill="#3fd0ff"/>
+</svg>

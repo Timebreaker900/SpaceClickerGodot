@@ -76,7 +76,8 @@ func _ready() -> void:
 	for building: Dictionary in Game.buildings:
 		if not building.has("parent") and building.get("placement", "list") == "list":
 			order.append(building["id"])
-	_check("Gebäude-Reihenfolge", order, ["farm", "lumberjack", "market", "mine", "sandmine", "smeltery", "watermill", "factory", "solarpanel", "sawmill", "bank"])
+	_check("Gebäude-Reihenfolge", order, ["farm", "lumberjack", "market", "mine", "sandmine", "smeltery", "watermill", "factory", "greenhouse", "solarpanel", "sawmill", "bank"])
+	_check("Gewächshaus liefert mehr Nahrung als die Farm und kostet Glas", [_building("greenhouse")["produces"]["food"] > _building("farm")["produces"]["food"], _building("greenhouse")["cost"].has("glass")], [true, true])
 	_check("Schmelze braucht keinen Strom mehr, Kohleabbau ab Mine Lv 2", [_building("smeltery")["reserves"].has("electricity"), _building("coal_mining")["requires"]["mine"]], [false, 2.0])
 	_check("Erste Bank kostet 1 Goldbarren, die dritte 3", [Game.cost_for(_building("bank"), 1)["gold_bar"], Game.cost_for(_building("bank"), 3)["gold_bar"]], [1.0, 6.0])
 	_check("Markt liefert 1 Coin, Sägewerk mehr Holz als der Holzfäller", [_building("market")["produces"]["coins"], _building("sawmill")["produces"]["wood"] > _building("lumberjack")["produces"]["wood"]], [1.0, true])

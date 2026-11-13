@@ -10,6 +10,7 @@
 		{ "building": "market", "name": "Markt-Upgrade" },
 		{ "building": "watermill", "name": "Wassermühlen-Upgrade" },
 		{ "building": "sandmine", "name": "Sandminen-Upgrade" },
+		{ "building": "greenhouse", "name": "Gewächshaus-Upgrade", "tiers": 10 },
 		{ "building": "solarpanel", "name": "Solarpanel-Upgrade", "tiers": 10 },
 		{ "building": "sawmill", "name": "Sägewerk-Upgrade", "tiers": 10 },
 		{ "building": "bank", "name": "Bank-Upgrade", "tiers": 10 }
