@@ -24,14 +24,22 @@ Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Abschnitte mit �
 - Gebäude: Farm, Bevölkerung, Holzfäller, Mine, Wassermühle, Bank – Werte in `data/buildings.json`
 - Kaufmenge 1 / 10 / 100
 - Speichern alle 10 Sekunden und beim Schließen
+- Sandmine, Schmelze, Fabrik
+- Erzabbau für Kupfer, Eisen und Gold, freigeschaltet über das Minen-Level
+- Rezepte mit Laufzeit, Start-Knopf und Auto-Schalter – Werte in `data/recipes.json`
+- Drei Reiter: Gebäude, Produktion, Ressourcen (die Sicht mit allen Währungen)
 
 Abweichungen vom alten Stand:
 
 - Kostenfaktor 1,15 pro Level für alle Gebäude. Das ist ein Vorschlag, der alte Wert ist unbekannt.
 - Bevölkerung ist technisch ein Gebäude (kostet Nahrung, verbraucht 2 Nahrung/s, liefert 1 Bevölkerung).
 - Die Erde ist eine sich drehende Kugel statt eines flachen Bildes.
+- Das Level von Schmelze und Fabrik bestimmt die Menge pro Durchgang. Im alten Stand hatte das Level keine erkennbare Wirkung.
+- Auto ist bei jedem Rezept sofort verfügbar. Im alten Stand war es als Upgrade gedacht.
 
-Noch nicht portiert: Schmelze, Fabrik, Sandmine, Solarpanel, Erzabbau, Rezepte, Upgrades, Sicht mit allen Währungen, weitere Planeten.
+Vorschlagswerte, weil die alten nur im Unity-Editor standen: Kosten und Ertrag der Sandmine, Kosten und Freischalt-Level des Erzabbaus (Mine Lv 5 / 10 / 20), Mengen und Zeiten aller Rezepte. Die Erz-Raten 0,8 / 0,5 / 0,2 pro Sekunde stammen aus dem alten Code.
+
+Noch nicht portiert: Solarpanel, Upgrades, weitere Planeten.
 
 ## Rahmen
 
@@ -117,6 +125,9 @@ Verstärktes Glas wird vom Solarpanel verlangt, hat aber kein Rezept.
 
 ## Offene Fragen
 
+- Solarpanel: Es verlangt verstärktes Glas, für das es kein Rezept gibt. Woraus wird es hergestellt?
+- Wofür werden Goldbarren und Glas gebraucht?
+- Soll Auto bei Rezepten sofort verfügbar sein oder erst als Upgrade?
 - Was ist das ultimative Ziel? Gibt es Prestige?
 - Was heißt „futuristisch“ konkret: nur das Aussehen der Oberfläche, oder auch Inhalte (spätere Gebäude, Technologien)? Die Erde beginnt mit Farm und Holzfäller.
 - Wie viele Planeten, was bringt jeder, und wie schaltet man sie frei?
