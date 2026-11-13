@@ -15,6 +15,11 @@ extends Node
 ##   reserves - Kapazität dauerhaft belegen
 ##   requires - erst kaufbar, wenn andere Gebäude ein Level erreicht haben
 ##
+## Ein Upgrade wird einmal gekauft und verbessert dauerhaft etwas:
+##   add_produces / add_provides - Gebäude liefern pro Level mehr
+##   add_click                   - ein Klick bringt mehr
+## Freigeschaltet wird es über Gebäude-Level (requires) oder Klicks (requires_clicks).
+##
 ## Ein Rezept wandelt in "seconds" Sekunden "input" in "output" um. Es gehört zu
 ## einem Gebäude; dessen Level bestimmt, wie viel pro Durchgang verarbeitet wird.
 
@@ -25,16 +30,20 @@ var save_path: String = "user://save.json"  # Tests biegen das auf eine eigene D
 var resources: Array = []
 var buildings: Array = []
 var recipes: Array = []
+var upgrades: Array = []
 var settings: Dictionary = {}
 
 var amounts: Dictionary = {}       # Ressourcen-ID -> Vorrat
 var levels: Dictionary = {}        # Gebäude-ID -> Level
 var recipe_state: Dictionary = {}  # Rezept-ID -> { auto, running, progress, batch }
+var bought: Dictionary = {}        # Upgrade-ID -> gekauft?
+var click_counts: Dictionary = {}  # Ressourcen-ID -> wie oft dafür geklickt wurde
 var click_target: String = "coins"
 var buy_amount: int = 1
 
 var _resource_by_id: Dictionary = {}
 var _building_by_id: Dictionary = {}
+var _bonus: Dictionary = {}  # Summe der gekauften Upgrades, siehe _rebuild_bonuses()
 var _save_timer: float = 0.0
 
 
@@ -42,6 +51,7 @@ func _ready() -> void:
 	resources = _load_json("res://data/resources.json")
 	buildings = _load_json("res://data/buildings.json")
 	recipes = _load_json("res://data/recipes.json")
+	upgrades = _load_json("res://data/upgrades.json")
 	settings = _load_json("res://data/settings.json")
 	for res: Dictionary in resources:
 		_resource_by_id[res["id"]] = res
@@ -52,7 +62,12 @@ func _ready() -> void:
 		levels[building["id"]] = 0
 	for recipe: Dictionary in recipes:
 		recipe_state[recipe["id"]] = _new_recipe_state()
+	for upgrade: Dictionary in upgrades:
+		bought[upgrade["id"]] = false
+	for id: String in settings["click"]:
+		click_counts[id] = 0
 	load_game()
+	_rebuild_bonuses()
 
 
 func _process(delta: float) -> void:
@@ -90,10 +105,25 @@ func get_rates() -> Dictionary:
 		var level: int = levels[building["id"]]
 		if level == 0:
 			continue
-		var produces: Dictionary = building.get("produces", {})
+		var produces: Dictionary = building_output(building, "produces")
 		for id: String in produces:
 			rates[id] = rates.get(id, 0.0) + float(produces[id]) * level
 	return rates
+
+
+## Was ein Gebäude pro Level liefert: Grundwert aus den Daten plus gekaufte
+## Upgrades. "key" ist "produces" oder "provides".
+func building_output(building: Dictionary, key: String) -> Dictionary:
+	var result: Dictionary = building.get(key, {}).duplicate()
+	var bonus: Dictionary = _bonus.get(key, {}).get(building["id"], {})
+	for id: String in bonus:
+		result[id] = float(result.get(id, 0.0)) + bonus[id]
+	return result
+
+
+## Wie viel ein Klick für eine Ressource bringt.
+func click_gain(id: String) -> float:
+	return float(settings["click"][id]) + _bonus.get("click", {}).get(id, 0.0)
 
 
 func capacity_total(id: String) -> float:
@@ -147,7 +177,7 @@ func can_buy(building: Dictionary, count: int) -> bool:
 			return false
 	# Laufender Verbrauch darf die Produktion nicht ins Minus drücken.
 	var rates: Dictionary = get_rates()
-	var produces: Dictionary = building.get("produces", {})
+	var produces: Dictionary = building_output(building, "produces")
 	for id: String in produces:
 		var change: float = float(produces[id]) * count
 		if change < 0.0 and rates.get(id, 0.0) + change < 0.0:
@@ -174,8 +204,9 @@ func can_start_recipe(recipe: Dictionary) -> bool:
 # --- Aktionen ---------------------------------------------------------------
 
 func click() -> float:
-	var gain: float = float(settings["click"][click_target])
+	var gain: float = click_gain(click_target)
 	amounts[click_target] += gain
+	click_counts[click_target] += 1
 	return gain
 
 
@@ -193,6 +224,37 @@ func cycle_buy_amount() -> void:
 	var options: Array = settings["buy_amounts"]
 	var index: int = options.find(float(buy_amount))
 	buy_amount = int(options[(index + 1) % options.size()])
+
+
+func upgrade_unlocked(upgrade: Dictionary) -> bool:
+	if not is_unlocked(upgrade):
+		return false
+	var clicks: Dictionary = upgrade.get("requires_clicks", {})
+	for id: String in clicks:
+		if click_counts[id] < int(clicks[id]):
+			return false
+	return true
+
+
+func can_buy_upgrade(upgrade: Dictionary) -> bool:
+	if bought[upgrade["id"]] or not upgrade_unlocked(upgrade):
+		return false
+	var cost: Dictionary = upgrade.get("cost", {})
+	for id: String in cost:
+		if amounts[id] < float(cost[id]):
+			return false
+	return true
+
+
+func buy_upgrade(upgrade: Dictionary) -> bool:
+	if not can_buy_upgrade(upgrade):
+		return false
+	var cost: Dictionary = upgrade.get("cost", {})
+	for id: String in cost:
+		amounts[id] -= float(cost[id])
+	bought[upgrade["id"]] = true
+	_rebuild_bonuses()
+	return true
 
 
 ## Startet einen Durchgang: Die Zutaten werden sofort abgezogen, das Ergebnis
@@ -239,6 +301,8 @@ func save_game() -> void:
 		"amounts": amounts,
 		"levels": levels,
 		"recipes": recipe_state,
+		"bought": bought,
+		"click_counts": click_counts,
 		"click_target": click_target,
 	}
 	var file: FileAccess = FileAccess.open(save_path, FileAccess.WRITE)
@@ -272,6 +336,12 @@ func load_game() -> void:
 			"progress": float(saved.get("progress", 0.0)),
 			"batch": int(saved.get("batch", 0)),
 		}
+	var saved_bought: Dictionary = data.get("bought", {})
+	for id: String in bought:
+		bought[id] = bool(saved_bought.get(id, false))
+	var saved_clicks: Dictionary = data.get("click_counts", {})
+	for id: String in click_counts:
+		click_counts[id] = int(saved_clicks.get(id, 0))
 	var target: String = data.get("click_target", "coins")
 	if settings["click"].has(target):
 		click_target = target
@@ -284,6 +354,11 @@ func reset_game() -> void:
 		levels[id] = 0
 	for id: String in recipe_state:
 		recipe_state[id] = _new_recipe_state()
+	for id: String in bought:
+		bought[id] = false
+	for id: String in click_counts:
+		click_counts[id] = 0
+	_rebuild_bonuses()
 	save_game()
 
 
@@ -307,6 +382,28 @@ func fmt_signed(value: float) -> String:
 	return sign_text + fmt(magnitude)
 
 
+## Rechnet aus allen gekauften Upgrades zusammen, was sie bewirken. Das Ergebnis
+## wird gemerkt, damit nicht jedes Bild alle Upgrades durchgegangen werden müssen.
+##   _bonus["produces"][Gebäude-ID][Ressourcen-ID] = Zuschlag pro Level
+##   _bonus["click"][Ressourcen-ID] = Zuschlag pro Klick
+func _rebuild_bonuses() -> void:
+	_bonus = { "produces": {}, "provides": {}, "click": {} }
+	for upgrade: Dictionary in upgrades:
+		if not bought[upgrade["id"]]:
+			continue
+		for key: String in ["produces", "provides"]:
+			var per_building: Dictionary = upgrade.get("add_" + key, {})
+			for building_id: String in per_building:
+				if not _bonus[key].has(building_id):
+					_bonus[key][building_id] = {}
+				var target: Dictionary = _bonus[key][building_id]
+				for id: String in per_building[building_id]:
+					target[id] = target.get(id, 0.0) + float(per_building[building_id][id])
+		var click_bonus: Dictionary = upgrade.get("add_click", {})
+		for id: String in click_bonus:
+			_bonus["click"][id] = _bonus["click"].get(id, 0.0) + float(click_bonus[id])
+
+
 func _new_recipe_state() -> Dictionary:
 	return { "auto": false, "running": false, "progress": 0.0, "batch": 0 }
 
@@ -314,7 +411,7 @@ func _new_recipe_state() -> Dictionary:
 func _sum_over_buildings(key: String, id: String) -> float:
 	var total: float = 0.0
 	for building: Dictionary in buildings:
-		var entry: Dictionary = building.get(key, {})
+		var entry: Dictionary = building_output(building, key) if key == "provides" else building.get(key, {})
 		total += float(entry.get(id, 0.0)) * levels[building["id"]]
 	return total
 

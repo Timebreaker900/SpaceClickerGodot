@@ -91,6 +91,31 @@ func _ready() -> void:
 	_check("Auto startet von selbst", Game.recipe_state["copper_bar"]["running"], true)
 	Game.set_recipe_auto(copper_bar, false)
 
+	# Upgrades: erst ab Bedingung, einmalig, wirken auf die Produktion
+	var farm_upgrade: Dictionary = _upgrade("farm_1")
+	Game.amounts["food"] = 1000.0
+	Game.amounts["coins"] = 1000.0
+	Game.amounts["wood"] = 1000.0
+	Game.levels["farm"] = 9
+	_check("Farm-Upgrade unter Lv 10 gesperrt", Game.can_buy_upgrade(farm_upgrade), false)
+	Game.levels["farm"] = 10
+	var food_before: float = Game.get_rates()["food"]
+	_check("Farm-Upgrade kaufbar", Game.buy_upgrade(farm_upgrade), true)
+	_check("Farm liefert doppelt", Game.get_rates()["food"] - food_before, 10.0)
+	_check("Upgrade nur einmal kaufbar", Game.can_buy_upgrade(farm_upgrade), false)
+	var click_upgrade: Dictionary = _upgrade("click_coins_1")
+	Game.click_counts["coins"] = 99
+	_check("Klick-Upgrade unter 100 Klicks gesperrt", Game.upgrade_unlocked(click_upgrade), false)
+	Game.click_target = "coins"
+	Game.click()
+	_check("Klick-Upgrade ab 100 Klicks frei", Game.buy_upgrade(click_upgrade), true)
+	_check("Klick bringt 2 Coins", Game.click(), 2.0)
+	Game.save_game()
+	_reset()
+	Game.load_game()
+	Game._rebuild_bonuses()
+	_check("Upgrade nach Laden noch gekauft", Game.click_gain("coins"), 2.0)
+
 	# Zahlenformat
 	_check("Format klein", Game.fmt(1234.9), "1234")
 	_check("Format groß", Game.fmt(2_500_000.0), "2.50e6")
@@ -109,7 +134,7 @@ func _ready() -> void:
 
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--tab="):
-			main.get_node("Margin/Layout/Tabs").current_tab = int(arg.trim_prefix("--tab="))
+			main.get_node("%Tabs").current_tab = int(arg.trim_prefix("--tab="))
 			await get_tree().process_frame
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--shot="):
@@ -128,6 +153,13 @@ func _building(id: String) -> Dictionary:
 	return {}
 
 
+func _upgrade(id: String) -> Dictionary:
+	for upgrade: Dictionary in Game.upgrades:
+		if upgrade["id"] == id:
+			return upgrade
+	return {}
+
+
 func _recipe(id: String) -> Dictionary:
 	for recipe: Dictionary in Game.recipes:
 		if recipe["id"] == id:
@@ -142,6 +174,11 @@ func _reset() -> void:
 		Game.levels[id] = 0
 	for id: String in Game.recipe_state:
 		Game.recipe_state[id] = Game._new_recipe_state()
+	for id: String in Game.bought:
+		Game.bought[id] = false
+	for id: String in Game.click_counts:
+		Game.click_counts[id] = 0
+	Game._rebuild_bonuses()
 
 
 func _check(what: String, actual: Variant, expected: Variant) -> void:
