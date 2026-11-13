@@ -20,10 +20,14 @@ extends VBoxContainer
 var building: Dictionary
 var _last_state: String = ""   # Zustand im vorigen Bild, um Wechsel zu bemerken
 var _reveal_until: float = 0.0  # solange läuft die Aufdeck-Animation des Icons
+var _upgrades: Array = []      # die Upgrades dieses Gebäudes (seine Upgrade-Reihe)
 
 
 func setup(definition: Dictionary) -> void:
 	building = definition
+	for upgrade: Dictionary in Game.upgrades:
+		if upgrade.get("add_produces", {}).has(building["id"]) or upgrade.get("add_provides", {}).has(building["id"]):
+			_upgrades.append(upgrade)
 	icon.texture = load(building["icon"])
 	buy_button.pressed.connect(_on_buy_pressed)
 	expand_button.toggled.connect(_on_expand_toggled)
@@ -111,6 +115,13 @@ func _describe_effects() -> String:
 	var provides: Dictionary = Game.building_output(building, "provides")
 	for id: String in provides:
 		parts.append("%s %s" % [Game.fmt_signed(provides[id]), Game.resource_def(id)["name"]])
+	# Stand der Upgrade-Reihe, damit man sieht, dass sie begrenzt ist: "Upgrades 2/5".
+	if not _upgrades.is_empty():
+		var bought: int = 0
+		for upgrade: Dictionary in _upgrades:
+			if Game.bought[upgrade["id"]]:
+				bought += 1
+		parts.append("Upgrades %d/%d" % [bought, _upgrades.size()])
 	if building.has("note"):
 		parts.append(building["note"])
 	# Gebäude mit Rezepten sagen, wann das nächste dazukommt – aber nicht welches.
