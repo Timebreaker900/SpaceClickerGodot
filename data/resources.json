@@ -12,10 +12,13 @@
 	{ "id": "copper_ore", "name": "Kupfererz", "type": "stock", "group": "Bergbau", "icon": "res://assets/icons/copper_ore.svg" },
 	{ "id": "iron_ore", "name": "Eisenerz", "type": "stock", "group": "Bergbau", "icon": "res://assets/icons/iron_ore.svg" },
 	{ "id": "gold_ore", "name": "Golderz", "type": "stock", "group": "Bergbau", "icon": "res://assets/icons/gold_ore.svg" },
+	{ "id": "titanium_ore", "name": "Titanerz", "type": "stock", "group": "Bergbau", "icon": "res://assets/icons/titanium_ore.svg" },
 
 	{ "id": "copper_bar", "name": "Kupferbarren", "type": "stock", "group": "Barren", "icon": "res://assets/icons/copper_bar.svg" },
 	{ "id": "iron_bar", "name": "Eisenbarren", "type": "stock", "group": "Barren", "icon": "res://assets/icons/iron_bar.svg" },
 	{ "id": "gold_bar", "name": "Goldbarren", "type": "stock", "group": "Barren", "icon": "res://assets/icons/gold_bar.svg" },
+	{ "id": "steel", "name": "Stahl", "type": "stock", "group": "Barren", "icon": "res://assets/icons/steel.svg" },
+	{ "id": "titanium_bar", "name": "Titanbarren", "type": "stock", "group": "Barren", "icon": "res://assets/icons/titanium_bar.svg" },
 
 	{ "id": "glass", "name": "Glas", "type": "stock", "group": "Bauteile", "icon": "res://assets/icons/glass.svg" },
 	{ "id": "copper_cable", "name": "Kupferkabel", "type": "stock", "group": "Bauteile", "icon": "res://assets/icons/copper_cable.svg" },

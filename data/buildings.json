@@ -102,6 +102,18 @@
 		"produces": { "gold_ore": 0.2 }
 	},
 	{
+		"id": "titanium_mining",
+		"parent": "mine",
+		"level_cap": "mine",
+		"name": "Titanabbau",
+		"icon": "res://assets/icons/titanium_ore.svg",
+		"requires": { "mine": 30 },
+		"cost": { "food": 800, "wood": 800, "stone": 800 },
+		"growth": 1.15,
+		"reserves": { "research": 1 },
+		"produces": { "titanium_ore": 0.1 }
+	},
+	{
 		"id": "smeltery",
 		"name": "Schmelze",
 		"icon": "res://assets/buildings/smeltery.svg",

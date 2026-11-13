@@ -77,6 +77,7 @@ func _ready() -> void:
 		if not building.has("parent") and building.get("placement", "list") == "list":
 			order.append(building["id"])
 	_check("Gebäude-Reihenfolge", order, ["farm", "lumberjack", "market", "mine", "smeltery", "watermill", "factory", "greenhouse", "solarpanel", "sawmill", "bank", "lab"])
+	_check("Titanabbau ab Mine Lv 30, belegt Forschung; Stahl ab Schmelze 20, Titanbarren ab 25", [_building("titanium_mining")["requires"]["mine"], _building("titanium_mining")["reserves"]["research"], _recipe("steel")["requires_level"], _recipe("titanium_bar")["requires_level"]], [30.0, 1.0, 20.0, 25.0])
 	_check("Forschungslabor stellt Forschung bereit (statisch wie Strom)", [_building("lab")["provides"]["research"], Game.resource_def("research")["type"]], [1.0, "capacity"])
 	_check("Gewächshaus liefert mehr Nahrung als die Farm und kostet Glas", [_building("greenhouse")["produces"]["food"] > _building("farm")["produces"]["food"], _building("greenhouse")["cost"].has("glass")], [true, true])
 	_check("Schmelze braucht keinen Strom mehr, Sand ab Mine Lv 2, Kohle ab Lv 4", [_building("smeltery")["reserves"].has("electricity"), _building("coal_mining")["requires"]["mine"], _building("sandmine")["requires"]["mine"], _building("sandmine").get("parent", "")], [false, 4.0, 2.0, "mine"])
@@ -141,7 +142,7 @@ func _ready() -> void:
 	_check("Vor Ablauf noch kein Barren", Game.amounts["copper_bar"], 0.0)
 	Game._advance_recipe(copper_bar, 0.2)
 	_check("Nach Ablauf 1 Barren", Game.amounts["copper_bar"], 1.0)
-	_check("Höchstlevel = letzte Freischaltung + 5: Fabrik 15, Schmelze 20", [_building("factory")["max_level"], _building("smeltery")["max_level"]], [15, 20])
+	_check("Höchstlevel = letzte Freischaltung + 5: Fabrik 15, Schmelze 30", [_building("factory")["max_level"], _building("smeltery")["max_level"]], [15, 30])
 	Game.levels["factory"] = 5
 	_check("Fabrik Lv 5: Kupferkabel ja, Eisenplatte nein", [Game.recipe_batch(_recipe("copper_cable")), Game.recipe_batch(_recipe("iron_plate"))], [1, 0])
 	Game.levels["factory"] = 10

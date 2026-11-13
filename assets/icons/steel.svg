@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+<!-- Stahlträger, schräg von vorn -->
+<path d="M14 40 78 22l36 12-64 18z" fill="#8fa0b5"/>
+<path d="M14 40v14l36 12V52z" fill="#5d6c80"/>
+<path d="M50 52v14l64-18V34z" fill="#465263"/>
+<path d="M26 58v30l12 4V62z" fill="#4c5a6b"/>
+<path d="M38 62v30l64-18V44z" fill="#6b7b90"/>
+<path d="M14 86v14l36 12V98z" fill="#5d6c80"/>
+<path d="M50 98v14l64-18V80z" fill="#465263"/>
+<path d="M14 86l12-3v5l12 4 64-18 12 6-64 18z" fill="#8fa0b5"/>
+<path d="M24 41 78 26l10 3-54 15z" fill="#fff" opacity=".3"/>
+</svg>

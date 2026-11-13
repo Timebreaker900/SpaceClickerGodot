@@ -39,6 +39,26 @@
 		"seconds": 8
 	},
 	{
+		"id": "steel",
+		"requires_level": 20,
+		"name": "Stahl",
+		"icon": "res://assets/icons/steel.svg",
+		"building": "smeltery",
+		"input": { "iron_bar": 2, "coal": 4 },
+		"output": { "steel": 1 },
+		"seconds": 10
+	},
+	{
+		"id": "titanium_bar",
+		"requires_level": 25,
+		"name": "Titanbarren",
+		"icon": "res://assets/icons/titanium_bar.svg",
+		"building": "smeltery",
+		"input": { "titanium_ore": 2, "coal": 4 },
+		"output": { "titanium_bar": 1 },
+		"seconds": 12
+	},
+	{
 		"id": "copper_cable",
 		"requires_level": 5,
 		"name": "Kupferkabel",

@@ -18,7 +18,7 @@ Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Abschnitte mit �
   1. Farm – Nahrung
   2. Holzfäller – Holz
   3. Markt – 1 Coin pro Sekunde, die erste Coin-Quelle ohne Klicken; kostet Coins und Holz
-  4. Mine – Stein, darunter der Bergbau: Sand ab Mine Lv 2, Kohle ab Lv 4, Kupfer ab Lv 6, Eisen ab Lv 10, Gold ab Lv 20. Die Sandmine ist kein eigenes Gebäude mehr.
+  4. Mine – Stein, darunter der Bergbau: Sand ab Mine Lv 2, Kohle ab Lv 4, Kupfer ab Lv 6, Eisen ab Lv 10, Gold ab Lv 20, Titan ab Lv 30 (belegt je Level 1 Forschung). Die Sandmine ist kein eigenes Gebäude mehr.
   5. Schmelze – schaltet Schmelz-Rezepte frei; braucht Kohle statt Strom und erscheint deshalb erst, wenn der Kohleabbau steht
   6. Wassermühle – Strom, zuerst für die Fabrik
   7. Fabrik – schaltet Fabrik-Rezepte frei
@@ -26,7 +26,7 @@ Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Abschnitte mit �
   9. Solarpanel – Strom; kostet Coins, Kupferkabel und Eisenplatten
   10. Sägewerk – mehr Holz als der Holzfäller
   11. Bank – 50 Coins pro Sekunde (Vorschlag); kostet Coins, Stein, Eisenplatten und Goldbarren (1 für die erste, je Level einer mehr), belegt Bevölkerung und Strom
-  12. Forschungslabor – stellt Forschung bereit, eine statische Ressource wie Bevölkerung und Strom (je Level +1). Kostet Coins, Glas und Kupferkabel, belegt Bevölkerung und Strom. Noch belegt nichts die Forschung; das kommt mit Titanabbau und Ölpumpe.
+  12. Forschungslabor – stellt Forschung bereit, eine statische Ressource wie Bevölkerung und Strom (je Level +1). Kostet Coins, Glas und Kupferkabel, belegt Bevölkerung und Strom. Der Titanabbau belegt Forschung; weitere Abnehmer kommen mit der Ölpumpe.
 - Verstärktes Glas entfällt: Das Solarpanel braucht es nicht mehr.
 - Es gibt eine eigene Sicht, die alle Währungen auf einmal zeigt.
 
@@ -64,10 +64,10 @@ Abweichungen vom alten Stand:
 - Kostenfaktor 1,15 pro Level für alle Gebäude. Das ist ein Vorschlag, der alte Wert ist unbekannt.
 - Bevölkerung ist technisch ein Gebäude (kostet Nahrung, verbraucht 2 Nahrung/s, liefert 1 Bevölkerung).
 - Menge pro Durchgang: 1 beim Freischalten, +1 je weiterem Level von Schmelze bzw. Fabrik, +1 je Mengen-Upgrade des Rezepts. Größere Menge heißt mehr Zutaten und mehr Ergebnis bei gleicher Dauer.
-- Das Level der Schmelze schaltet die Schmelz-Rezepte frei: ab Lv 1 Glas, ab Lv 5 Kupferbarren, ab Lv 10 Eisenbarren, ab Lv 15 Goldbarren. Glas steht in der Produktionsliste ganz oben.
+- Das Level der Schmelze schaltet die Schmelz-Rezepte frei: ab Lv 1 Glas, ab Lv 5 Kupferbarren, ab Lv 10 Eisenbarren, ab Lv 15 Goldbarren, ab Lv 20 Stahl (Eisenbarren und Kohle), ab Lv 25 Titanbarren (Titanerz und Kohle). Glas steht in der Produktionsliste ganz oben.
 - Kohle ist der Brennstoff der Schmelze: Jeder Schmelz-Durchgang verbraucht Kohle als zusätzliche Zutat (Glas und Kupferbarren 1, Eisen- und Goldbarren 2, mal Menge). Die Schmelze belegt dafür keinen Strom.
 - Die Fabrik ist genauso gestaffelt: ab Lv 5 Kupferkabel, ab Lv 10 Eisenplatte.
-- Höchstlevel von Schmelze und Fabrik: immer 5 Level über der letzten Freischaltung (Schmelze 20, Fabrik 15), damit auch das letzte Rezept noch größere Durchgänge bekommt.
+- Höchstlevel von Schmelze und Fabrik: immer 5 Level über der letzten Freischaltung (Schmelze 30, Fabrik 15), damit auch das letzte Rezept noch größere Durchgänge bekommt.
 - Die Fabrik kostet zusätzlich Glas: das erste Level 1, jedes weitere eines mehr (bis Lv 10 zusammen 55).
 
 Vorschlagswerte, weil die alten nur im Unity-Editor standen: Kosten und Ertrag der Sandmine, Kosten und Freischalt-Level des Erzabbaus (Mine Lv 5 / 10 / 20), Mengen und Zeiten aller Rezepte. Die Erz-Raten 0,8 / 0,5 / 0,2 pro Sekunde stammen aus dem alten Code.
@@ -203,7 +203,7 @@ Geplante Kette nach der Bank: Forschungslabor → Titanabbau → Ölpumpe → Ra
 
 Offen:
 
-- Ersetzt Titan den Stahl aus dem alten Plan unten, oder gibt es beides?
+- Stahl und Titan gibt es beide (vom Nutzer bestätigt). Wofür sie gebraucht werden, kommt mit Ölpumpe und Rakete.
 - Bleiben Chips (Goldbarren plus Kupferkabel) für die Steuerung?
 - Startet der Mond bei null, bis der Lift steht, oder gelten die Erd-Ressourcen dort sofort?
 - Was bietet der Mond überhaupt (Gebäude, Ressourcen)?
