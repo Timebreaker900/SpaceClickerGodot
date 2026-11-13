@@ -23,6 +23,8 @@ const TOASTS_TOP := 250.0     # Lage der Einblendungen ohne Zusatzrand
 @onready var pop_button: Button = %PopButton
 @onready var buy_amount_button: Button = %BuyAmountButton
 @onready var building_list: VBoxContainer = %BuildingList
+@onready var production_tab: Control = %Produktion
+@onready var recipe_groups: HBoxContainer = %RecipeGroups
 @onready var recipe_list: VBoxContainer = %RecipeList
 @onready var upgrade_list: VBoxContainer = %UpgradeList
 @onready var resource_list: VBoxContainer = %ResourceList
@@ -42,7 +44,9 @@ const TOASTS_TOP := 250.0     # Lage der Einblendungen ohne Zusatzrand
 var _bar_entries: Dictionary = {}
 var _list_entries: Dictionary = {}
 var _group_headings: Dictionary = {}  # Gruppenname -> Überschrift im Reiter
-var _recipe_headings: Dictionary = {} # Gebäude-ID -> Überschrift im Reiter "Produktion"
+var _group_buttons: Dictionary = {}   # Gebäude-ID -> Knopf im Umschalter des Reiters "Produktion"
+var _recipe_rows: Array = []          # alle Rezeptzeilen
+var _recipe_group: String = ""        # gerade gezeigte Gruppe (Gebäude-ID)
 var _seen_before: Dictionary = {}     # Stand von Game.seen im vorigen Bild
 var _planet_building: Dictionary      # Gebäude mit eigenem Knopf beim Planeten (Bevölkerung)
 
@@ -61,15 +65,23 @@ func _ready() -> void:
 	_build_building_rows()
 	pop_caption.text = _planet_building.get("caption", "")
 	for recipe: Dictionary in Game.recipes:
-		# Rezepte sind nach Gebäude gruppiert: "Schmelzen", "Herstellen".
+		# Je Gebäude mit Rezepten ein Knopf im Umschalter: "Schmelzen", "Herstellen".
 		var building_id: String = recipe["building"]
-		if not _recipe_headings.has(building_id):
-			var heading: Label = _heading(Game.building_def(building_id).get("recipes_label", ""))
-			recipe_list.add_child(heading)
-			_recipe_headings[building_id] = heading
+		if not _group_buttons.has(building_id):
+			var button := Button.new()
+			button.text = Game.building_def(building_id).get("recipes_label", "")
+			button.toggle_mode = true
+			button.custom_minimum_size.y = 84
+			button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			button.pressed.connect(func() -> void:
+				Sfx.play("tap")
+				_recipe_group = building_id)
+			recipe_groups.add_child(button)
+			_group_buttons[building_id] = button
 		var row: Node = RecipeRow.instantiate()
 		recipe_list.add_child(row)
 		row.setup(recipe)
+		_recipe_rows.append(row)
 	for upgrade: Dictionary in Game.upgrades:
 		if Game.bought[upgrade["id"]]:
 			continue  # Gekaufte Upgrades tauchen nicht mehr auf.
@@ -149,9 +161,17 @@ func _process(_delta: float) -> void:
 		if Game.recipe_visible(recipe):
 			any_recipe = true
 			buildings_with_recipes[recipe["building"]] = true
-	tabs.set_tab_hidden(recipe_list.get_parent().get_index(), not any_recipe)
-	for building_id: String in _recipe_headings:
-		_recipe_headings[building_id].visible = buildings_with_recipes.has(building_id)
+	tabs.set_tab_hidden(production_tab.get_index(), not any_recipe)
+	# Umschalter: Es gibt nur Knöpfe für Gruppen, in denen schon etwas zu sehen ist.
+	# Ist die gewählte Gruppe leer, springt die Anzeige zur ersten mit Inhalt.
+	if not buildings_with_recipes.has(_recipe_group) and not buildings_with_recipes.is_empty():
+		_recipe_group = buildings_with_recipes.keys()[0]
+	recipe_groups.visible = buildings_with_recipes.size() > 1
+	for building_id: String in _group_buttons:
+		_group_buttons[building_id].visible = buildings_with_recipes.has(building_id)
+		_group_buttons[building_id].set_pressed_no_signal(building_id == _recipe_group)
+	for row: Node in _recipe_rows:
+		row.in_shown_group = row.recipe["building"] == _recipe_group
 
 	# Der Reiter zeigt, wie viele Upgrades gerade kaufbar sind.
 	var buyable: int = 0

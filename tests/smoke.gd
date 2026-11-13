@@ -353,9 +353,13 @@ func _ready() -> void:
 	main.get_node("%BuildingList").get_child(0)._on_buy_pressed()
 	await get_tree().create_timer(0.1).timeout
 	_check("Kauf über die Zeile zählt", Game.levels["farm"], farm_level_before + 1)
-	_check("Rezeptzeilen plus zwei Überschriften angelegt", main.get_node("%RecipeList").get_child_count(), Game.recipes.size() + 2)
+	_check("Rezeptzeilen angelegt, zwei Gruppen im Umschalter", [main.get_node("%RecipeList").get_child_count(), main.get_node("%RecipeGroups").get_child_count()], [Game.recipes.size(), 2])
 
 	for arg: String in OS.get_cmdline_user_args():
+		if arg == "--group2":
+			main._recipe_group = "factory"
+			await get_tree().process_frame
+			await get_tree().process_frame
 		if arg.begins_with("--scroll="):
 			main.get_node("%BuildingList").get_parent().scroll_vertical = int(arg.trim_prefix("--scroll="))
 			await get_tree().process_frame

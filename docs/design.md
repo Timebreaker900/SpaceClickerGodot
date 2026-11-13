@@ -90,7 +90,7 @@ Wird Punkt für Punkt abgearbeitet: Nach jedem Punkt testet der Nutzer und gibt 
 - [x] Auto bei Rezepten als Upgrade (100 vom eigenen Erzeugnis)
 - [x] Erzabbau darf das Level der Mine nie übersteigen
 - [x] Rezept-Upgrades, bezahlt mit dem eigenen Erzeugnis: „Schneller“ (je Stufe −1 s, mindestens 1 s) und „Mehr“ (je Stufe +1 Menge, also Zutaten und Ergebnis um den Grundwert); Preis 25, 50, 75 …
-- [x] Produktion zeigt Icons statt Namen und ist in „Schmelzen“ und „Herstellen“ gegliedert
+- [x] Produktion zeigt Icons statt Namen; oben ein Umschalter zwischen „Schmelzen“ und „Herstellen“
 - [x] Leiste oben als festes Raster, damit nichts springt
 - [ ] Mehr Verwendung für Strom und Goldbarren
 
@@ -187,4 +187,4 @@ Verstärktes Glas wird vom Solarpanel verlangt, hat aber kein Rezept.
 
 ## Später
 
-- Produktion als echtes Untermenü mit eigenen Seiten für Schmelzen und Herstellen. Vorerst sind es Zwischenüberschriften in einer Liste.
+Noch nichts.

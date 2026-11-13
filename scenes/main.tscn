@@ -253,13 +253,24 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 14
 
-[node name="Produktion" type="ScrollContainer" parent="Margin/Layout/Sheet/SheetMargin/Tabs"]
+[node name="Produktion" type="VBoxContainer" parent="Margin/Layout/Sheet/SheetMargin/Tabs"]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
-horizontal_scroll_mode = 0
+theme_override_constants/separation = 12
 metadata/_tab_index = 1
 
-[node name="RecipeList" type="VBoxContainer" parent="Margin/Layout/Sheet/SheetMargin/Tabs/Produktion"]
+[node name="RecipeGroups" type="HBoxContainer" parent="Margin/Layout/Sheet/SheetMargin/Tabs/Produktion"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="RecipeScroll" type="ScrollContainer" parent="Margin/Layout/Sheet/SheetMargin/Tabs/Produktion"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="RecipeList" type="VBoxContainer" parent="Margin/Layout/Sheet/SheetMargin/Tabs/Produktion/RecipeScroll"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

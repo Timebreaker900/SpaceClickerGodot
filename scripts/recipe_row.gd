@@ -18,6 +18,7 @@ extends PanelContainer
 const UPGRADE_LABELS: Dictionary = { "speed": "Schneller", "amount": "Mehr", "auto": "Auto" }
 
 var recipe: Dictionary
+var in_shown_group: bool = true  # vom Hauptbildschirm gesetzt: gehört zur gewählten Gruppe
 
 
 func setup(definition: Dictionary) -> void:
@@ -41,7 +42,7 @@ func _process(_delta: float) -> void:
 		return
 	var state: Dictionary = Game.recipe_state[recipe["id"]]
 	var batch: int = Game.recipe_batch(recipe)
-	visible = Game.recipe_visible(recipe)  # erst mit Gebäude und bekannten Zutaten
+	visible = in_shown_group and Game.recipe_visible(recipe)  # erst mit Gebäude und bekannten Zutaten
 	if not visible:
 		return
 	var seconds: float = Game.recipe_seconds(recipe)
