@@ -9,7 +9,9 @@ extends Control
 
 
 func _ready() -> void:
-	close_button.pressed.connect(hide)
+	close_button.pressed.connect(func() -> void:
+		Sfx.play("tap")
+		hide())
 
 
 ## Leert den Inhalt, setzt den Titel und zeigt das Fenster. Danach füllt der

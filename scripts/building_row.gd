@@ -31,6 +31,7 @@ func setup(definition: Dictionary) -> void:
 
 func _on_buy_pressed() -> void:
 	if Game.buy(building):
+		Sfx.play("buy")
 		Ui.flash($Panel)
 		Ui.pop(icon)
 		Ui.pop(name_label, 1.08)
@@ -57,6 +58,7 @@ func _process(_delta: float) -> void:
 	# damit beim Spielstart nicht alles auf einmal aufblitzt.
 	if previous_state == "mystery" and known:
 		_reveal_until = now + 0.6
+		Sfx.play("reveal")
 		Ui.reveal($Panel, icon)
 		Game.announcement.emit(building["icon"], "Neu: %s" % building["name"])
 	elif previous_state == "hidden":

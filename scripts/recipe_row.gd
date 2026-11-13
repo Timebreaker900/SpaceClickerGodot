@@ -19,6 +19,7 @@ func setup(definition: Dictionary) -> void:
 	auto_button.button_pressed = Game.recipe_state[recipe["id"]]["auto"]
 	start_button.pressed.connect(func() -> void:
 		if Game.start_recipe(recipe):
+			Sfx.play("tap")
 			Ui.pop(icon))
 	auto_button.toggled.connect(func(on: bool) -> void: Game.set_recipe_auto(recipe, on))
 

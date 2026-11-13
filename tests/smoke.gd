@@ -193,6 +193,13 @@ func _ready() -> void:
 	_check("Erz aufgebraucht", Game.amounts["copper_ore"], 0.0)
 	Game.set_recipe_auto(_recipe("copper_bar"), false)
 
+	# Ton: alle Töne wurden erzeugt, Lautstärke lässt sich setzen
+	_check("Sechs Töne erzeugt", Sfx._streams.size(), 6)
+	_check("Klick-Ton ist 0,08 s lang", is_equal_approx(Sfx._streams["click"].get_length(), 0.08), true)
+	Sfx.set_volume(0.4)
+	_check("Lautstärke gesetzt", Sfx.volume, 0.4)
+	Sfx.play("upgrade")
+
 	# Zahlenformat
 	_check("Format klein", Game.fmt(1234.9), "1234")
 	_check("Format groß", Game.fmt(2_500_000.0), "2.50e6")
@@ -275,7 +282,13 @@ func _ready() -> void:
 			await RenderingServer.frame_post_draw
 			get_viewport().get_texture().get_image().save_png(arg.trim_prefix("--shot="))
 
+	# Aufräumen: laufende Töne beenden, Testdateien löschen
+	for player: AudioStreamPlayer in Sfx._players:
+		player.stop()
+		player.stream = null
+	await get_tree().process_frame
 	DirAccess.remove_absolute(ProjectSettings.globalize_path("user://test_save.json"))
+	DirAccess.remove_absolute(ProjectSettings.globalize_path("user://test_options.json"))
 	print("FEHLER: %d" % _failed if _failed > 0 else "ALLE TESTS OK")
 	get_tree().quit(1 if _failed > 0 else 0)
 

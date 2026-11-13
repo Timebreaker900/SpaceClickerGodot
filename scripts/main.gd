@@ -68,12 +68,17 @@ func _ready() -> void:
 	click_wood.pressed.connect(_set_click_target.bind("wood"))
 	pop_button.pressed.connect(func() -> void:
 		if Game.buy(_planet_building):
+			Sfx.play("buy")
 			Ui.pop(pop_button, 1.12))
 	buy_amount_button.pressed.connect(_on_buy_amount_pressed)
 	settings_button.pressed.connect(_open_settings)
 	resources_button.pressed.connect(_open_bar_picker)
 	_set_click_target(Game.click_target)
 	_seen_before = Game.seen.duplicate()
+	# Leiser Tipp-Ton für alles, was nur umschaltet oder ein Fenster öffnet.
+	for button: Button in [click_coins, click_wood, buy_amount_button, settings_button, resources_button, offline_close]:
+		button.pressed.connect(Sfx.play.bind("tap"))
+	tabs.tab_changed.connect(func(_index: int) -> void: Sfx.play("tap"))
 	Game.announcement.connect(_show_toast)
 
 	# Abwesenheit: beim Start steht der Bericht schon bereit, bei der Rückkehr in
@@ -141,6 +146,7 @@ func _update_resource_views(rates: Dictionary) -> void:
 			# Gerade entdeckt: Einblendung, und der Eintrag in der Leiste hüpft.
 			_seen_before[id] = true
 			_show_toast(res["icon"], "Entdeckt: %s" % res["name"])
+			Sfx.play("discover")
 			if bar_entry["node"].visible:
 				Ui.pop.call_deferred(bar_entry["node"], 1.4)
 		if seen:
@@ -284,7 +290,7 @@ func _open_bar_picker() -> void:
 
 
 func _open_settings() -> void:
-	popup.open("Einstellungen", 420)
+	popup.open("Einstellungen", 560)
 	var version := Label.new()
 	version.text = "Space Clicker – Version %s" % GAME_VERSION
 	version.add_theme_color_override("font_color", Color(0.56, 0.70, 0.84))
@@ -294,6 +300,22 @@ func _open_settings() -> void:
 	hint.text = "Der Spielstand wird alle 10 Sekunden und beim Schließen gespeichert."
 	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	popup.content.add_child(hint)
+
+	var volume_label := Label.new()
+	popup.content.add_child(volume_label)
+	var slider := HSlider.new()
+	slider.max_value = 100
+	slider.step = 5
+	slider.value = Sfx.volume * 100.0
+	slider.custom_minimum_size.y = 64
+	var show_volume := func() -> void:
+		volume_label.text = "Ton: aus" if slider.value == 0 else "Ton: %d %%" % int(slider.value)
+	slider.value_changed.connect(func(value: float) -> void:
+		Sfx.set_volume(value / 100.0)
+		Sfx.play("buy")  # gleich hören, wie laut es ist
+		show_volume.call())
+	show_volume.call()
+	popup.content.add_child(slider)
 
 	# Zurücksetzen braucht zwei Klicks, damit es nicht aus Versehen passiert.
 	var reset := Button.new()
@@ -320,6 +342,7 @@ func _show_offline_report(report: Dictionary) -> void:
 			lines.append("[img=48x48]%s[/img]  +%s %s" % [res["icon"], Game.fmt(gains[res["id"]]), res["name"]])
 	offline_gains.text = "\n".join(lines)
 	offline_popup.visible = true
+	Sfx.play("discover")
 
 
 ## "45 Sek", "12 Min", "3 Std 20 Min"
@@ -348,6 +371,7 @@ func _on_buy_amount_pressed() -> void:
 
 func _on_planet_pressed() -> void:
 	var gain: float = Game.click()
+	Sfx.play("click", 0.06)
 	# Kurzes "Eindrücken" des Planeten.
 	var tween: Tween = create_tween()
 	tween.tween_property(planet, "scale", Vector2(0.94, 0.94), 0.05)

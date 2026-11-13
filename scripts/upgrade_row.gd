@@ -38,6 +38,7 @@ func _process(_delta: float) -> void:
 	var now: float = Time.get_ticks_msec() / 1000.0
 	if previous_state == "mystery" and known:
 		_reveal_until = now + 0.6
+		Sfx.play("discover")
 		Ui.reveal(self, icon, true)
 	elif previous_state == "hidden":
 		Ui.fade_in(self)
@@ -58,6 +59,7 @@ func _on_buy_pressed() -> void:
 		return
 	# Aufblitzen, kurz stehen lassen, dann ausblenden und entfernen.
 	_leaving = true
+	Sfx.play("upgrade")
 	buy_button.disabled = true
 	Ui.flash(self)
 	Ui.pop(icon)

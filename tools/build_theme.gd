@@ -93,6 +93,11 @@ func _init() -> void:
 	theme.set_stylebox("background", "ProgressBar", _box(Color(0, 0, 0, 0.45), Color(ACCENT, 0.25), 1, 9))
 	theme.set_stylebox("fill", "ProgressBar", _box(ACCENT, ACCENT, 0, 9))
 
+	# Schieberegler (Lautstärke)
+	theme.set_stylebox("slider", "HSlider", _box(Color(0, 0, 0, 0.45), Color(ACCENT, 0.25), 1, 8, 0, 8))
+	theme.set_stylebox("grabber_area", "HSlider", _box(Color(ACCENT, 0.7), ACCENT, 0, 8, 0, 8))
+	theme.set_stylebox("grabber_area_highlight", "HSlider", _box(ACCENT, ACCENT, 0, 8, 0, 8))
+
 	# Schmale Bildlaufleiste
 	var track := _box(Color(0, 0, 0, 0), Color(0, 0, 0, 0), 0, 4)
 	track.content_margin_left = 4
