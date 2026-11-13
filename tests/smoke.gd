@@ -76,7 +76,7 @@ func _ready() -> void:
 	for building: Dictionary in Game.buildings:
 		if not building.has("parent") and building.get("placement", "list") == "list":
 			order.append(building["id"])
-	_check("Gebäude-Reihenfolge", order, ["farm", "lumberjack", "market", "mine", "smeltery", "watermill", "factory", "greenhouse", "solarpanel", "sawmill", "bank", "lab", "oil_pump", "refinery"])
+	_check("Gebäude-Reihenfolge", order, ["farm", "lumberjack", "market", "mine", "smeltery", "watermill", "factory", "greenhouse", "solarpanel", "sawmill", "bank", "lab", "oil_pump", "refinery", "launchpad"])
 	_check("Chips in der Fabrik ab Lv 15 aus Goldbarren und Kupferkabel", [_recipe("chip")["building"], _recipe("chip")["requires_level"], _recipe("chip")["input"].keys()], ["factory", 15.0, ["gold_bar", "copper_cable"]])
 	_check("Ölpumpe und Raffinerie belegen Forschung; Treibstoff kommt aus der Raffinerie", [_building("oil_pump")["reserves"]["research"], _building("refinery")["reserves"]["research"], _recipe("fuel")["building"], _building("refinery")["max_level"]], [2.0, 2.0, "refinery", 6])
 	_check("Titanabbau ab Mine Lv 30 und Labor Lv 1; Stahl ab Schmelze 20, Titanbarren ab 25", [_building("titanium_mining")["requires"]["mine"], _building("titanium_mining")["requires"]["lab"], _recipe("steel")["requires_level"], _recipe("titanium_bar")["requires_level"]], [30.0, 1.0, 20.0, 25.0])
@@ -153,6 +153,28 @@ func _ready() -> void:
 	_check("Fabrik Lv 20: Eisenplatte mit Menge 11, Chips mit Menge 6, Fabrik fertig", [Game.recipe_batch(_recipe("iron_plate")), Game.recipe_batch(_recipe("chip")), Game.is_maxed(_building("factory")), Game.can_buy(_building("factory"), 1)], [11, 6, true, false])
 	Game.levels["smeltery"] = 20
 	_check("Schmelze Lv 20: Goldbarren mit Menge 6", Game.recipe_batch(_recipe("gold_bar")), 6)
+	# Rakete: Teile gibt es erst mit der Startrampe, jedes nur einmal, Start erst mit allen
+	var hull: Dictionary = Game.rocket["parts"][0]
+	for part: Dictionary in Game.rocket["parts"]:
+		for id: String in part["cost"]:
+			Game.amounts[id] += float(part["cost"][id])
+	_check("Startrampe nur einmal baubar", _building("launchpad")["max_level"], 1.0)
+	_check("Ohne Startrampe kein Raketenteil", [Game.rocket_available(), Game.can_build_rocket_part(hull)], [false, false])
+	Game.levels["launchpad"] = 1
+	_check("Rumpf bauen zieht das Material ab", [Game.build_rocket_part(hull), Game.amounts["steel"] >= float(hull["cost"]["steel"])], [true, false])
+	_check("Jedes Teil nur einmal; Start erst mit allen Teilen", [Game.can_build_rocket_part(hull), Game.rocket_parts_built(), Game.launch_rocket()], [false, 1, false])
+	for part: Dictionary in Game.rocket["parts"]:
+		Game.build_rocket_part(part)
+	_check("Alle Teile gebaut: Start möglich, aber nur einmal", [Game.rocket_complete(), Game.launch_rocket(), Game.rocket_launched, Game.launch_rocket()], [true, true, true, false])
+	Game.save_game()
+	Game.rocket_launched = false
+	Game.rocket_built["hull"] = false
+	Game.load_game()
+	_check("Rakete übersteht Speichern und Laden", [Game.rocket_launched, Game.rocket_built["hull"]], [true, true])
+	Game.levels["launchpad"] = 0
+	for id: String in Game.rocket_built:
+		Game.rocket_built[id] = false
+	Game.rocket_launched = false
 	# Sparsam: je Stufe 20 % weniger Kohle, aufgerundet, andere Zutaten bleiben
 	_check("Sparsam gibt es nur für Rezepte mit Kohle", [Game.recipe_upgrade_available(_recipe("gold_bar"), "saver"), Game.recipe_upgrade_available(_recipe("copper_cable"), "saver")], [true, false])
 	_check("Goldbarren Menge 6 ohne Sparsam: 12 Erz, 12 Kohle", Game.recipe_input(_recipe("gold_bar"), 6), { "gold_ore": 12.0, "coal": 12.0 })
@@ -425,6 +447,12 @@ func _ready() -> void:
 		if arg == "--picker":
 			main._open_bar_picker()
 			await get_tree().process_frame
+		if arg == "--rocket":
+			Game.levels["launchpad"] = 1
+			Game.rocket_built["hull"] = true
+			Game.rocket_built["control"] = true
+			Game.amounts["fuel"] = 2500.0
+			main._open_rocket()
 		if arg == "--settings":
 			main._open_settings()
 			await get_tree().process_frame
@@ -633,6 +661,9 @@ func _reset() -> void:
 		Game.bought[id] = false
 	for id: String in Game.click_counts:
 		Game.click_counts[id] = 0
+	for id: String in Game.rocket_built:
+		Game.rocket_built[id] = false
+	Game.rocket_launched = false
 	Game._rebuild_bonuses()
 
 

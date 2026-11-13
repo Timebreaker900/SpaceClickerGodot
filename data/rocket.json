@@ -1,0 +1,30 @@
+{
+	"building": "launchpad",
+	"icon": "res://assets/rocket/rocket.svg",
+	"parts": [
+		{
+			"id": "hull",
+			"name": "Rumpf",
+			"icon": "res://assets/rocket/hull.svg",
+			"cost": { "steel": 200, "iron_plate": 300, "titanium_bar": 100 }
+		},
+		{
+			"id": "engine",
+			"name": "Triebwerk",
+			"icon": "res://assets/rocket/engine.svg",
+			"cost": { "steel": 150, "copper_cable": 500, "titanium_bar": 50 }
+		},
+		{
+			"id": "control",
+			"name": "Steuerung",
+			"icon": "res://assets/rocket/control.svg",
+			"cost": { "chip": 200, "glass": 1000 }
+		},
+		{
+			"id": "fuel",
+			"name": "Treibstofftanks",
+			"icon": "res://assets/rocket/fuel.svg",
+			"cost": { "fuel": 2000 }
+		}
+	]
+}

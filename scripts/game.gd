@@ -51,6 +51,7 @@ var buildings: Array = []
 var recipes: Array = []
 var upgrades: Array = []
 var settings: Dictionary = {}
+var rocket: Dictionary = {}          # data/rocket.json: Gebäude und Teile der Rakete
 
 var amounts: Dictionary = {}       # Ressourcen-ID -> Vorrat
 var levels: Dictionary = {}        # Gebäude-ID -> Level
@@ -58,6 +59,8 @@ var recipe_state: Dictionary = {}  # Rezept-ID -> Zustand, siehe _new_recipe_sta
 var bought: Dictionary = {}        # Upgrade-ID -> gekauft?
 var click_counts: Dictionary = {}  # Ressourcen-ID -> wie oft dafür geklickt wurde
 var seen: Dictionary = {}          # Ressourcen-ID -> schon einmal besessen? Bleibt für immer wahr.
+var rocket_built: Dictionary = {}   # Raketenteil-ID -> gebaut?
+var rocket_launched: bool = false   # Rakete gestartet, nächster Planet frei
 var bar_selection: Array = []      # Vorräte, die der Spieler in der Leiste oben sehen will
 var click_target: String = "coins"
 var buy_amount: int = 1      # feste Kaufmenge (1, 10, 100)
@@ -87,6 +90,9 @@ func _ready() -> void:
 	recipes = _load_json("res://data/recipes.json")
 	upgrades = _load_json("res://data/upgrades.json")
 	settings = _load_json("res://data/settings.json")
+	rocket = _load_json("res://data/rocket.json")
+	for part: Dictionary in rocket["parts"]:
+		rocket_built[part["id"]] = false
 	for res: Dictionary in resources:
 		_resource_by_id[res["id"]] = res
 		if res["type"] == "stock":
@@ -599,6 +605,54 @@ func _advance_recipe(recipe: Dictionary, delta: float) -> void:
 		start_recipe(recipe)
 
 
+
+# --- Rakete -----------------------------------------------------------------
+# Die Rakete besteht aus Teilen (data/rocket.json), die einzeln und einmalig
+# gebaut werden, sobald die Startrampe steht. Sind alle da, kann sie starten;
+# der Start schaltet den nächsten Planeten frei.
+
+## Steht das Gebäude, an dem die Rakete gebaut wird?
+func rocket_available() -> bool:
+	return not rocket.is_empty() and levels[rocket["building"]] > 0
+
+
+func can_build_rocket_part(part: Dictionary) -> bool:
+	if not rocket_available() or rocket_built[part["id"]]:
+		return false
+	for id: String in part["cost"]:
+		if amounts[id] < float(part["cost"][id]):
+			return false
+	return true
+
+
+func build_rocket_part(part: Dictionary) -> bool:
+	if not can_build_rocket_part(part):
+		return false
+	for id: String in part["cost"]:
+		amounts[id] -= float(part["cost"][id])
+	rocket_built[part["id"]] = true
+	return true
+
+
+func rocket_parts_built() -> int:
+	var count: int = 0
+	for id: String in rocket_built:
+		if rocket_built[id]:
+			count += 1
+	return count
+
+
+func rocket_complete() -> bool:
+	return rocket_available() and rocket_parts_built() == rocket_built.size()
+
+
+func launch_rocket() -> bool:
+	if not rocket_complete() or rocket_launched:
+		return false
+	rocket_launched = true
+	save_game()
+	return true
+
 # --- Abwesenheit -------------------------------------------------------------
 
 ## Rechnet nach, was in "seconds" Sekunden Abwesenheit passiert wäre, und gibt
@@ -688,6 +742,8 @@ func save_game() -> void:
 		"seen": seen,
 		"bar": bar_selection,
 		"click_target": click_target,
+		"rocket_built": rocket_built,
+		"rocket_launched": rocket_launched,
 	}
 	var file: FileAccess = FileAccess.open(save_path, FileAccess.WRITE)
 	if file == null:
@@ -739,6 +795,10 @@ func load_game() -> void:
 		for id: Variant in data["bar"]:
 			if amounts.has(id):
 				bar_selection.append(id)
+	var saved_rocket: Dictionary = data.get("rocket_built", {})
+	for id: String in rocket_built:
+		rocket_built[id] = bool(saved_rocket.get(id, false))
+	rocket_launched = bool(data.get("rocket_launched", false))
 	_update_seen()  # Spielstände von früher: alles, was man hat, gilt als entdeckt
 	var target: String = data.get("click_target", "coins")
 	if settings["click"].has(target):
@@ -756,6 +816,9 @@ func reset_game() -> void:
 		bought[id] = false
 	for id: String in click_counts:
 		click_counts[id] = 0
+	for id: String in rocket_built:
+		rocket_built[id] = false
+	rocket_launched = false
 	_reset_discovery()
 	_rebuild_bonuses()
 	save_game()

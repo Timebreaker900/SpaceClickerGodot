@@ -209,5 +209,15 @@
 		"levels_after_last_recipe": 5,
 		"note": "Jedes Level: +1 Menge bei allen Raffinerie-Rezepten",
 		"recipes_label": "Raffinieren"
+	},
+	{
+		"id": "launchpad",
+		"name": "Startrampe",
+		"icon": "res://assets/buildings/launchpad.svg",
+		"cost": { "coins": 500000, "steel": 100, "titanium_bar": 50 },
+		"growth": 1.0,
+		"max_level": 1,
+		"reserves": { "population": 5, "electricity": 20, "research": 5 },
+		"note": "Hier wird die Rakete gebaut"
 	}
 ]

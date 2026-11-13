@@ -29,6 +29,7 @@ Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Abschnitte mit �
   12. Forschungslabor – stellt Forschung bereit, eine statische Ressource wie Bevölkerung und Strom (je Level +1). Kostet Coins, Glas und Kupferkabel, belegt Bevölkerung und Strom. Der Titanabbau setzt das Labor voraus; Ölpumpe und Raffinerie belegen je Level 2 Forschung.
   13. Ölpumpe – Öl; kostet Coins, Stahl und Titanbarren, belegt Bevölkerung, Strom und Forschung
   14. Raffinerie – drittes Rezept-Gebäude (Knopf „Raffinieren“): macht aus Öl Treibstoff; kostet Coins, Stahl, Titanbarren und Eisenplatten, belegt Bevölkerung, Strom und Forschung. Treibstoff wird erst von der Rakete gebraucht.
+  15. Startrampe – einmalig baubar; kostet Coins, Stahl und Titanbarren, belegt Bevölkerung, Strom und Forschung. Mit ihr erscheint neben dem Planeten der Knopf zur Raketen-Ansicht.
 - Verstärktes Glas entfällt: Das Solarpanel braucht es nicht mehr.
 - Es gibt eine eigene Sicht, die alle Währungen auf einmal zeigt.
 
@@ -192,6 +193,12 @@ Verstärktes Glas wird vom Solarpanel verlangt, hat aber kein Rezept.
 - Monetarisierung am Handy: welche Art? Was unterscheidet die Steam-Version?
 
 ## Später
+
+### Rakete (gebaut)
+
+- Die Rakete besteht aus vier Teilen, die einzeln und einmalig gebaut werden: Rumpf (Stahl, Eisenplatten, Titanbarren), Triebwerk (Stahl, Kupferkabel, Titanbarren), Steuerung (Chips, Glas), Treibstofftanks (Treibstoff). Teile und Kosten stehen in `data/rocket.json`.
+- Die Raketen-Ansicht zeigt die Rakete; fehlende Teile sind ein dunkler Umriss.
+- Sind alle Teile gebaut, kann die Rakete starten. Der Start ist einmalig und schaltet den Mond frei. Der Mond hat noch keinen Inhalt.
 
 ### Weg zur Rakete (Stand 13.11.2026, noch nicht bauen)
 

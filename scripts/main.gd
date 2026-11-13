@@ -50,6 +50,7 @@ var _recipe_rows: Array = []          # alle Rezeptzeilen
 var _recipe_group: String = ""        # gerade gezeigte Gruppe (Gebäude-ID)
 var _seen_before: Dictionary = {}     # Stand von Game.seen im vorigen Bild
 var _planet_building: Dictionary      # Gebäude mit eigenem Knopf beim Planeten (Bevölkerung)
+var _rocket_button: Button            # Knopf neben dem Planeten, öffnet die Raketen-Ansicht
 
 
 func _ready() -> void:
@@ -84,6 +85,7 @@ func _ready() -> void:
 		row.setup(recipe)
 		_recipe_rows.append(row)
 	_build_stats()
+	_build_rocket_button()
 	for upgrade: Dictionary in Game.upgrades:
 		if Game.bought[upgrade["id"]]:
 			continue  # Gekaufte Upgrades tauchen nicht mehr auf.
@@ -225,6 +227,7 @@ func _process(_delta: float) -> void:
 		row.in_shown_group = row.recipe["building"] == _recipe_group
 
 	_update_stats()
+	_rocket_button.visible = Game.rocket_available()
 
 	# Der Reiter zeigt, wie viele Upgrades gerade kaufbar sind.
 	var buyable: int = 0
@@ -588,6 +591,130 @@ func _duration_text(seconds: float) -> String:
 		return "%d Min" % (total / 60)
 	var minutes: int = (total % 3600) / 60
 	return "%d Std" % (total / 3600) if minutes == 0 else "%d Std %d Min" % [total / 3600, minutes]
+
+
+# --- Rakete -------------------------------------------------------------------
+
+## Knopf neben dem Planeten; erscheint, sobald die Startrampe steht.
+func _build_rocket_button() -> void:
+	_rocket_button = Button.new()
+	_rocket_button.icon = load(Game.rocket["icon"])
+	_rocket_button.expand_icon = true
+	_rocket_button.custom_minimum_size = Vector2(130, 130)
+	_rocket_button.size = Vector2(130, 130)
+	_rocket_button.position = Vector2(planet.custom_minimum_size.x - 110, -10)
+	_rocket_button.tooltip_text = "Rakete"
+	_rocket_button.visible = false
+	_rocket_button.pressed.connect(func() -> void:
+		Sfx.play("tap")
+		_open_rocket())
+	planet.get_parent().add_child(_rocket_button)
+
+
+## Die Raketen-Ansicht: oben das Bild (fehlende Teile als dunkler Umriss),
+## darunter die Teile mit Kosten und Bauknopf, ganz unten der Start.
+func _open_rocket() -> void:
+	popup.open("Rakete", 1000)
+	var picture := Control.new()
+	picture.custom_minimum_size = Vector2(380, 380)
+	picture.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	popup.content.add_child(picture)
+	var status := Label.new()
+	status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	popup.content.add_child(status)
+
+	var layers: Dictionary = {}   # Teil-ID -> Bild in der Rakete
+	var costs: Dictionary = {}    # Teil-ID -> Kostenzeile
+	var buttons: Dictionary = {}  # Teil-ID -> Bauknopf
+	var launch := Button.new()
+	var refresh := func() -> void:
+		for part: Dictionary in Game.rocket["parts"]:
+			var id: String = part["id"]
+			var built: bool = Game.rocket_built[id]
+			layers[id].modulate = Color.WHITE if built else Color(0.1, 0.14, 0.2)
+			costs[id].visible = not built
+			var line: String = Ui.cost_line(part["cost"])
+			if costs[id].text != line:
+				costs[id].text = line
+			buttons[id].text = "Gebaut" if built else "Bauen"
+			buttons[id].disabled = not Game.can_build_rocket_part(part)
+		var total: int = Game.rocket_built.size()
+		if Game.rocket_launched:
+			status.text = "Die Rakete ist gestartet. Der Mond ist freigeschaltet; sein Inhalt folgt in einer späteren Version."
+			launch.text = "Gestartet"
+		else:
+			status.text = "%d von %d Teilen gebaut" % [Game.rocket_parts_built(), total]
+			launch.text = "Rakete starten"
+		launch.disabled = Game.rocket_launched or not Game.rocket_complete()
+
+	# Die Teile liegen deckungsgleich übereinander; die Reihenfolge der Datei
+	# bestimmt nur die Liste, gezeichnet wird von hinten nach vorn.
+	var parts: Array = Game.rocket["parts"].duplicate()
+	parts.reverse()
+	for part: Dictionary in parts:
+		var layer: TextureRect = _icon(part["icon"], 380)
+		layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		picture.add_child(layer)
+		layers[part["id"]] = layer
+
+	for part: Dictionary in Game.rocket["parts"]:
+		var panel := PanelContainer.new()
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 18)
+		row.add_child(_icon(part["icon"], 96))
+		var text := VBoxContainer.new()
+		text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		text.alignment = BoxContainer.ALIGNMENT_CENTER
+		var title := Label.new()
+		title.text = part["name"]
+		title.theme_type_variation = &"HeadingLabel"
+		text.add_child(title)
+		var cost := RichTextLabel.new()
+		cost.bbcode_enabled = true
+		cost.fit_content = true
+		cost.scroll_active = false
+		cost.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		text.add_child(cost)
+		row.add_child(text)
+		var button := Button.new()
+		button.custom_minimum_size = Vector2(190, 96)
+		button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		button.theme_type_variation = &"PrimaryButton"
+		button.pressed.connect(func() -> void:
+			if Ui.tap_allowed() and Game.build_rocket_part(part):
+				Sfx.play("upgrade")
+				Ui.flash(panel)
+				Ui.pop(layers[part["id"]])
+				refresh.call())
+		row.add_child(button)
+		panel.add_child(row)
+		popup.content.add_child(panel)
+		costs[part["id"]] = cost
+		buttons[part["id"]] = button
+
+	launch.custom_minimum_size.y = 110
+	launch.theme_type_variation = &"PrimaryButton"
+	launch.pressed.connect(func() -> void:
+		if Ui.tap_allowed() and Game.launch_rocket():
+			Sfx.play("discover")
+			_show_toast(Game.rocket["icon"], "Rakete gestartet – der Mond ist frei")
+			# Die Rakete hebt ab: nach oben aus dem Bild und dabei ausblenden.
+			var tween: Tween = picture.create_tween().set_parallel(true)
+			tween.tween_property(picture, "position:y", picture.position.y - 900.0, 1.6).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+			tween.tween_property(picture, "modulate:a", 0.0, 1.6)
+			refresh.call())
+	popup.content.add_child(launch)
+
+	# Kosten färben sich um, während Material hereinkommt: zweimal pro Sekunde auffrischen.
+	var timer := Timer.new()
+	timer.wait_time = 0.5
+	timer.autostart = true
+	timer.timeout.connect(refresh)
+	popup.content.add_child(timer)
+	refresh.call()
+	Ui.pass_touches(popup.content)
 
 
 # --- Eingaben -----------------------------------------------------------------

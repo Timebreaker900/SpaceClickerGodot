@@ -83,6 +83,12 @@ func _wanted_click_resource() -> String:
 
 
 func _play() -> void:
+	# Rakete: Teile bauen, sobald das Material da ist, und starten.
+	for part: Dictionary in Game.rocket["parts"]:
+		if Game.build_rocket_part(part):
+			_once("Rakete: %s" % part["name"])
+	if Game.launch_rocket():
+		_once("RAKETE GESTARTET")
 	for round_index: int in 40:  # mehrere Käufe pro Sekunde, aber nicht endlos
 		if not _buy_something():
 			break
@@ -99,7 +105,19 @@ func _buy_something() -> bool:
 
 	# Die Wunschliste von oben nach unten durchgehen: kaufen, was geht; sparen,
 	# wenn etwas in unter zwei Minuten leistbar ist; sonst zum nächsten Wunsch.
+	# Fehlt einem Wunsch eine Versorgung (etwa Forschung), wird sie für ihn
+	# aufgespart: Spätere Wünsche, die dieselbe Versorgung belegen, warten.
+	var saved_for_earlier: Dictionary = {}
 	for building: Dictionary in _buildings_by_level():
+		var reserves: Dictionary = building.get("reserves", {})
+		var waits: bool = false
+		for capacity_id: String in reserves:
+			if saved_for_earlier.has(capacity_id):
+				waits = true
+			elif Game.capacity_free(capacity_id) < float(reserves[capacity_id]):
+				saved_for_earlier[capacity_id] = true
+		if waits:
+			continue
 		var target: Dictionary = _resolve(building)
 		if Game.can_buy(target, 1):
 			return _buy_building(target)
@@ -228,6 +246,11 @@ func _buy_recipe_upgrades(recipe: Dictionary) -> void:
 	for building: Dictionary in Game.buildings:
 		if Game.building_visibility(building) == "known" and not Game.is_maxed(building):
 			keep = maxf(keep, float(Game.cost_for(building, 1).get(product, 0.0)))
+	# Auch für die Raketenteile wird Material zurückgehalten.
+	if Game.rocket_available():
+		for part: Dictionary in Game.rocket["parts"]:
+			if not Game.rocket_built[part["id"]]:
+				keep = maxf(keep, float(part["cost"].get(product, 0.0)))
 	for kind: String in ["auto", "saver", "speed", "amount"]:
 		if not Game.recipe_upgrade_available(recipe, kind):
 			continue
@@ -295,6 +318,8 @@ func _print_report() -> void:
 	for recipe: Dictionary in Game.recipes:
 		if Game.amounts[recipe["output"].keys()[0]] <= 0.0 and not _done.has("Entdeckt: %s" % Game.resource_def(recipe["output"].keys()[0])["name"]):
 			missing.append("Rezept " + recipe["name"])
+	if not Game.rocket_launched:
+		missing.append("Raketenstart (%d von %d Teilen)" % [Game.rocket_parts_built(), Game.rocket_built.size()])
 	print("  " + (", ".join(missing) if not missing.is_empty() else "nichts"))
 
 	print("\nVERLAUF (Produktion pro Sekunde)")
