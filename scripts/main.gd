@@ -121,8 +121,7 @@ func _update_population_button(rates: Dictionary) -> void:
 
 func _show_offline_report(report: Dictionary) -> void:
 	offline_time.text = "Du warst %s weg." % _duration_text(report["seconds"])
-	if report["counted"] < report["seconds"]:
-		offline_time.text += " Angerechnet werden höchstens %s." % _duration_text(report["counted"])
+	offline_time.text += " Angerechnet: %s zu %d %%." % [_duration_text(report["counted"]), int(report["percent"])]
 	var lines: PackedStringArray = []
 	var gains: Dictionary = report["gains"]
 	for res: Dictionary in Game.resources:  # Reihenfolge wie in der Ressourcenliste

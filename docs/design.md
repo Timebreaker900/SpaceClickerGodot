@@ -36,7 +36,8 @@ Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Abschnitte mit �
 - Erzabbau ist ein aufklappbares Untermenü der Mine
 - Kosten zeigen Icons; rot wird nur der Posten, der fehlt
 - Alle Icons als SVG neu gezeichnet
-- Offline-Fortschritt: Beim Start und bei der Rückkehr in die App wird die Abwesenheit nachgerechnet (Gebäude zu 100 %, Auto-Rezepte solange Zutaten reichen), höchstens 8 Stunden, ab 60 Sekunden mit Fenster „Willkommen zurück“
+- Offline-Fortschritt, aufgebaut über Upgrades: Ohne Upgrade passiert bei Abwesenheit nichts. „Nachtschicht“ schaltet 1 Stunde zu 20 % frei, je drei weitere Upgrades erhöhen die Dauer (2, 4, 8 Stunden) und den Ertrag (40, 60, 80 %). Obergrenze: 8 Stunden zu 80 %. Jede Stufe erscheint erst, wenn die vorige gekauft ist. Ab 60 Sekunden Abwesenheit zeigt das Fenster „Willkommen zurück“ den Ertrag.
+- Die späten Abwesenheits-Upgrades kosten Kupferkabel, Eisenplatten, Glas und Goldbarren. Damit haben Glas und Goldbarren einen ersten Verwendungszweck (Vorschlag).
 
 Abweichungen vom alten Stand:
 
@@ -142,7 +143,6 @@ Verstärktes Glas wird vom Solarpanel verlangt, hat aber kein Rezept.
 - Wie viele Planeten, was bringt jeder, und wie schaltet man sie frei?
 - Wie groß soll das Spiel werden (ein paar Stunden oder Wochen)?
 - Worin unterscheiden sich die Verwendungszwecke von Coins und Holz über den Anfang hinaus? Derzeit kosten fast alle Gebäude Coins, Holz nur vier davon.
-- Offline-Fortschritt: Sind 8 Stunden Obergrenze und 100 % Ertrag richtig? Üblich ist, beides über Upgrades oder Werbung zu erhöhen.
 - Monetarisierung am Handy: welche Art? Was unterscheidet die Steam-Version?
 
 ## Später

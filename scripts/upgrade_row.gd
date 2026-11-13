@@ -22,6 +22,9 @@ func setup(definition: Dictionary) -> void:
 func _process(_delta: float) -> void:
 	if upgrade.is_empty():
 		return
+	visible = Game.upgrade_visible(upgrade)
+	if not visible:
+		return
 	var unlocked: bool = Game.upgrade_unlocked(upgrade)
 	var affordable: bool = Game.can_buy_upgrade(upgrade)
 	buy_button.disabled = not affordable
@@ -49,6 +52,10 @@ func _describe_effects() -> String:
 		for id: String in provides[building_id]:
 			parts.append("%s: %s %s je Level" % [Game.building_def(building_id)["name"],
 				Game.fmt_signed(provides[building_id][id]), Game.resource_def(id)["name"]])
+	if upgrade.has("add_offline_hours"):
+		parts.append("Abwesenheit: +%d Std anrechenbar" % int(upgrade["add_offline_hours"]))
+	if upgrade.has("add_offline_percent"):
+		parts.append("Abwesenheit: +%d %% Ertrag" % int(upgrade["add_offline_percent"]))
 	var click: Dictionary = upgrade.get("add_click", {})
 	for id: String in click:
 		parts.append("%s %s pro Klick" % [Game.fmt_signed(click[id]), Game.resource_def(id)["name"]])
