@@ -36,6 +36,12 @@ Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Abschnitte mit �
 - Erzabbau ist ein aufklappbares Untermenü der Mine
 - Kosten zeigen Icons; rot wird nur der Posten, der fehlt
 - Alle Icons als SVG neu gezeichnet
+- Überraschung wie bei Cookie Clicker: Von den Gebäuden sieht man nur die bekannten und das jeweils nächste als schwarzen Umriss mit „???“. Bekannt wird ein Gebäude, wenn sein Vorgänger gekauft ist. Dasselbe gilt für die Erze unter der Mine.
+- Upgrades: sichtbar, sobald freigeschaltet; als Rätsel nur für Gebäude, die man besitzt. Rezepte und der Reiter „Produktion“ erscheinen erst mit Schmelze oder Fabrik.
+- Ressourcen werden entdeckt: Leiste und Reiter „Ressourcen“ zeigen nur, was man schon einmal hatte.
+- Leiste oben zeigt nur den Stand, ohne Rate. Vorräte (Coins, Holz, …) und Versorgung (Bevölkerung, Strom) stehen getrennt.
+- Knopf „Leiste anpassen“: höchstens 8 Vorräte frei wählbar, Versorgung ist immer zu sehen.
+- Knopf „Einstellungen“: Version und Spielstand zurücksetzen.
 - Offline-Fortschritt, aufgebaut über Upgrades: Ohne Upgrade passiert bei Abwesenheit nichts. „Nachtschicht“ schaltet 1 Stunde zu 20 % frei, je drei weitere Upgrades erhöhen die Dauer (2, 4, 8 Stunden) und den Ertrag (40, 60, 80 %). Obergrenze: 8 Stunden zu 80 %. Jede Stufe erscheint erst, wenn die vorige gekauft ist. Ab 60 Sekunden Abwesenheit zeigt das Fenster „Willkommen zurück“ den Ertrag.
 - Die späten Abwesenheits-Upgrades kosten Kupferkabel, Eisenplatten, Glas und Goldbarren. Damit haben Glas und Goldbarren einen ersten Verwendungszweck (Vorschlag).
 

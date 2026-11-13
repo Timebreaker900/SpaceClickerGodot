@@ -6,6 +6,9 @@
 [ext_resource type="Texture2D" path="res://assets/icons/coins.svg" id="4_coins"]
 [ext_resource type="Texture2D" path="res://assets/icons/wood.svg" id="5_wood"]
 [ext_resource type="Texture2D" path="res://assets/icons/population.svg" id="6_pop"]
+[ext_resource type="Texture2D" path="res://assets/icons/ui_settings.svg" id="7_settings"]
+[ext_resource type="Texture2D" path="res://assets/icons/ui_resources.svg" id="8_resources"]
+[ext_resource type="PackedScene" path="res://scenes/popup.tscn" id="9_popup"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -44,21 +47,64 @@ theme_override_constants/margin_bottom = 28
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="TopPanel" type="PanelContainer" parent="Margin/Layout"]
+[node name="TopRow" type="HBoxContainer" parent="Margin/Layout"]
 layout_mode = 2
+theme_override_constants/separation = 14
 
-[node name="TopMargin" type="MarginContainer" parent="Margin/Layout/TopPanel"]
+[node name="SideButtons" type="VBoxContainer" parent="Margin/Layout/TopRow"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="SettingsButton" type="Button" parent="Margin/Layout/TopRow/SideButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(88, 88)
+layout_mode = 2
+tooltip_text = "Einstellungen"
+icon = ExtResource("7_settings")
+icon_alignment = 1
+expand_icon = true
+
+[node name="ResourcesButton" type="Button" parent="Margin/Layout/TopRow/SideButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(88, 88)
+layout_mode = 2
+tooltip_text = "Leiste anpassen"
+icon = ExtResource("8_resources")
+icon_alignment = 1
+expand_icon = true
+
+[node name="TopPanel" type="PanelContainer" parent="Margin/Layout/TopRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TopMargin" type="MarginContainer" parent="Margin/Layout/TopRow/TopPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 22
 theme_override_constants/margin_top = 14
 theme_override_constants/margin_right = 22
 theme_override_constants/margin_bottom = 14
 
-[node name="ResourceBar" type="HFlowContainer" parent="Margin/Layout/TopPanel/TopMargin"]
+[node name="TopBox" type="VBoxContainer" parent="Margin/Layout/TopRow/TopPanel/TopMargin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="ResourceBar" type="HFlowContainer" parent="Margin/Layout/TopRow/TopPanel/TopMargin/TopBox"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 3
 theme_override_constants/h_separation = 28
-theme_override_constants/v_separation = 12
+theme_override_constants/v_separation = 10
+
+[node name="BarDivider" type="ColorRect" parent="Margin/Layout/TopRow/TopPanel/TopMargin/TopBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+color = Color(0.25, 0.82, 1, 0.25)
+
+[node name="CapacityBar" type="HBoxContainer" parent="Margin/Layout/TopRow/TopPanel/TopMargin/TopBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 36
 
 [node name="PlanetArea" type="CenterContainer" parent="Margin/Layout"]
 custom_minimum_size = Vector2(0, 540)
@@ -201,6 +247,11 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 6
+
+[node name="Popup" parent="." instance=ExtResource("9_popup")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
 
 [node name="OfflinePopup" type="Control" parent="."]
 unique_name_in_owner = true

@@ -27,6 +27,9 @@ func _process(_delta: float) -> void:
 	var state: Dictionary = Game.recipe_state[recipe["id"]]
 	var batch: int = Game.recipe_batch(recipe)
 	var unlocked: bool = batch > 0
+	visible = unlocked  # Rezepte tauchen erst auf, wenn ihr Gebäude steht
+	if not visible:
+		return
 	icon.modulate.a = 1.0 if unlocked else 0.4
 	start_button.disabled = not Game.can_start_recipe(recipe)
 	auto_button.disabled = not unlocked

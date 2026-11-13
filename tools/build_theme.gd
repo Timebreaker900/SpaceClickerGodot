@@ -102,11 +102,18 @@ func _init() -> void:
 	theme.set_stylebox("grabber_highlight", "VScrollBar", _box(Color(ACCENT, 0.6), ACCENT, 0, 4))
 	theme.set_stylebox("grabber_pressed", "VScrollBar", _box(ACCENT, ACCENT, 0, 4))
 
-	# Auto-Schalter
+	# Schalter (Auto, Leisten-Auswahl): kein Knopf-Hintergrund, nur Text und Schieber
+	for state: String in ["normal", "hover", "pressed", "hover_pressed", "disabled", "focus"]:
+		var empty := StyleBoxEmpty.new()
+		empty.content_margin_left = 8
+		empty.content_margin_right = 8
+		empty.content_margin_top = 8
+		empty.content_margin_bottom = 8
+		theme.set_stylebox(state, "CheckButton", empty)
 	theme.set_color("font_color", "CheckButton", TEXT_MUTED)
-	theme.set_color("font_pressed_color", "CheckButton", ACCENT)
+	theme.set_color("font_pressed_color", "CheckButton", Color.WHITE)
 	theme.set_color("font_hover_color", "CheckButton", TEXT)
-	theme.set_color("font_hover_pressed_color", "CheckButton", ACCENT)
+	theme.set_color("font_hover_pressed_color", "CheckButton", Color.WHITE)
 	theme.set_color("font_disabled_color", "CheckButton", Color(TEXT_MUTED, 0.4))
 
 	var error: int = ResourceSaver.save(theme, "res://ui/theme.tres")

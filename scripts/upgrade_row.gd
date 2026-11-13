@@ -1,8 +1,12 @@
 extends PanelContainer
 ## Eine Zeile im Reiter "Upgrades". Dieselbe Szene für jedes Upgrade aus
 ## data/upgrades.json. Nach dem Kauf verschwindet die Zeile.
+##
+## Ob die Zeile normal, als Rätsel ("???") oder gar nicht erscheint, bestimmt
+## Game.upgrade_visibility().
 
 @onready var icon: TextureRect = %Icon
+@onready var badge: TextureRect = %Badge
 @onready var name_label: Label = %Name
 @onready var info_label: Label = %Info
 @onready var cost_label: RichTextLabel = %Cost
@@ -14,7 +18,6 @@ var upgrade: Dictionary
 func setup(definition: Dictionary) -> void:
 	upgrade = definition
 	icon.texture = load(upgrade["icon"])
-	name_label.text = upgrade["name"]
 	info_label.text = _describe_effects()
 	buy_button.pressed.connect(_on_buy_pressed)
 
@@ -22,16 +25,20 @@ func setup(definition: Dictionary) -> void:
 func _process(_delta: float) -> void:
 	if upgrade.is_empty():
 		return
-	visible = Game.upgrade_visible(upgrade)
+	var state: String = Game.upgrade_visibility(upgrade)
+	visible = state != "hidden"
 	if not visible:
 		return
-	var unlocked: bool = Game.upgrade_unlocked(upgrade)
-	var affordable: bool = Game.can_buy_upgrade(upgrade)
-	buy_button.disabled = not affordable
-	var cost_text: String = Ui.cost_line(upgrade.get("cost", {})) if unlocked else _describe_requirements()
+	var known: bool = state == "known"
+	icon.self_modulate = Color.WHITE if known else Color(0, 0, 0, 0.75)  # nur das Icon, nicht das Abzeichen
+	badge.visible = known
+	info_label.visible = known
+	name_label.text = upgrade["name"] if known else "???"
+	buy_button.text = "Kaufen" if known else "?"
+	buy_button.disabled = not Game.can_buy_upgrade(upgrade)
+	var cost_text: String = Ui.cost_line(upgrade.get("cost", {})) if known else _describe_requirements()
 	if cost_label.text != cost_text:
 		cost_label.text = cost_text
-	icon.modulate.a = 1.0 if unlocked else 0.4
 
 
 func _on_buy_pressed() -> void:

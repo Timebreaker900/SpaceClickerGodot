@@ -4,6 +4,9 @@ extends VBoxContainer
 ##
 ## Eine Zeile kann Unterzeilen haben (z. B. der Erzabbau unter der Mine). Die
 ## hängen eingerückt darunter und lassen sich auf- und zuklappen.
+##
+## Ob die Zeile normal, als Rätsel ("???") oder gar nicht erscheint, bestimmt
+## Game.building_visibility().
 
 @onready var icon: TextureRect = %Icon
 @onready var name_label: Label = %Name
@@ -27,28 +30,40 @@ func setup(definition: Dictionary) -> void:
 ## Hängt die Zeile eines untergeordneten Gebäudes ein.
 func add_sub_row(row: Node) -> void:
 	sub_list.add_child(row)
-	expand_button.visible = true
 	_on_expand_toggled(expand_button.button_pressed)
 
 
 func _process(_delta: float) -> void:
 	if building.is_empty():
 		return
-	name_label.text = "%s  Lv %d" % [building["name"], Game.levels[building["id"]]]
-	info_label.text = _describe_effects()  # jedes Bild neu, weil Upgrades die Werte ändern
-	buy_button.text = "+%d" % Game.buy_amount
+	var state: String = Game.building_visibility(building)
+	visible = state != "hidden"
+	if not visible:
+		return
+	var known: bool = state == "known"
+	# Als Rätsel bleibt vom Icon nur der schwarze Umriss.
+	icon.modulate = Color.WHITE if known else Color(0, 0, 0, 0.75)
+	info_label.visible = known
+	expand_button.visible = known and sub_list.get_child_count() > 0
+	sub_margin.visible = expand_button.visible and expand_button.button_pressed
 	buy_button.disabled = not Game.can_buy(building, Game.buy_amount)
-	var unlocked: bool = Game.is_unlocked(building)
-	var cost_text: String = _describe_cost() if unlocked else _describe_requirements()
+	buy_button.text = "+%d" % Game.buy_amount if known else "?"
+
+	var cost_text: String
+	if known:
+		name_label.text = "%s  Lv %d" % [building["name"], Game.levels[building["id"]]]
+		info_label.text = _describe_effects()  # jedes Bild neu, weil Upgrades die Werte ändern
+		cost_text = _describe_cost()
+	else:
+		name_label.text = "???"
+		cost_text = _describe_hint()
 	if cost_label.text != cost_text:  # nur bei Änderung setzen, das Einlesen der Icons kostet Zeit
 		cost_label.text = cost_text
-	icon.modulate.a = 1.0 if unlocked else 0.4
 
 
 func _on_expand_toggled(open: bool) -> void:
 	sub_margin.visible = open
-	expand_button.text = "%s (%d) %s" % [
-		building.get("children_label", "Mehr"), sub_list.get_child_count(), "▲" if open else "▼"]
+	expand_button.text = "%s %s" % [building.get("children_label", "Mehr"), "▲" if open else "▼"]
 
 
 ## Was ein Level bringt, z. B. "+1 Nahrung/s" oder "+1 Strom".
@@ -76,8 +91,12 @@ func _describe_cost() -> String:
 	return text
 
 
-## Text für gesperrte Gebäude, z. B. "Ab Mine Lv 5".
-func _describe_requirements() -> String:
+## Was fehlt, damit das Rätsel gelüftet wird: zuerst der Vorgänger, dann die
+## eigenen Voraussetzungen.
+func _describe_hint() -> String:
+	var previous: Dictionary = Game.previous_building(building)
+	if not previous.is_empty() and Game.levels[previous["id"]] == 0:
+		return "Kaufe zuerst: %s" % previous["name"]
 	var parts: PackedStringArray = []
 	var requires: Dictionary = building.get("requires", {})
 	for id: String in requires:
