@@ -35,6 +35,8 @@ Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Abschnitte mit �
 - Bevölkerung hat einen eigenen Kaufknopf beim Planeten statt einer Zeile in der Gebäudeliste
 - Erzabbau ist ein aufklappbares Untermenü der Mine
 - Kosten zeigen Icons; rot wird nur der Posten, der fehlt
+- Alle Icons als SVG neu gezeichnet
+- Offline-Fortschritt: Beim Start und bei der Rückkehr in die App wird die Abwesenheit nachgerechnet (Gebäude zu 100 %, Auto-Rezepte solange Zutaten reichen), höchstens 8 Stunden, ab 60 Sekunden mit Fenster „Willkommen zurück“
 
 Abweichungen vom alten Stand:
 
@@ -127,7 +129,6 @@ Verstärktes Glas wird vom Solarpanel verlangt, hat aber kein Rezept.
 ## Bekannte Schwächen des alten Stands
 
 - Der Kostenfaktor wurde pro Kauf zweimal angewendet (Kosten × Faktor²).
-- Kein Offline-Fortschritt gefunden.
 - Kein Prestige, kein Endziel.
 - Goldbarren und Glas haben keinen erkennbaren Verwendungszweck.
 
@@ -141,6 +142,7 @@ Verstärktes Glas wird vom Solarpanel verlangt, hat aber kein Rezept.
 - Wie viele Planeten, was bringt jeder, und wie schaltet man sie frei?
 - Wie groß soll das Spiel werden (ein paar Stunden oder Wochen)?
 - Worin unterscheiden sich die Verwendungszwecke von Coins und Holz über den Anfang hinaus? Derzeit kosten fast alle Gebäude Coins, Holz nur vier davon.
+- Offline-Fortschritt: Sind 8 Stunden Obergrenze und 100 % Ertrag richtig? Üblich ist, beides über Upgrades oder Werbung zu erhöhen.
 - Monetarisierung am Handy: welche Art? Was unterscheidet die Steam-Version?
 
 ## Später

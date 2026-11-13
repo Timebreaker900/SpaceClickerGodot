@@ -201,3 +201,76 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 6
+
+[node name="OfflinePopup" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Dim" type="ColorRect" parent="OfflinePopup"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0.02, 0.06, 0.72)
+
+[node name="Center" type="CenterContainer" parent="OfflinePopup"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="OfflinePopup/Center"]
+custom_minimum_size = Vector2(820, 0)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="OfflinePopup/Center/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 44
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 44
+theme_override_constants/margin_bottom = 40
+
+[node name="Box" type="VBoxContainer" parent="OfflinePopup/Center/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="Title" type="Label" parent="OfflinePopup/Center/Panel/Margin/Box"]
+layout_mode = 2
+theme_type_variation = &"HeadingLabel"
+theme_override_font_sizes/font_size = 52
+text = "Willkommen zurück"
+horizontal_alignment = 1
+
+[node name="OfflineTime" type="Label" parent="OfflinePopup/Center/Panel/Margin/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.25, 0.82, 1, 1)
+text = "Du warst 2 Std weg"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="OfflineGains" type="RichTextLabel" parent="OfflinePopup/Center/Panel/Margin/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 38
+bbcode_enabled = true
+text = "+100"
+fit_content = true
+scroll_active = false
+
+[node name="OfflineClose" type="Button" parent="OfflinePopup/Center/Panel/Margin/Box"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 104)
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+text = "Weiter"

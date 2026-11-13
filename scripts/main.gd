@@ -18,6 +18,10 @@ const UpgradeRow := preload("res://scenes/upgrade_row.tscn")
 @onready var upgrade_list: VBoxContainer = %UpgradeList
 @onready var resource_list: VBoxContainer = %ResourceList
 @onready var tabs: TabContainer = %Tabs
+@onready var offline_popup: Control = %OfflinePopup
+@onready var offline_time: Label = %OfflineTime
+@onready var offline_gains: RichTextLabel = %OfflineGains
+@onready var offline_close: Button = %OfflineClose
 
 var _bar_labels: Dictionary = {}   # Ressourcen-ID -> Label in der Leiste oben
 var _list_labels: Dictionary = {}  # Ressourcen-ID -> Label im Reiter "Ressourcen"
@@ -53,6 +57,13 @@ func _ready() -> void:
 	pop_button.pressed.connect(func() -> void: Game.buy(_planet_building))
 	buy_amount_button.pressed.connect(_on_buy_amount_pressed)
 	_set_click_target(Game.click_target)
+
+	# Abwesenheit: beim Start steht der Bericht schon bereit, bei der Rückkehr in
+	# die App (Handy) kommt er über das Signal.
+	offline_close.pressed.connect(func() -> void: offline_popup.visible = false)
+	Game.offline_applied.connect(_show_offline_report)
+	if not Game.offline_report.is_empty():
+		_show_offline_report(Game.offline_report)
 
 
 ## Legt die Gebäudezeilen an. Drei Fälle, gesteuert über data/buildings.json:
@@ -106,6 +117,30 @@ func _update_population_button(rates: Dictionary) -> void:
 		pop_cost.text = text
 	pop_button.text = "+%d" % count
 	pop_button.disabled = not Game.can_buy(_planet_building, count)
+
+
+func _show_offline_report(report: Dictionary) -> void:
+	offline_time.text = "Du warst %s weg." % _duration_text(report["seconds"])
+	if report["counted"] < report["seconds"]:
+		offline_time.text += " Angerechnet werden höchstens %s." % _duration_text(report["counted"])
+	var lines: PackedStringArray = []
+	var gains: Dictionary = report["gains"]
+	for res: Dictionary in Game.resources:  # Reihenfolge wie in der Ressourcenliste
+		if gains.has(res["id"]):
+			lines.append("[img=48x48]%s[/img]  +%s %s" % [res["icon"], Game.fmt(gains[res["id"]]), res["name"]])
+	offline_gains.text = "\n".join(lines)
+	offline_popup.visible = true
+
+
+## "45 Sek", "12 Min", "3 Std 20 Min"
+func _duration_text(seconds: float) -> String:
+	var total: int = int(seconds)
+	if total < 60:
+		return "%d Sek" % total
+	if total < 3600:
+		return "%d Min" % (total / 60)
+	var minutes: int = (total % 3600) / 60
+	return "%d Std" % (total / 3600) if minutes == 0 else "%d Std %d Min" % [total / 3600, minutes]
 
 
 ## "1234  +2/s" für Vorräte, "frei/gesamt" für Bevölkerung und Strom.
