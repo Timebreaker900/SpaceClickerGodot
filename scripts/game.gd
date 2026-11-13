@@ -25,6 +25,9 @@ extends Node
 
 const SAVE_VERSION := 1
 
+## Wird ausgelöst, wenn Abwesenheit nachgerechnet wurde (Start oder Rückkehr in die App).
+signal offline_applied(report: Dictionary)
+
 var save_path: String = "user://save.json"  # Tests biegen das auf eine eigene Datei um.
 
 var resources: Array = []
@@ -45,9 +48,19 @@ var _resource_by_id: Dictionary = {}
 var _building_by_id: Dictionary = {}
 var _bonus: Dictionary = {}  # Summe der gekauften Upgrades, siehe _rebuild_bonuses()
 var _save_timer: float = 0.0
+var _last_save_time: float = 0.0  # Zeitstempel des letzten Speicherns, 0 = noch nie
+
+## Ergebnis der letzten Nachrechnung: { seconds, counted, gains }. Leer, wenn es
+## nichts zu melden gab.
+var offline_report: Dictionary = {}
 
 
 func _ready() -> void:
+	# Testszenen bekommen von Anfang an eine eigene Speicherdatei, damit sie den
+	# echten Spielstand weder lesen noch überschreiben.
+	for arg: String in OS.get_cmdline_args():
+		if arg.begins_with("res://tests/"):
+			save_path = "user://test_save.json"
 	resources = _load_json("res://data/resources.json")
 	buildings = _load_json("res://data/buildings.json")
 	recipes = _load_json("res://data/recipes.json")
@@ -68,6 +81,7 @@ func _ready() -> void:
 		click_counts[id] = 0
 	load_game()
 	_rebuild_bonuses()
+	_catch_up()
 
 
 func _process(delta: float) -> void:
@@ -86,6 +100,10 @@ func _notification(what: int) -> void:
 	# Fenster wird geschlossen bzw. App geht am Handy in den Hintergrund.
 	if what == NOTIFICATION_WM_CLOSE_REQUEST or what == NOTIFICATION_APPLICATION_PAUSED:
 		save_game()
+	# Am Handy läuft das Spiel im Hintergrund nicht weiter. Bei der Rückkehr wird
+	# die Zeit seit dem Speichern nachgerechnet.
+	elif what == NOTIFICATION_APPLICATION_RESUMED:
+		_catch_up()
 
 
 # --- Abfragen ---------------------------------------------------------------
@@ -282,22 +300,90 @@ func _advance_recipe(recipe: Dictionary, delta: float) -> void:
 	if state["running"]:
 		state["progress"] += delta
 		if state["progress"] >= float(recipe["seconds"]):
-			var output: Dictionary = recipe["output"]
-			for id: String in output:
-				amounts[id] += float(output[id]) * int(state["batch"])
-			state["running"] = false
-			state["progress"] = 0.0
+			_advance_recipe_to_end(recipe)
 	if state["auto"] and not state["running"]:
 		start_recipe(recipe)
+
+
+# --- Abwesenheit -------------------------------------------------------------
+
+## Rechnet nach, was in "seconds" Sekunden Abwesenheit passiert wäre, und gibt
+## einen Bericht zurück. Angerechnet wird höchstens offline_max_hours.
+##   - Gebäude liefern ihre normale Produktion.
+##   - Ein laufender Rezept-Durchgang wird fertig.
+##   - Rezepte auf "Auto" laufen weiter, solange Zeit und Zutaten reichen.
+func apply_offline(seconds: float) -> Dictionary:
+	var counted: float = clampf(seconds, 0.0, float(settings.get("offline_max_hours", 8)) * 3600.0)
+	var before: Dictionary = amounts.duplicate()
+	var rates: Dictionary = get_rates()
+	for id: String in rates:
+		amounts[id] = maxf(0.0, amounts[id] + rates[id] * counted)
+	for recipe: Dictionary in recipes:
+		_offline_recipe(recipe, counted)
+	var gains: Dictionary = {}
+	for id: String in amounts:
+		if amounts[id] - before[id] >= 1.0:
+			gains[id] = amounts[id] - before[id]
+	return { "seconds": seconds, "counted": counted, "gains": gains }
+
+
+func _offline_recipe(recipe: Dictionary, seconds: float) -> void:
+	var state: Dictionary = recipe_state[recipe["id"]]
+	var duration: float = float(recipe["seconds"])
+	var time_left: float = seconds
+	if state["running"]:
+		var remaining: float = duration - float(state["progress"])
+		if time_left < remaining:
+			state["progress"] += time_left
+			return
+		_advance_recipe_to_end(recipe)
+		time_left -= remaining
+	var batch: int = recipe_batch(recipe)
+	if not state["auto"] or batch == 0:
+		return
+	# Wie viele ganze Durchgänge gehen sich aus? Begrenzt durch Zeit und Zutaten.
+	var cycles: float = floorf(time_left / duration)
+	var input: Dictionary = recipe["input"]
+	for id: String in input:
+		cycles = minf(cycles, floorf(amounts[id] / (float(input[id]) * batch)))
+	for id: String in input:
+		amounts[id] -= float(input[id]) * batch * cycles
+	var output: Dictionary = recipe["output"]
+	for id: String in output:
+		amounts[id] += float(output[id]) * batch * cycles
+
+
+func _advance_recipe_to_end(recipe: Dictionary) -> void:
+	var state: Dictionary = recipe_state[recipe["id"]]
+	var output: Dictionary = recipe["output"]
+	for id: String in output:
+		amounts[id] += float(output[id]) * int(state["batch"])
+	state["running"] = false
+	state["progress"] = 0.0
+
+
+## Zeit seit dem letzten Speichern nachrechnen und melden, wenn es sich lohnt.
+func _catch_up() -> void:
+	if _last_save_time <= 0.0:
+		return
+	var away: float = Time.get_unix_time_from_system() - _last_save_time
+	if away < float(settings.get("offline_min_seconds", 60)):
+		return  # Kurze Pausen laufen stillschweigend weiter, ohne Fenster.
+	var report: Dictionary = apply_offline(away)
+	save_game()
+	if not report["gains"].is_empty():
+		offline_report = report
+		offline_applied.emit(report)
 
 
 # --- Speichern --------------------------------------------------------------
 
 func save_game() -> void:
 	_save_timer = 0.0
+	_last_save_time = Time.get_unix_time_from_system()
 	var data: Dictionary = {
 		"version": SAVE_VERSION,
-		"time": Time.get_unix_time_from_system(),
+		"time": _last_save_time,
 		"amounts": amounts,
 		"levels": levels,
 		"recipes": recipe_state,
@@ -321,6 +407,7 @@ func load_game() -> void:
 		return
 	# Nur übernehmen, was es in den Daten noch gibt. So überlebt ein Spielstand,
 	# wenn später Ressourcen, Gebäude oder Rezepte dazukommen oder wegfallen.
+	_last_save_time = float(data.get("time", 0.0))
 	var saved_amounts: Dictionary = data.get("amounts", {})
 	for id: String in amounts:
 		amounts[id] = float(saved_amounts.get(id, 0.0))

@@ -1,5 +1,7 @@
 {
 	"click": { "coins": 1, "wood": 1 },
 	"buy_amounts": [1, 10, 100],
-	"autosave_seconds": 10
+	"autosave_seconds": 10,
+	"offline_max_hours": 8,
+	"offline_min_seconds": 60
 }

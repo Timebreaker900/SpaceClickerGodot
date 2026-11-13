@@ -10,7 +10,7 @@ var _failed: int = 0
 
 
 func _ready() -> void:
-	Game.save_path = "user://test_save.json"
+	_check("Test nutzt eigene Speicherdatei", Game.save_path, "user://test_save.json")
 	Game.set_process(false)  # Zeit steht, damit die Zahlen exakt bleiben.
 	_reset()
 
@@ -116,6 +116,29 @@ func _ready() -> void:
 	Game._rebuild_bonuses()
 	_check("Upgrade nach Laden noch gekauft", Game.click_gain("coins"), 2.0)
 
+	# Abwesenheit: Gebäude liefern weiter, Auto-Rezepte laufen, Obergrenze greift
+	_reset()
+	Game.levels["farm"] = 3
+	var report: Dictionary = Game.apply_offline(100.0)
+	_check("100 s weg: 300 Nahrung", Game.amounts["food"], 300.0)
+	_check("Bericht nennt Nahrung", report["gains"].get("food", 0.0), 300.0)
+	_reset()
+	Game.levels["farm"] = 1
+	report = Game.apply_offline(100.0 * 3600.0)
+	_check("Obergrenze 8 Stunden", Game.amounts["food"], 8.0 * 3600.0)
+	_reset()
+	Game.levels["smeltery"] = 1
+	Game.amounts["copper_ore"] = 10.0
+	Game.apply_offline(1000.0)
+	_check("Ohne Auto wird nichts geschmolzen", Game.amounts["copper_bar"], 0.0)
+	Game.set_recipe_auto(_recipe("copper_bar"), true)
+	Game.apply_offline(12.0)
+	_check("Auto: 12 s reichen für 3 Durchgänge", Game.amounts["copper_bar"], 3.0)
+	Game.apply_offline(1000.0)
+	_check("Auto: Zutaten begrenzen", Game.amounts["copper_bar"], 5.0)
+	_check("Erz aufgebraucht", Game.amounts["copper_ore"], 0.0)
+	Game.set_recipe_auto(_recipe("copper_bar"), false)
+
 	# Zahlenformat
 	_check("Format klein", Game.fmt(1234.9), "1234")
 	_check("Format groß", Game.fmt(2_500_000.0), "2.50e6")
@@ -142,6 +165,10 @@ func _ready() -> void:
 	_check("Rezeptzeilen angelegt", main.get_node("%RecipeList").get_child_count(), Game.recipes.size())
 
 	for arg: String in OS.get_cmdline_user_args():
+		if arg == "--offline":
+			main._show_offline_report({ "seconds": 30000.0, "counted": 28800.0,
+				"gains": { "coins": 57600.0, "wood": 28800.0, "food": 1234567.0, "copper_bar": 420.0 } })
+			await get_tree().process_frame
 		if arg == "--expand":
 			for row: Node in main.get_node("%BuildingList").get_children():
 				row.expand_button.button_pressed = true
