@@ -5,7 +5,7 @@ extends Control
 const BuildingRow := preload("res://scenes/building_row.tscn")
 const RecipeRow := preload("res://scenes/recipe_row.tscn")
 const UpgradeRow := preload("res://scenes/upgrade_row.tscn")
-const GAME_VERSION := "0.2"
+const GAME_VERSION := "0.3"
 const BASE_MARGIN := 28       # normaler Abstand zum Bildschirmrand
 const HINT_TOP := 700.0       # Lage des Hinweisfelds ohne Zusatzrand
 const TOASTS_TOP := 250.0     # Lage der Einblendungen ohne Zusatzrand
