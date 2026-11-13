@@ -13,37 +13,44 @@ theme_override_constants/margin_top = 14
 theme_override_constants/margin_right = 18
 theme_override_constants/margin_bottom = 14
 
-[node name="Row" type="HBoxContainer" parent="Margin"]
+[node name="Box" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Row" type="HBoxContainer" parent="Margin/Box"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Icon" type="TextureRect" parent="Margin/Row"]
+[node name="Icon" type="TextureRect" parent="Margin/Box/Row"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(120, 120)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Text" type="VBoxContainer" parent="Margin/Row"]
+[node name="Text" type="VBoxContainer" parent="Margin/Box/Row"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 4
+theme_override_constants/separation = 6
 
-[node name="Name" type="Label" parent="Margin/Row/Text"]
+[node name="Name" type="Label" parent="Margin/Box/Row/Text"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"HeadingLabel"
 theme_override_font_sizes/font_size = 38
 text = "Rezept"
 
-[node name="Info" type="Label" parent="Margin/Row/Text"]
+[node name="Info" type="RichTextLabel" parent="Margin/Box/Row/Text"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
-text = "2 Erz → 1 Barren"
-autowrap_mode = 3
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 32
+bbcode_enabled = true
+text = "2 → 1"
+fit_content = true
+scroll_active = false
 
-[node name="Progress" type="ProgressBar" parent="Margin/Row/Text"]
+[node name="Progress" type="ProgressBar" parent="Margin/Box/Row/Text"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 22)
 layout_mode = 2
@@ -51,19 +58,50 @@ max_value = 1.0
 step = 0.001
 show_percentage = false
 
-[node name="Buttons" type="VBoxContainer" parent="Margin/Row"]
+[node name="Buttons" type="VBoxContainer" parent="Margin/Box/Row"]
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/separation = 8
 
-[node name="StartButton" type="Button" parent="Margin/Row/Buttons"]
+[node name="StartButton" type="Button" parent="Margin/Box/Row/Buttons"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(190, 72)
 layout_mode = 2
 theme_type_variation = &"PrimaryButton"
 text = "Start"
 
-[node name="AutoButton" type="CheckButton" parent="Margin/Row/Buttons"]
+[node name="AutoButton" type="CheckButton" parent="Margin/Box/Row/Buttons"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Auto"
+
+[node name="Upgrades" type="HBoxContainer" parent="Margin/Box"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="SpeedButton" type="Button" parent="Margin/Box/Upgrades"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"LinkButton2"
+text = "Schneller  25"
+expand_icon = true
+
+[node name="AmountButton" type="Button" parent="Margin/Box/Upgrades"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"LinkButton2"
+text = "Mehr  25"
+expand_icon = true
+
+[node name="AutoUpgradeButton" type="Button" parent="Margin/Box/Upgrades"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"LinkButton2"
+text = "Auto  100"
+expand_icon = true

@@ -10,7 +10,7 @@ const BASE_MARGIN := 28       # normaler Abstand zum Bildschirmrand
 const HINT_TOP := 700.0       # Lage des Hinweisfelds ohne Zusatzrand
 const TOASTS_TOP := 250.0     # Lage der Einblendungen ohne Zusatzrand
 
-@onready var resource_bar: HFlowContainer = %ResourceBar
+@onready var resource_bar: GridContainer = %ResourceBar
 @onready var bar_divider: ColorRect = %BarDivider
 @onready var capacity_bar: HBoxContainer = %CapacityBar
 @onready var settings_button: Button = %SettingsButton
@@ -42,6 +42,7 @@ const TOASTS_TOP := 250.0     # Lage der Einblendungen ohne Zusatzrand
 var _bar_entries: Dictionary = {}
 var _list_entries: Dictionary = {}
 var _group_headings: Dictionary = {}  # Gruppenname -> Überschrift im Reiter
+var _recipe_headings: Dictionary = {} # Gebäude-ID -> Überschrift im Reiter "Produktion"
 var _seen_before: Dictionary = {}     # Stand von Game.seen im vorigen Bild
 var _planet_building: Dictionary      # Gebäude mit eigenem Knopf beim Planeten (Bevölkerung)
 
@@ -51,7 +52,7 @@ func _ready() -> void:
 		# Leiste: Vorräte fließen oben, Versorgung (Bevölkerung, Strom) steht
 		# in einer eigenen Zeile darunter.
 		var bar_parent: Container = capacity_bar if res["type"] == "capacity" else resource_bar
-		_bar_entries[res["id"]] = _add_resource_entry(bar_parent, res, 52, false)
+		_bar_entries[res["id"]] = _add_resource_entry(bar_parent, res, 48, false, 136)
 		var group: String = res.get("group", "")
 		if not _group_headings.has(group):
 			_group_headings[group] = _add_group_heading(group)
@@ -60,6 +61,12 @@ func _ready() -> void:
 	_build_building_rows()
 	pop_caption.text = _planet_building.get("caption", "")
 	for recipe: Dictionary in Game.recipes:
+		# Rezepte sind nach Gebäude gruppiert: "Schmelzen", "Herstellen".
+		var building_id: String = recipe["building"]
+		if not _recipe_headings.has(building_id):
+			var heading: Label = _heading(Game.building_def(building_id).get("recipes_label", ""))
+			recipe_list.add_child(heading)
+			_recipe_headings[building_id] = heading
 		var row: Node = RecipeRow.instantiate()
 		recipe_list.add_child(row)
 		row.setup(recipe)
@@ -137,9 +144,14 @@ func _process(_delta: float) -> void:
 
 	# Der Reiter "Produktion" erscheint erst, wenn es ein Rezept gibt.
 	var any_recipe: bool = false
+	var buildings_with_recipes: Dictionary = {}
 	for recipe: Dictionary in Game.recipes:
-		any_recipe = any_recipe or Game.recipe_batch(recipe) > 0
+		if Game.recipe_visible(recipe):
+			any_recipe = true
+			buildings_with_recipes[recipe["building"]] = true
 	tabs.set_tab_hidden(recipe_list.get_parent().get_index(), not any_recipe)
+	for building_id: String in _recipe_headings:
+		_recipe_headings[building_id].visible = buildings_with_recipes.has(building_id)
 
 	# Der Reiter zeigt, wie viele Upgrades gerade kaufbar sind.
 	var buyable: int = 0
@@ -280,7 +292,8 @@ func _resource_text(id: String, rates: Dictionary, with_rate: bool) -> String:
 	if Game.resource_def(id)["type"] == "capacity":
 		var pattern: String = "%s frei von %s" if with_rate else "%s / %s"
 		return pattern % [Game.fmt(Game.capacity_free(id)), Game.fmt(Game.capacity_total(id))]
-	var text: String = Game.fmt(Game.amounts[id])
+	# In der Leiste ist wenig Platz, dort steht die Zahl mit drei Stellen (12,3 Mio).
+	var text: String = Game.fmt(Game.amounts[id]) if with_rate else Game.fmt_compact(Game.amounts[id])
 	var rate: float = rates.get(id, 0.0)
 	if with_rate and rate != 0.0:
 		text += "  %s/s" % Game.fmt_signed(rate)
@@ -288,7 +301,10 @@ func _resource_text(id: String, rates: Dictionary, with_rate: bool) -> String:
 
 
 ## Legt Icon + Zahl an und gibt die Zeile samt Zahlen-Label zurück.
-func _add_resource_entry(parent: Container, res: Dictionary, icon_size: int, with_name: bool) -> Dictionary:
+## Mit "fixed_width" bekommt die Zahl eine feste Breite. Dann verschiebt sich
+## nichts, wenn eine Zahl eine Stelle länger wird (wichtig für die Leiste).
+func _add_resource_entry(parent: Container, res: Dictionary, icon_size: int, with_name: bool,
+		fixed_width: int = 0) -> Dictionary:
 	var entry := HBoxContainer.new()
 	entry.add_theme_constant_override("separation", 12)
 	entry.add_child(_icon(res["icon"], icon_size))
@@ -298,6 +314,11 @@ func _add_resource_entry(parent: Container, res: Dictionary, icon_size: int, wit
 		name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		entry.add_child(name_label)
 	var value_label := Label.new()
+	if fixed_width > 0:
+		entry.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		value_label.custom_minimum_size.x = fixed_width
+		value_label.clip_text = true
+		value_label.add_theme_font_size_override("font_size", 30)
 	entry.add_child(value_label)
 	parent.add_child(entry)
 	return { "node": entry, "label": value_label }
@@ -313,12 +334,18 @@ func _icon(path: String, icon_size: int) -> TextureRect:
 
 
 func _add_group_heading(title: String) -> Label:
+	var heading: Label = _heading(title)
+	resource_list.add_child(heading)
+	return heading
+
+
+## Türkise Zwischenüberschrift für Listen.
+func _heading(title: String) -> Label:
 	var heading := Label.new()
 	heading.text = title
 	heading.theme_type_variation = &"HeadingLabel"
 	heading.add_theme_font_size_override("font_size", 38)
 	heading.add_theme_color_override("font_color", Color(0.25, 0.82, 1.0))
-	resource_list.add_child(heading)
 	return heading
 
 

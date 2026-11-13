@@ -50,8 +50,7 @@ Abweichungen vom alten Stand:
 
 - Kostenfaktor 1,15 pro Level für alle Gebäude. Das ist ein Vorschlag, der alte Wert ist unbekannt.
 - Bevölkerung ist technisch ein Gebäude (kostet Nahrung, verbraucht 2 Nahrung/s, liefert 1 Bevölkerung).
-- Das Level von Schmelze und Fabrik bestimmt die Menge pro Durchgang. Im alten Stand hatte das Level keine erkennbare Wirkung.
-- Auto ist bei jedem Rezept sofort verfügbar. Im alten Stand war es als Upgrade gedacht.
+- Menge pro Durchgang = Level von Schmelze bzw. Fabrik plus Mengen-Upgrades des Rezepts. Dass das Gebäude-Level mitzählt, ist ein Vorschlag; im alten Stand hatte es keine erkennbare Wirkung.
 
 Vorschlagswerte, weil die alten nur im Unity-Editor standen: Kosten und Ertrag der Sandmine, Kosten und Freischalt-Level des Erzabbaus (Mine Lv 5 / 10 / 20), Mengen und Zeiten aller Rezepte. Die Erz-Raten 0,8 / 0,5 / 0,2 pro Sekunde stammen aus dem alten Code.
 
@@ -74,7 +73,11 @@ Wird Punkt für Punkt abgearbeitet: Nach jedem Punkt testet der Nutzer und gibt 
 - [x] Handy-Ränder (Notch, runde Ecken) – eingebaut und mit simulierten Rändern geprüft; am echten Handy noch zu testen
 - [x] Ruhigerer Hintergrund (untere Hälfte abgedunkelt, Flächen deckender; das Hintergrundbild selbst ist unverändert)
 - [ ] Solarpanel samt Rezept für verstärktes Glas
-- [ ] Auto bei Rezepten als Upgrade
+- [x] Auto bei Rezepten als Upgrade (100 vom eigenen Erzeugnis)
+- [x] Erzabbau darf das Level der Mine nie übersteigen
+- [x] Rezept-Upgrades, bezahlt mit dem eigenen Erzeugnis: „Schneller“ (je Stufe −1 s, mindestens 1 s) und „Mehr“ (je Stufe +1 Menge, also Zutaten und Ergebnis um den Grundwert); Preis 25, 50, 75 …
+- [x] Produktion zeigt Icons statt Namen und ist in „Schmelzen“ und „Herstellen“ gegliedert
+- [x] Leiste oben als festes Raster, damit nichts springt
 - [ ] Mehr Verwendung für Strom und Goldbarren
 
 ## Rahmen
@@ -162,7 +165,6 @@ Verstärktes Glas wird vom Solarpanel verlangt, hat aber kein Rezept.
 
 - Solarpanel: Es verlangt verstärktes Glas, für das es kein Rezept gibt. Woraus wird es hergestellt?
 - Wofür werden Goldbarren und Glas gebraucht?
-- Soll Auto bei Rezepten sofort verfügbar sein oder erst als Upgrade?
 - Was ist das ultimative Ziel? Gibt es Prestige?
 - Was heißt „futuristisch“ konkret: nur das Aussehen der Oberfläche, oder auch Inhalte (spätere Gebäude, Technologien)? Die Erde beginnt mit Farm und Holzfäller.
 - Wie viele Planeten, was bringt jeder, und wie schaltet man sie frei?
@@ -172,4 +174,4 @@ Verstärktes Glas wird vom Solarpanel verlangt, hat aber kein Rezept.
 
 ## Später
 
-Noch nichts.
+- Produktion als echtes Untermenü mit eigenen Seiten für Schmelzen und Herstellen. Vorerst sind es Zwischenüberschriften in einer Liste.

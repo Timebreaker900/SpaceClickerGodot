@@ -1,13 +1,21 @@
 extends PanelContainer
 ## Eine Zeile im Reiter "Produktion". Dieselbe Szene für jedes Rezept aus
 ## data/recipes.json.
+##
+## Unter dem Rezept stehen seine drei Upgrades (Schneller, Mehr, Auto). Sie
+## werden mit dem bezahlt, was das Rezept herstellt; die Regeln stehen in
+## Game.recipe_upgrade_cost().
 
 @onready var icon: TextureRect = %Icon
 @onready var name_label: Label = %Name
-@onready var info_label: Label = %Info
+@onready var info_label: RichTextLabel = %Info
 @onready var progress: ProgressBar = %Progress
 @onready var start_button: Button = %StartButton
 @onready var auto_button: CheckButton = %AutoButton
+@onready var upgrade_buttons: Dictionary = {
+	"speed": %SpeedButton, "amount": %AmountButton, "auto": %AutoUpgradeButton }
+
+const UPGRADE_LABELS: Dictionary = { "speed": "Schneller", "amount": "Mehr", "auto": "Auto" }
 
 var recipe: Dictionary
 
@@ -16,12 +24,16 @@ func setup(definition: Dictionary) -> void:
 	recipe = definition
 	icon.texture = load(recipe["icon"])
 	name_label.text = recipe["name"]
-	auto_button.button_pressed = Game.recipe_state[recipe["id"]]["auto"]
 	start_button.pressed.connect(func() -> void:
 		if Game.start_recipe(recipe):
 			Sfx.play("tap")
 			Ui.pop(icon))
 	auto_button.toggled.connect(func(on: bool) -> void: Game.set_recipe_auto(recipe, on))
+	# Die Upgrade-Knöpfe zeigen das Icon dessen, womit bezahlt wird.
+	var product_icon: Texture2D = load(Game.resource_def(recipe["output"].keys()[0])["icon"])
+	for kind: String in upgrade_buttons:
+		upgrade_buttons[kind].icon = product_icon
+		upgrade_buttons[kind].pressed.connect(_on_upgrade_pressed.bind(kind))
 
 
 func _process(_delta: float) -> void:
@@ -29,24 +41,42 @@ func _process(_delta: float) -> void:
 		return
 	var state: Dictionary = Game.recipe_state[recipe["id"]]
 	var batch: int = Game.recipe_batch(recipe)
-	var unlocked: bool = batch > 0
-	visible = unlocked  # Rezepte tauchen erst auf, wenn ihr Gebäude steht
+	visible = Game.recipe_visible(recipe)  # erst mit Gebäude und bekannten Zutaten
 	if not visible:
 		return
-	icon.modulate.a = 1.0 if unlocked else 0.4
+	var seconds: float = Game.recipe_seconds(recipe)
 	start_button.disabled = not Game.can_start_recipe(recipe)
-	auto_button.disabled = not unlocked
-	progress.value = state["progress"] / float(recipe["seconds"]) if state["running"] else 0.0
-	if unlocked:
-		info_label.text = "%s → %s  (%d s)" % [
-			_describe(recipe["input"], batch), _describe(recipe["output"], batch), int(recipe["seconds"])]
-	else:
-		info_label.text = "Benötigt %s" % Game.building_def(recipe["building"])["name"]
+	progress.value = state["progress"] / seconds if state["running"] else 0.0
+
+	# Der Auto-Schalter erscheint erst, wenn das Auto-Upgrade gekauft ist.
+	auto_button.visible = state["auto_unlocked"]
+	auto_button.set_pressed_no_signal(state["auto"])
+
+	var info: String = "%s  →  %s    %d s" % [
+		_describe(recipe["input"], batch, true), _describe(recipe["output"], batch, false), int(seconds)]
+	if info_label.text != info:
+		info_label.text = info
+
+	for kind: String in upgrade_buttons:
+		var button: Button = upgrade_buttons[kind]
+		button.visible = Game.recipe_upgrade_available(recipe, kind)
+		if button.visible:
+			var cost: Dictionary = Game.recipe_upgrade_cost(recipe, kind)
+			button.text = "%s  %s" % [UPGRADE_LABELS[kind], Game.fmt(cost.values()[0])]
+			button.disabled = not Game.can_buy_recipe_upgrade(recipe, kind)
 
 
-## "4 Kupfererz, 2 Sand" – Mengen mal Durchgangsgröße.
-func _describe(items: Dictionary, batch: int) -> String:
+func _on_upgrade_pressed(kind: String) -> void:
+	if Game.buy_recipe_upgrade(recipe, kind):
+		Sfx.play("upgrade")
+		Ui.flash(self)
+		Ui.pop(icon)
+
+
+## Mengen mal Durchgangsgröße, als Zahl mit Icon. Bei den Zutaten wird rot, was fehlt.
+func _describe(items: Dictionary, batch: int, check_stock: bool) -> String:
 	var parts: PackedStringArray = []
 	for id: String in items:
-		parts.append("%s %s" % [Game.fmt(float(items[id]) * batch), Game.resource_def(id)["name"]])
-	return ", ".join(parts)
+		var needed: float = float(items[id]) * batch
+		parts.append(Ui.amount(id, needed, not check_stock or Game.amounts[id] >= needed))
+	return "  ".join(parts)

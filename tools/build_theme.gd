@@ -48,6 +48,8 @@ func _init() -> void:
 	theme.set_color("font_color", "LinkButton2", ACCENT)
 	theme.set_color("font_pressed_color", "LinkButton2", Color.WHITE)
 	theme.set_font_size("font_size", "LinkButton2", 26)
+	theme.set_constant("icon_max_width", "LinkButton2", 36)
+	theme.set_stylebox("disabled", "LinkButton2", _box(Color(0, 0, 0, 0.2), DISABLED_BORDER, 1, 12, 16, 4))
 
 	theme.set_color("default_color", "RichTextLabel", TEXT)
 	theme.set_font_size("normal_font_size", "RichTextLabel", 28)

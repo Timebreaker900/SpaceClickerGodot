@@ -109,12 +109,13 @@ theme_override_constants/margin_bottom = 14
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="ResourceBar" type="HFlowContainer" parent="Margin/Layout/TopRow/TopPanel/TopMargin/TopBox"]
+[node name="ResourceBar" type="GridContainer" parent="Margin/Layout/TopRow/TopPanel/TopMargin/TopBox"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/h_separation = 28
+theme_override_constants/h_separation = 14
 theme_override_constants/v_separation = 10
+columns = 4
 
 [node name="BarDivider" type="ColorRect" parent="Margin/Layout/TopRow/TopPanel/TopMargin/TopBox"]
 unique_name_in_owner = true

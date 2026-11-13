@@ -113,6 +113,15 @@ func _describe_cost() -> String:
 	for id: String in reserves:
 		var needed: float = float(reserves[id]) * count
 		text += "   " + Ui.amount(id, needed, Game.capacity_free(id) >= needed, "belegt ")
+	# Darf dieses Gebäude ein anderes nicht überholen, steht die Grenze dabei –
+	# rot, sobald sie erreicht ist.
+	if building.has("level_cap"):
+		var cap: Dictionary = Game.building_def(building["level_cap"])
+		var limit: int = Game.levels[cap["id"]]
+		var note: String = "höchstens %s-Level (%d)" % [cap["name"], limit]
+		if Game.levels[building["id"]] + count > limit:
+			note = "[color=#%s]%s[/color]" % [Ui.MISSING_COLOR, note]
+		text += "   " + note
 	return text
 
 
