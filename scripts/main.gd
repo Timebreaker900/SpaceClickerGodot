@@ -4,6 +4,7 @@ extends Control
 
 const BuildingRow := preload("res://scenes/building_row.tscn")
 const RecipeRow := preload("res://scenes/recipe_row.tscn")
+const UpgradeRow := preload("res://scenes/upgrade_row.tscn")
 
 @onready var resource_bar: HFlowContainer = %ResourceBar
 @onready var planet: TextureButton = %Planet
@@ -12,7 +13,9 @@ const RecipeRow := preload("res://scenes/recipe_row.tscn")
 @onready var buy_amount_button: Button = %BuyAmountButton
 @onready var building_list: VBoxContainer = %BuildingList
 @onready var recipe_list: VBoxContainer = %RecipeList
+@onready var upgrade_list: VBoxContainer = %UpgradeList
 @onready var resource_list: VBoxContainer = %ResourceList
+@onready var tabs: TabContainer = %Tabs
 
 var _bar_labels: Dictionary = {}   # Ressourcen-ID -> Label in der Leiste oben
 var _list_labels: Dictionary = {}  # Ressourcen-ID -> Label im Reiter "Ressourcen"
@@ -36,6 +39,12 @@ func _ready() -> void:
 		var row: Node = RecipeRow.instantiate()
 		recipe_list.add_child(row)
 		row.setup(recipe)
+	for upgrade: Dictionary in Game.upgrades:
+		if Game.bought[upgrade["id"]]:
+			continue  # Gekaufte Upgrades tauchen nicht mehr auf.
+		var row: Node = UpgradeRow.instantiate()
+		upgrade_list.add_child(row)
+		row.setup(upgrade)
 
 	planet.pivot_offset = planet.custom_minimum_size / 2.0
 	planet.button_down.connect(_on_planet_pressed)
@@ -51,6 +60,13 @@ func _process(_delta: float) -> void:
 		_bar_labels[id].text = _resource_text(id, rates)
 	for id: String in _list_labels:
 		_list_labels[id].text = _resource_text(id, rates)
+
+	# Der Reiter zeigt, wie viele Upgrades gerade kaufbar sind.
+	var buyable: int = 0
+	for upgrade: Dictionary in Game.upgrades:
+		if Game.can_buy_upgrade(upgrade):
+			buyable += 1
+	tabs.set_tab_title(upgrade_list.get_parent().get_index(), "Upgrades (%d)" % buyable if buyable > 0 else "Upgrades")
 
 
 ## "1234  +2/s" für Vorräte, "frei/gesamt" für Bevölkerung und Strom.

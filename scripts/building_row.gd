@@ -14,7 +14,6 @@ var building: Dictionary
 func setup(definition: Dictionary) -> void:
 	building = definition
 	icon.texture = load(building["icon"])
-	info_label.text = _describe_effects()
 	buy_button.pressed.connect(func() -> void: Game.buy(building))
 
 
@@ -22,6 +21,7 @@ func _process(_delta: float) -> void:
 	if building.is_empty():
 		return
 	name_label.text = "%s  Lv %d" % [building["name"], Game.levels[building["id"]]]
+	info_label.text = _describe_effects()  # jedes Bild neu, weil Upgrades die Werte ändern
 	buy_button.text = "+%d" % Game.buy_amount
 	var affordable: bool = Game.can_buy(building, Game.buy_amount)
 	buy_button.disabled = not affordable
@@ -35,10 +35,10 @@ func _process(_delta: float) -> void:
 ## Was ein Level bringt, z. B. "+1 Nahrung/s" oder "+1 Strom".
 func _describe_effects() -> String:
 	var parts: PackedStringArray = []
-	var produces: Dictionary = building.get("produces", {})
+	var produces: Dictionary = Game.building_output(building, "produces")
 	for id: String in produces:
 		parts.append("%s %s/s" % [Game.fmt_signed(produces[id]), Game.resource_def(id)["name"]])
-	var provides: Dictionary = building.get("provides", {})
+	var provides: Dictionary = Game.building_output(building, "provides")
 	for id: String in provides:
 		parts.append("%s %s" % [Game.fmt_signed(provides[id]), Game.resource_def(id)["name"]])
 	if building.has("note"):

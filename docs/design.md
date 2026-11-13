@@ -27,7 +27,9 @@ Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Abschnitte mit �
 - Sandmine, Schmelze, Fabrik
 - Erzabbau für Kupfer, Eisen und Gold, freigeschaltet über das Minen-Level
 - Rezepte mit Laufzeit, Start-Knopf und Auto-Schalter – Werte in `data/recipes.json`
-- Drei Reiter: Gebäude, Produktion, Ressourcen (die Sicht mit allen Währungen)
+- Vier Reiter: Gebäude, Produktion, Upgrades, Ressourcen (die Sicht mit allen Währungen)
+- Upgrades: je eines für Farm, Holzfäller, Mine, Wassermühle, Bank und Sandmine sowie Klick-Upgrades für Coins und Holz – Werte in `data/upgrades.json`
+- Eigenes Design: dunkle Flächen mit türkisem Akzent, Schrift Exo 2
 
 Abweichungen vom alten Stand:
 
@@ -39,7 +41,9 @@ Abweichungen vom alten Stand:
 
 Vorschlagswerte, weil die alten nur im Unity-Editor standen: Kosten und Ertrag der Sandmine, Kosten und Freischalt-Level des Erzabbaus (Mine Lv 5 / 10 / 20), Mengen und Zeiten aller Rezepte. Die Erz-Raten 0,8 / 0,5 / 0,2 pro Sekunde stammen aus dem alten Code.
 
-Noch nicht portiert: Solarpanel, Upgrades, weitere Planeten.
+Upgrades sind Vorschlagswerte: Gebäude-Upgrades ab Level 10, Kosten rund das Zehnfache des Gebäude-Startpreises, Wirkung verdoppelt die Grundproduktion. Klick-Upgrades ab 100 Klicks, +1 pro Klick. Aus dem alten Code belegt ist nur „+1 Grundproduktion“ bei der Farm und „+1 pro Klick“.
+
+Noch nicht portiert: Solarpanel, weitere Planeten.
 
 ## Rahmen
 
