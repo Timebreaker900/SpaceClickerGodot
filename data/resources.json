@@ -4,8 +4,8 @@
 	{ "id": "food", "name": "Nahrung", "type": "stock", "group": "Basis", "bar": true, "icon": "res://assets/icons/food.svg" },
 	{ "id": "stone", "name": "Stein", "type": "stock", "group": "Basis", "bar": true, "icon": "res://assets/icons/stone.svg" },
 	{ "id": "sand", "name": "Sand", "type": "stock", "group": "Basis", "icon": "res://assets/icons/sand.svg" },
-	{ "id": "population", "name": "Bevölkerung", "type": "capacity", "group": "Basis", "bar": true, "icon": "res://assets/icons/population.svg" },
-	{ "id": "electricity", "name": "Strom", "type": "capacity", "group": "Basis", "bar": true, "icon": "res://assets/icons/electricity.svg" },
+	{ "id": "population", "name": "Bevölkerung", "type": "capacity", "group": "Versorgung", "icon": "res://assets/icons/population.svg" },
+	{ "id": "electricity", "name": "Strom", "type": "capacity", "group": "Versorgung", "icon": "res://assets/icons/electricity.svg" },
 
 	{ "id": "copper_ore", "name": "Kupfererz", "type": "stock", "group": "Erze", "icon": "res://assets/icons/copper_ore.svg" },
 	{ "id": "iron_ore", "name": "Eisenerz", "type": "stock", "group": "Erze", "icon": "res://assets/icons/iron_ore.svg" },

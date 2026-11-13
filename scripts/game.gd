@@ -44,6 +44,8 @@ var levels: Dictionary = {}        # Gebäude-ID -> Level
 var recipe_state: Dictionary = {}  # Rezept-ID -> { auto, running, progress, batch }
 var bought: Dictionary = {}        # Upgrade-ID -> gekauft?
 var click_counts: Dictionary = {}  # Ressourcen-ID -> wie oft dafür geklickt wurde
+var seen: Dictionary = {}          # Ressourcen-ID -> schon einmal besessen? Bleibt für immer wahr.
+var bar_selection: Array = []      # Vorräte, die der Spieler in der Leiste oben sehen will
 var click_target: String = "coins"
 var buy_amount: int = 1
 
@@ -82,6 +84,7 @@ func _ready() -> void:
 		bought[upgrade["id"]] = false
 	for id: String in settings["click"]:
 		click_counts[id] = 0
+	_reset_discovery()
 	load_game()
 	_rebuild_bonuses()
 	_catch_up()
@@ -93,6 +96,7 @@ func _process(delta: float) -> void:
 		amounts[id] = maxf(0.0, amounts[id] + rates[id] * delta)
 	for recipe: Dictionary in recipes:
 		_advance_recipe(recipe, delta)
+	_update_seen()
 
 	_save_timer += delta
 	if _save_timer >= float(settings.get("autosave_seconds", 10)):
@@ -169,6 +173,58 @@ func capacity_free(id: String) -> float:
 	return capacity_total(id) - capacity_used(id)
 
 
+## Wie ein Gebäude in der Liste erscheint – die Überraschung wie bei Cookie Clicker:
+##   "known"   - normal sichtbar und kaufbar
+##   "mystery" - als schwarzer Umriss mit "???": das nächste, das kommt
+##   "hidden"  - noch gar nicht da
+## Bekannt ist ein Gebäude, wenn sein Vorgänger in derselben Liste gekauft wurde
+## und seine Voraussetzungen erfüllt sind. Genau eines danach ist das Rätsel.
+func building_visibility(building: Dictionary) -> String:
+	if building.get("placement", "list") != "list":
+		return "known"
+	var previous_known: bool = true
+	var previous_owned: bool = true
+	for sibling: Dictionary in buildings:
+		if sibling.get("placement", "list") != "list" or sibling.get("parent", "") != building.get("parent", ""):
+			continue
+		# Was man schon besitzt, bleibt immer sichtbar (auch bei älteren Spielständen).
+		var known: bool = levels[sibling["id"]] > 0 or (previous_known and previous_owned and is_unlocked(sibling))
+		if sibling["id"] == building["id"]:
+			if known:
+				return "known"
+			return "mystery" if previous_known else "hidden"
+		previous_known = known
+		previous_owned = levels[sibling["id"]] > 0
+	return "hidden"
+
+
+## Das Gebäude, das in derselben Liste direkt davor steht (leer, wenn keines).
+func previous_building(building: Dictionary) -> Dictionary:
+	var previous: Dictionary = {}
+	for sibling: Dictionary in buildings:
+		if sibling.get("placement", "list") != "list" or sibling.get("parent", "") != building.get("parent", ""):
+			continue
+		if sibling["id"] == building["id"]:
+			return previous
+		previous = sibling
+	return {}
+
+
+## Dasselbe für Upgrades: gekaufte und Kettenglieder ohne Vorgänger sind weg,
+## freigeschaltete sichtbar, und ein Rätsel ist ein Upgrade nur für Gebäude,
+## die man schon besitzt.
+func upgrade_visibility(upgrade: Dictionary) -> String:
+	if bought[upgrade["id"]] or not upgrade_visible(upgrade):
+		return "hidden"
+	if upgrade_unlocked(upgrade):
+		return "known"
+	var requires: Dictionary = upgrade.get("requires", {})
+	for id: String in requires:
+		if levels[id] == 0:
+			return "hidden"
+	return "mystery"
+
+
 ## Sind alle Voraussetzungen ("requires") eines Gebäudes erfüllt?
 func is_unlocked(building: Dictionary) -> bool:
 	var requires: Dictionary = building.get("requires", {})
@@ -196,7 +252,7 @@ func cost_for(building: Dictionary, count: int) -> Dictionary:
 
 
 func can_buy(building: Dictionary, count: int) -> bool:
-	if not is_unlocked(building):
+	if building_visibility(building) != "known":
 		return false
 	var cost: Dictionary = cost_for(building, count)
 	for id: String in cost:
@@ -249,6 +305,14 @@ func buy(building: Dictionary) -> bool:
 		amounts[id] -= cost[id]
 	levels[building["id"]] += buy_amount
 	return true
+
+
+## Legt fest, welche Vorräte die Leiste oben zeigt (höchstens bar_max).
+func set_bar_selected(id: String, selected: bool) -> void:
+	if not selected:
+		bar_selection.erase(id)
+	elif not bar_selection.has(id) and bar_selection.size() < int(settings.get("bar_max", 8)):
+		bar_selection.append(id)
 
 
 func cycle_buy_amount() -> void:
@@ -412,6 +476,8 @@ func save_game() -> void:
 		"recipes": recipe_state,
 		"bought": bought,
 		"click_counts": click_counts,
+		"seen": seen,
+		"bar": bar_selection,
 		"click_target": click_target,
 	}
 	var file: FileAccess = FileAccess.open(save_path, FileAccess.WRITE)
@@ -452,6 +518,15 @@ func load_game() -> void:
 	var saved_clicks: Dictionary = data.get("click_counts", {})
 	for id: String in click_counts:
 		click_counts[id] = int(saved_clicks.get(id, 0))
+	var saved_seen: Dictionary = data.get("seen", {})
+	for id: String in seen:
+		seen[id] = seen[id] or bool(saved_seen.get(id, false))
+	if data.has("bar"):
+		bar_selection = []
+		for id: Variant in data["bar"]:
+			if amounts.has(id):
+				bar_selection.append(id)
+	_update_seen()  # Spielstände von früher: alles, was man hat, gilt als entdeckt
 	var target: String = data.get("click_target", "coins")
 	if settings["click"].has(target):
 		click_target = target
@@ -468,6 +543,7 @@ func reset_game() -> void:
 		bought[id] = false
 	for id: String in click_counts:
 		click_counts[id] = 0
+	_reset_discovery()
 	_rebuild_bonuses()
 	save_game()
 
@@ -514,6 +590,28 @@ func _rebuild_bonuses() -> void:
 		var click_bonus: Dictionary = upgrade.get("add_click", {})
 		for id: String in click_bonus:
 			_bonus["click"][id] = _bonus["click"].get(id, 0.0) + float(click_bonus[id])
+
+
+## Ausgangszustand: Entdeckt ist nur, was man anklicken kann. Die Leiste zeigt
+## die Vorräte, die in den Daten mit "bar" markiert sind.
+func _reset_discovery() -> void:
+	bar_selection = []
+	for res: Dictionary in resources:
+		seen[res["id"]] = settings["click"].has(res["id"])
+		if res["type"] == "stock" and res.get("bar", false):
+			bar_selection.append(res["id"])
+
+
+## Merkt sich, welche Ressourcen der Spieler schon einmal hatte.
+func _update_seen() -> void:
+	for res: Dictionary in resources:
+		var id: String = res["id"]
+		if seen[id]:
+			continue
+		if res["type"] == "stock":
+			seen[id] = amounts[id] > 0.0
+		else:
+			seen[id] = capacity_total(id) > 0.0
 
 
 func _new_recipe_state() -> Dictionary:

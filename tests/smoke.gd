@@ -29,10 +29,19 @@ func _ready() -> void:
 	_check("25 Klicks geben 25 Coins", Game.amounts["coins"], 25.0)
 	_check("25 Klicks geben 25 Holz", Game.amounts["wood"], 25.0)
 
+	# Überraschung: nur das nächste Gebäude ist als Rätsel zu sehen
+	_check("Farm von Anfang an bekannt", Game.building_visibility(farm), "known")
+	_check("Holzfäller anfangs Rätsel", Game.building_visibility(lumberjack), "mystery")
+	_check("Mine anfangs unsichtbar", Game.building_visibility(mine), "hidden")
+	_check("Rätsel ist nicht kaufbar", Game.can_buy(lumberjack, 1), false)
+	_check("Coins entdeckt, Stein nicht", [Game.seen["coins"], Game.seen["stone"]], [true, false])
+
 	# Gebäude kaufen
 	_check("Farm ist leistbar", Game.can_buy(farm, 1), true)
 	Game.buy(farm)
 	_check("Farm Level 1", Game.levels["farm"], 1)
+	_check("Nach Farm: Holzfäller bekannt", Game.building_visibility(lumberjack), "known")
+	_check("Nach Farm: Mine wird Rätsel", Game.building_visibility(mine), "mystery")
 	_check("Coins abgezogen", Game.amounts["coins"], 0.0)
 	_check("Nahrung +1/s", Game.get_rates()["food"], 1.0)
 	_check("Zweite Farm kostet 29", Game.cost_for(farm, 1)["coins"], 29.0)
@@ -164,6 +173,22 @@ func _ready() -> void:
 	_check("Format krumme Rate", Game.fmt_signed(0.8), "+0.8")
 	_check("Format negative Rate", Game.fmt_signed(-2.0), "-2")
 
+	# Leisten-Auswahl: höchstens bar_max
+	Game.bar_selection = []
+	for res: Dictionary in Game.resources:
+		if res["type"] == "stock":
+			Game.set_bar_selected(res["id"], true)
+	_check("Leiste nimmt höchstens 8", Game.bar_selection.size(), 8)
+	_reset()
+	Game._reset_discovery()
+
+	# Für Bildschirmfotos: ein fortgeschrittener Spielstand
+	if OS.get_cmdline_user_args().has("--demo"):
+		Game.levels.merge({ "farm": 12, "housing": 9, "lumberjack": 4, "mine": 6, "watermill": 2 }, true)
+		Game.amounts.merge({ "coins": 4820.0, "wood": 1310.0, "food": 960.0, "stone": 455.0, "copper_ore": 37.0 }, true)
+		Game.click_counts["coins"] = 140
+		Game._update_seen()
+
 	# Hauptbildschirm laden und ein paar Bilder laufen lassen
 	Game.set_process(true)
 	var main: Node = load("res://scenes/main.tscn").instantiate()
@@ -184,6 +209,12 @@ func _ready() -> void:
 	_check("Rezeptzeilen angelegt", main.get_node("%RecipeList").get_child_count(), Game.recipes.size())
 
 	for arg: String in OS.get_cmdline_user_args():
+		if arg == "--picker":
+			main._open_bar_picker()
+			await get_tree().process_frame
+		if arg == "--settings":
+			main._open_settings()
+			await get_tree().process_frame
 		if arg == "--offline":
 			main._show_offline_report({ "seconds": 30000.0, "counted": 28800.0, "percent": 80.0,
 				"gains": { "coins": 57600.0, "wood": 28800.0, "food": 1234567.0, "copper_bar": 420.0 } })
