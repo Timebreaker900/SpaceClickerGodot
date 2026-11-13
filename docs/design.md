@@ -65,7 +65,7 @@ Wird Punkt für Punkt abgearbeitet: Nach jedem Punkt testet der Nutzer und gibt 
 
 - [x] Rückmeldung beim Kauf (Zeile blitzt auf, Icon hüpft)
 - [x] Effekt, wenn ein „???“ aufgedeckt wird oder eine Ressource dazukommt (Icon färbt sich ein, Einblendung „Neu: …“ bzw. „Entdeckt: …“)
-- [ ] Kaufmenge „Max“
+- [x] Kaufmenge „Max“ (1 → 10 → 100 → Max; kauft so viele Level wie leistbar)
 - [ ] Ton (Klick, Kauf, Upgrade)
 - [ ] Planet bewegt sich leicht
 - [ ] Einstiegshinweis für neue Spieler

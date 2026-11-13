@@ -51,7 +51,8 @@ var click_counts: Dictionary = {}  # Ressourcen-ID -> wie oft dafür geklickt wu
 var seen: Dictionary = {}          # Ressourcen-ID -> schon einmal besessen? Bleibt für immer wahr.
 var bar_selection: Array = []      # Vorräte, die der Spieler in der Leiste oben sehen will
 var click_target: String = "coins"
-var buy_amount: int = 1
+var buy_amount: int = 1      # feste Kaufmenge (1, 10, 100)
+var buy_max: bool = false    # stattdessen: so viele wie leistbar
 
 var _resource_by_id: Dictionary = {}
 var _building_by_id: Dictionary = {}
@@ -303,13 +304,42 @@ func click() -> float:
 
 
 func buy(building: Dictionary) -> bool:
-	if not can_buy(building, buy_amount):
+	var count: int = buy_count(building)
+	if not can_buy(building, count):
 		return false
-	var cost: Dictionary = cost_for(building, buy_amount)
+	var cost: Dictionary = cost_for(building, count)
 	for id: String in cost:
 		amounts[id] -= cost[id]
-	levels[building["id"]] += buy_amount
+	levels[building["id"]] += count
 	return true
+
+
+## Wie viele Level ein Druck auf "Kaufen" gerade kauft: die feste Menge oder,
+## bei "Max", so viele wie leistbar (mindestens 1, damit ein Preis dasteht).
+func buy_count(building: Dictionary) -> int:
+	if not buy_max:
+		return buy_amount
+	return maxi(1, max_affordable(building))
+
+
+## Größte Menge, die sich gerade ausgeht. Weil "n leistbar" auch "weniger als n
+## leistbar" bedeutet, lässt sich die Grenze einkreisen: erst verdoppeln, bis es
+## nicht mehr reicht, dann die Mitte suchen.
+func max_affordable(building: Dictionary) -> int:
+	if not can_buy(building, 1):
+		return 0
+	var low: int = 1      # geht sicher
+	var high: int = 2     # wird gesucht: geht sicher nicht
+	while high <= 100000 and can_buy(building, high):
+		low = high
+		high *= 2
+	while high - low > 1:
+		var middle: int = (low + high) / 2
+		if can_buy(building, middle):
+			low = middle
+		else:
+			high = middle
+	return low
 
 
 ## Legt fest, welche Vorräte die Leiste oben zeigt (höchstens bar_max).
@@ -320,10 +350,14 @@ func set_bar_selected(id: String, selected: bool) -> void:
 		bar_selection.append(id)
 
 
+## Schaltet zur nächsten Kaufmenge aus data/settings.json: 1 -> 10 -> 100 -> Max -> 1
 func cycle_buy_amount() -> void:
 	var options: Array = settings["buy_amounts"]
-	var index: int = options.find(float(buy_amount))
-	buy_amount = int(options[(index + 1) % options.size()])
+	var current: Variant = "max" if buy_max else float(buy_amount)
+	var next: Variant = options[(options.find(current) + 1) % options.size()]
+	buy_max = typeof(next) == TYPE_STRING
+	if not buy_max:
+		buy_amount = int(next)
 
 
 ## Upgrades einer Kette tauchen erst auf, wenn ihr Vorgänger gekauft ist.

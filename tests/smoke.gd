@@ -53,6 +53,23 @@ func _ready() -> void:
 		single_sum += 25.0 * pow(1.15, 1 + i)
 	_check("10er-Kauf entspricht Einzelpreisen", absf(Game.cost_for(farm, 10)["coins"] - single_sum) < 1.0, true)
 
+	# Kaufmenge Max: so viele wie leistbar, begrenzt durch Vorrat und Bevölkerung
+	var saved_coins: float = Game.amounts["coins"]
+	var saved_wood: float = Game.amounts["wood"]
+	Game.amounts["coins"] = 100.0
+	Game.amounts["wood"] = 100.0
+	_check("Max: 3 Farmen um 100 (29+33+38)", Game.max_affordable(farm), 3)
+	Game.amounts["coins"] = 0.0
+	_check("Max ohne Coins: 0, angezeigt wird 1", [Game.max_affordable(farm), Game.buy_count(farm)], [0, 1])
+	for i: int in 3:
+		Game.cycle_buy_amount()
+	_check("Durchschalten endet bei Max", Game.buy_max, true)
+	_check("Max ohne Coins kauft nichts", Game.buy(farm), false)
+	Game.cycle_buy_amount()
+	_check("Danach wieder 1", [Game.buy_max, Game.buy_amount], [false, 1])
+	Game.amounts["coins"] = saved_coins
+	Game.amounts["wood"] = saved_wood
+
 	# Bevölkerung: kostet Nahrung und laufenden Verbrauch
 	Game.amounts["food"] = 250.0
 	_check("Bevölkerung nicht leistbar bei +1/s", Game.can_buy(housing, 1), false)

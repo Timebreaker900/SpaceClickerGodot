@@ -67,8 +67,9 @@ func _process(_delta: float) -> void:
 	info_label.visible = known
 	expand_button.visible = known and sub_list.get_child_count() > 0
 	sub_margin.visible = expand_button.visible and expand_button.button_pressed
-	buy_button.disabled = not Game.can_buy(building, Game.buy_amount)
-	buy_button.text = "+%d" % Game.buy_amount if known else "?"
+	var count: int = Game.buy_count(building)
+	buy_button.disabled = not Game.can_buy(building, count)
+	buy_button.text = "+%d" % count if known else "?"
 
 	var cost_text: String
 	if known:
@@ -104,10 +105,11 @@ func _describe_effects() -> String:
 ## Kaufpreis für die gewählte Menge plus das, was dauerhaft belegt wird.
 ## Rot wird nur der Posten, an dem es gerade scheitert.
 func _describe_cost() -> String:
-	var text: String = Ui.cost_line(Game.cost_for(building, Game.buy_amount))
+	var count: int = Game.buy_count(building)
+	var text: String = Ui.cost_line(Game.cost_for(building, count))
 	var reserves: Dictionary = building.get("reserves", {})
 	for id: String in reserves:
-		var needed: float = float(reserves[id]) * Game.buy_amount
+		var needed: float = float(reserves[id]) * count
 		text += "   " + Ui.amount(id, needed, Game.capacity_free(id) >= needed, "belegt ")
 	return text
 

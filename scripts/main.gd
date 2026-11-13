@@ -157,7 +157,7 @@ func _update_resource_views(rates: Dictionary) -> void:
 func _update_population_button(rates: Dictionary) -> void:
 	if _planet_building.is_empty():
 		return
-	var count: int = Game.buy_amount
+	var count: int = Game.buy_count(_planet_building)
 	var text: String = Ui.cost_line(Game.cost_for(_planet_building, count))
 	var upkeep: Dictionary = Game.building_output(_planet_building, "produces")
 	for id: String in upkeep:
@@ -343,7 +343,7 @@ func _set_click_target(id: String) -> void:
 
 func _on_buy_amount_pressed() -> void:
 	Game.cycle_buy_amount()
-	buy_amount_button.text = "Kaufen: %d" % Game.buy_amount
+	buy_amount_button.text = "Kaufen: Max" if Game.buy_max else "Kaufen: %d" % Game.buy_amount
 
 
 func _on_planet_pressed() -> void:
