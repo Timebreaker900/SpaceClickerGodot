@@ -1,0 +1,56 @@
+[
+	{
+		"id": "copper_bar",
+		"name": "Kupferbarren",
+		"icon": "res://assets/icons/copper_bar.png",
+		"building": "smeltery",
+		"input": { "copper_ore": 2 },
+		"output": { "copper_bar": 1 },
+		"seconds": 4
+	},
+	{
+		"id": "iron_bar",
+		"name": "Eisenbarren",
+		"icon": "res://assets/icons/iron_bar.png",
+		"building": "smeltery",
+		"input": { "iron_ore": 2 },
+		"output": { "iron_bar": 1 },
+		"seconds": 6
+	},
+	{
+		"id": "gold_bar",
+		"name": "Goldbarren",
+		"icon": "res://assets/icons/gold_bar.png",
+		"building": "smeltery",
+		"input": { "gold_ore": 2 },
+		"output": { "gold_bar": 1 },
+		"seconds": 8
+	},
+	{
+		"id": "glass",
+		"name": "Glas",
+		"icon": "res://assets/icons/glass.png",
+		"building": "smeltery",
+		"input": { "sand": 2 },
+		"output": { "glass": 1 },
+		"seconds": 4
+	},
+	{
+		"id": "copper_cable",
+		"name": "Kupferkabel",
+		"icon": "res://assets/icons/copper_cable.png",
+		"building": "factory",
+		"input": { "copper_bar": 1 },
+		"output": { "copper_cable": 2 },
+		"seconds": 5
+	},
+	{
+		"id": "iron_plate",
+		"name": "Eisenplatte",
+		"icon": "res://assets/icons/iron_plate.png",
+		"building": "factory",
+		"input": { "iron_bar": 2 },
+		"output": { "iron_plate": 1 },
+		"seconds": 6
+	}
+]

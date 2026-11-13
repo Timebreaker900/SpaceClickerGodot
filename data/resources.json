@@ -1,8 +1,21 @@
 [
-	{ "id": "coins", "name": "Coins", "type": "stock", "icon": "res://assets/icons/coins.png" },
-	{ "id": "wood", "name": "Holz", "type": "stock", "icon": "res://assets/icons/wood.png" },
-	{ "id": "food", "name": "Nahrung", "type": "stock", "icon": "res://assets/icons/food.png" },
-	{ "id": "stone", "name": "Stein", "type": "stock", "icon": "res://assets/icons/stone.png" },
-	{ "id": "population", "name": "Bevölkerung", "type": "capacity", "icon": "res://assets/icons/population.png" },
-	{ "id": "electricity", "name": "Strom", "type": "capacity", "icon": "res://assets/icons/electricity.png" }
+	{ "id": "coins", "name": "Coins", "type": "stock", "group": "Basis", "bar": true, "icon": "res://assets/icons/coins.png" },
+	{ "id": "wood", "name": "Holz", "type": "stock", "group": "Basis", "bar": true, "icon": "res://assets/icons/wood.png" },
+	{ "id": "food", "name": "Nahrung", "type": "stock", "group": "Basis", "bar": true, "icon": "res://assets/icons/food.png" },
+	{ "id": "stone", "name": "Stein", "type": "stock", "group": "Basis", "bar": true, "icon": "res://assets/icons/stone.png" },
+	{ "id": "sand", "name": "Sand", "type": "stock", "group": "Basis", "icon": "res://assets/icons/sand.png" },
+	{ "id": "population", "name": "Bevölkerung", "type": "capacity", "group": "Basis", "bar": true, "icon": "res://assets/icons/population.png" },
+	{ "id": "electricity", "name": "Strom", "type": "capacity", "group": "Basis", "bar": true, "icon": "res://assets/icons/electricity.png" },
+
+	{ "id": "copper_ore", "name": "Kupfererz", "type": "stock", "group": "Erze", "icon": "res://assets/icons/copper_ore.png" },
+	{ "id": "iron_ore", "name": "Eisenerz", "type": "stock", "group": "Erze", "icon": "res://assets/icons/iron_ore.png" },
+	{ "id": "gold_ore", "name": "Golderz", "type": "stock", "group": "Erze", "icon": "res://assets/icons/gold_ore.png" },
+
+	{ "id": "copper_bar", "name": "Kupferbarren", "type": "stock", "group": "Barren", "icon": "res://assets/icons/copper_bar.png" },
+	{ "id": "iron_bar", "name": "Eisenbarren", "type": "stock", "group": "Barren", "icon": "res://assets/icons/iron_bar.png" },
+	{ "id": "gold_bar", "name": "Goldbarren", "type": "stock", "group": "Barren", "icon": "res://assets/icons/gold_bar.png" },
+
+	{ "id": "glass", "name": "Glas", "type": "stock", "group": "Bauteile", "icon": "res://assets/icons/glass.png" },
+	{ "id": "copper_cable", "name": "Kupferkabel", "type": "stock", "group": "Bauteile", "icon": "res://assets/icons/copper_cable.png" },
+	{ "id": "iron_plate", "name": "Eisenplatte", "type": "stock", "group": "Bauteile", "icon": "res://assets/icons/iron_plate.png" }
 ]

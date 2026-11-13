@@ -50,5 +50,59 @@
 		"growth": 1.15,
 		"reserves": { "population": 2, "electricity": 2 },
 		"produces": { "coins": 2 }
+	},
+	{
+		"id": "sandmine",
+		"name": "Sandmine",
+		"icon": "res://assets/buildings/sandmine.png",
+		"cost": { "coins": 60 },
+		"growth": 1.15,
+		"reserves": { "population": 1 },
+		"produces": { "sand": 1 }
+	},
+	{
+		"id": "copper_mining",
+		"name": "Kupferabbau",
+		"icon": "res://assets/icons/copper_ore.png",
+		"requires": { "mine": 5 },
+		"cost": { "food": 100, "wood": 100, "stone": 100 },
+		"growth": 1.15,
+		"produces": { "copper_ore": 0.8 }
+	},
+	{
+		"id": "iron_mining",
+		"name": "Eisenabbau",
+		"icon": "res://assets/icons/iron_ore.png",
+		"requires": { "mine": 10 },
+		"cost": { "food": 200, "wood": 200, "stone": 200 },
+		"growth": 1.15,
+		"produces": { "iron_ore": 0.5 }
+	},
+	{
+		"id": "gold_mining",
+		"name": "Goldabbau",
+		"icon": "res://assets/icons/gold_ore.png",
+		"requires": { "mine": 20 },
+		"cost": { "food": 400, "wood": 400, "stone": 400 },
+		"growth": 1.15,
+		"produces": { "gold_ore": 0.2 }
+	},
+	{
+		"id": "smeltery",
+		"name": "Schmelze",
+		"icon": "res://assets/buildings/smeltery.png",
+		"cost": { "coins": 100, "stone": 150 },
+		"growth": 1.15,
+		"reserves": { "population": 1, "electricity": 1 },
+		"note": "Schmelzen: Level = Menge pro Durchgang"
+	},
+	{
+		"id": "factory",
+		"name": "Fabrik",
+		"icon": "res://assets/buildings/factory.png",
+		"cost": { "coins": 150, "wood": 180, "stone": 225 },
+		"growth": 1.15,
+		"reserves": { "population": 2, "electricity": 3 },
+		"note": "Fertigung: Level = Menge pro Durchgang"
 	}
 ]
