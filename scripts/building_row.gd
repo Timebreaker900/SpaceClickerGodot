@@ -75,14 +75,19 @@ func _process(_delta: float) -> void:
 
 	var cost_text: String
 	var maxed: bool = known and Game.is_maxed(building)
+	var level: int = Game.levels[building["id"]]
+	var max_level: int = int(building.get("max_level", 0))
 	buy_button.visible = not maxed
 	if maxed:
-		# Fertig ausgebaut: kein Level, kein Preis, kein Kaufknopf.
-		name_label.text = building["name"]
+		# Fertig ausgebaut: kein Preis, kein Kaufknopf. Einmalige Gebäude zeigen
+		# nur den Namen, die anderen ihr erreichtes Höchstlevel.
+		name_label.text = building["name"] if max_level <= 1 else "%s  Lv %d (Max)" % [building["name"], max_level]
 		info_label.text = _describe_effects()
 		cost_text = tr("Gebaut")
 	elif known:
-		name_label.text = "%s  Lv %d" % [building["name"], Game.levels[building["id"]]]
+		# Gibt es ein Höchstlevel, steht es dabei: "Schmelze  Lv 12 / 30".
+		var level_text: String = "%d" % level if max_level <= 1 else "%d / %d" % [level, max_level]
+		name_label.text = "%s  Lv %s" % [building["name"], level_text]
 		info_label.text = _describe_effects()  # jedes Bild neu, weil Upgrades die Werte ändern
 		cost_text = _describe_cost()
 	else:
