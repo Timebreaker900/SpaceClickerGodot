@@ -371,7 +371,7 @@ func _on_buy_amount_pressed() -> void:
 
 func _on_planet_pressed() -> void:
 	var gain: float = Game.click()
-	Sfx.play("click", 0.06)
+	Sfx.play("click_" + Game.click_target, 0.05)  # Münze klimpert, Holz klopft
 	# Kurzes "Eindrücken" des Planeten.
 	var tween: Tween = create_tween()
 	tween.tween_property(planet, "scale", Vector2(0.94, 0.94), 0.05)

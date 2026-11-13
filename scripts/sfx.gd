@@ -28,6 +28,13 @@ func _ready() -> void:
 	# Ein Ton ist eine Liste aus [Start in s, Tonhöhe von, Tonhöhe bis, Dauer in s, Stärke].
 	# Tonhöhen in Hertz; 523 / 659 / 784 / 1047 sind die Noten C, E, G, C.
 	_streams["click"] = _build([[0.0, 900, 520, 0.08, 0.55]])
+	# Münz-Klimpern: zwei sehr hohe, kurze Töne knapp hintereinander, jeder mit einem
+	# leisen, "schiefen" Oberton (2,76-fache Höhe) – das macht den Klang metallisch.
+	_streams["click_coins"] = _build([
+		[0.0, 2637, 2637, 0.09, 0.22], [0.0, 7278, 7278, 0.05, 0.08],
+		[0.045, 3520, 3520, 0.16, 0.22], [0.045, 9715, 9715, 0.07, 0.07]])
+	# Holz: ein tiefes, kurzes Klopfen mit hartem Anschlag.
+	_streams["click_wood"] = _build([[0.0, 300, 170, 0.07, 0.6], [0.0, 900, 600, 0.02, 0.25]])
 	_streams["tap"] = _build([[0.0, 1400, 1100, 0.035, 0.30]])
 	_streams["buy"] = _build([[0.0, 523, 523, 0.09, 0.45], [0.07, 784, 784, 0.16, 0.45]])
 	_streams["upgrade"] = _build([

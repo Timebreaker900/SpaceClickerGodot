@@ -194,7 +194,8 @@ func _ready() -> void:
 	Game.set_recipe_auto(_recipe("copper_bar"), false)
 
 	# Ton: alle Töne wurden erzeugt, Lautstärke lässt sich setzen
-	_check("Sechs Töne erzeugt", Sfx._streams.size(), 6)
+	_check("Acht Töne erzeugt", Sfx._streams.size(), 8)
+	_check("Eigener Klick-Ton je Ressource", [Sfx._streams.has("click_coins"), Sfx._streams.has("click_wood")], [true, true])
 	_check("Klick-Ton ist 0,08 s lang", is_equal_approx(Sfx._streams["click"].get_length(), 0.08), true)
 	Sfx.set_volume(0.4)
 	_check("Lautstärke gesetzt", Sfx.volume, 0.4)
