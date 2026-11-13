@@ -83,8 +83,8 @@
 		"id": "watermill",
 		"name": "Wassermühle",
 		"icon": "res://assets/buildings/watermill.svg",
-		"cost": { "coins": 100, "wood": 100 },
-		"growth": 1.15,
+		"cost": { "coins": 150, "wood": 150 },
+		"growth": 1.22,
 		"provides": { "electricity": 1 }
 	},
 	{
