@@ -445,6 +445,21 @@ func _ready() -> void:
 			kinds.append(kind)
 	_check("Upgrades: erst Klick, dann Abwesenheit, dann Gebäude", kinds, ["klick", "abwesenheit", "gebäude"])
 
+	# Übersicht "Aktuell" im Upgrade-Reiter zeigt Klickstärke und Abwesenheit
+	var bought_before: Dictionary = Game.bought.duplicate()
+	for id: String in Game.bought:
+		Game.bought[id] = false
+	Game._rebuild_bonuses()
+	main._update_stats()
+	_check("Übersicht ohne Upgrades", [main._stat_labels["click_coins"].text, main._stat_labels["offline"].text], ["Coins pro Klick: 1", "Abwesenheit: noch nicht freigeschaltet"])
+	Game.bought["offline_1"] = true
+	Game.bought["click_coins_1"] = true
+	Game._rebuild_bonuses()
+	main._update_stats()
+	_check("Übersicht mit Upgrades", [main._stat_labels["click_coins"].text, main._stat_labels["offline"].text], ["Coins pro Klick: 2", "Abwesenheit: bis 1 h, 20 % Ertrag"])
+	Game.bought = bought_before
+	Game._rebuild_bonuses()
+
 	# Handy-Ränder: Zusatzrand kommt zum normalen Abstand dazu
 	main.set_insets(0.0, 130.0, 0.0, 70.0)
 	_check("Rand oben = 28 + 130", main.get_node("Margin").get_theme_constant("margin_top"), 158)

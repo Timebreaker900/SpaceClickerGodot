@@ -27,6 +27,7 @@ const TOASTS_TOP := 250.0     # Lage der Einblendungen ohne Zusatzrand
 @onready var recipe_groups: HBoxContainer = %RecipeGroups
 @onready var recipe_list: VBoxContainer = %RecipeList
 @onready var upgrade_list: VBoxContainer = %UpgradeList
+var _stat_labels: Dictionary = {}  # Schlüssel -> Label in der Übersicht "Aktuell"
 @onready var resource_list: VBoxContainer = %ResourceList
 @onready var tabs: TabContainer = %Tabs
 @onready var hint_area: CenterContainer = %HintArea
@@ -82,6 +83,7 @@ func _ready() -> void:
 		recipe_list.add_child(row)
 		row.setup(recipe)
 		_recipe_rows.append(row)
+	_build_stats()
 	for upgrade: Dictionary in Game.upgrades:
 		if Game.bought[upgrade["id"]]:
 			continue  # Gekaufte Upgrades tauchen nicht mehr auf.
@@ -124,6 +126,47 @@ func _ready() -> void:
 	Game.offline_applied.connect(_show_offline_report)
 	if not Game.offline_report.is_empty():
 		_show_offline_report(Game.offline_report)
+
+
+## Übersicht ganz oben im Reiter "Upgrades": was die gekauften Upgrades gerade
+## bewirken (Stärke pro Klick, Abwesenheit). Die Zahlen füllt _update_stats().
+func _build_stats() -> void:
+	upgrade_list.add_child(_heading("Aktuell"))
+	var panel := PanelContainer.new()
+	var margin := MarginContainer.new()
+	for side: String in ["left", "right"]:
+		margin.add_theme_constant_override("margin_" + side, 24)
+	for side: String in ["top", "bottom"]:
+		margin.add_theme_constant_override("margin_" + side, 18)
+	var lines := VBoxContainer.new()
+	lines.add_theme_constant_override("separation", 12)
+	for id: String in Game.settings["click"]:
+		_stat_labels["click_" + id] = _add_stat_line(lines, Game.resource_def(id)["icon"])
+	_stat_labels["offline"] = _add_stat_line(lines, "res://assets/icons/offline_rate.svg")
+	margin.add_child(lines)
+	panel.add_child(margin)
+	upgrade_list.add_child(panel)
+
+
+func _add_stat_line(parent: Container, icon_path: String) -> Label:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 16)
+	row.add_child(_icon(icon_path, 52))
+	var label := Label.new()
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(label)
+	parent.add_child(row)
+	return label
+
+
+func _update_stats() -> void:
+	for id: String in Game.settings["click"]:
+		_stat_labels["click_" + id].text = "%s pro Klick: %s" % [Game.resource_def(id)["name"], Game.fmt(Game.click_gain(id))]
+	if Game.offline_hours() <= 0.0 or Game.offline_percent() <= 0.0:
+		_stat_labels["offline"].text = "Abwesenheit: noch nicht freigeschaltet"
+	else:
+		_stat_labels["offline"].text = "Abwesenheit: bis %s h, %s %% Ertrag" % [Game.fmt(Game.offline_hours()), Game.fmt(Game.offline_percent())]
 
 
 ## Legt die Gebäudezeilen an. Drei Fälle, gesteuert über data/buildings.json:
@@ -180,6 +223,8 @@ func _process(_delta: float) -> void:
 		_group_buttons[building_id].set_pressed_no_signal(building_id == _recipe_group)
 	for row: Node in _recipe_rows:
 		row.in_shown_group = row.recipe["building"] == _recipe_group
+
+	_update_stats()
 
 	# Der Reiter zeigt, wie viele Upgrades gerade kaufbar sind.
 	var buyable: int = 0
