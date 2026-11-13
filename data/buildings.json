@@ -2,7 +2,7 @@
 	{
 		"id": "farm",
 		"name": "Farm",
-		"icon": "res://assets/buildings/farm.png",
+		"icon": "res://assets/buildings/farm.svg",
 		"cost": { "coins": 25, "wood": 25 },
 		"growth": 1.15,
 		"produces": { "food": 1 }
@@ -10,7 +10,7 @@
 	{
 		"id": "housing",
 		"name": "Bevölkerung",
-		"icon": "res://assets/icons/population.png",
+		"icon": "res://assets/icons/population.svg",
 		"cost": { "food": 250 },
 		"growth": 1.0,
 		"placement": "planet",
@@ -20,7 +20,7 @@
 	{
 		"id": "lumberjack",
 		"name": "Holzfäller",
-		"icon": "res://assets/buildings/lumberjack.png",
+		"icon": "res://assets/buildings/lumberjack.svg",
 		"cost": { "coins": 50 },
 		"growth": 1.15,
 		"reserves": { "population": 1 },
@@ -29,7 +29,7 @@
 	{
 		"id": "mine",
 		"name": "Mine",
-		"icon": "res://assets/buildings/mine.png",
+		"icon": "res://assets/buildings/mine.svg",
 		"cost": { "coins": 75, "wood": 75 },
 		"growth": 1.15,
 		"reserves": { "population": 2 },
@@ -39,7 +39,7 @@
 	{
 		"id": "watermill",
 		"name": "Wassermühle",
-		"icon": "res://assets/buildings/watermill.png",
+		"icon": "res://assets/buildings/watermill.svg",
 		"cost": { "coins": 100, "wood": 100 },
 		"growth": 1.15,
 		"provides": { "electricity": 1 }
@@ -47,7 +47,7 @@
 	{
 		"id": "bank",
 		"name": "Bank",
-		"icon": "res://assets/buildings/bank.png",
+		"icon": "res://assets/buildings/bank.svg",
 		"cost": { "coins": 125, "stone": 125 },
 		"growth": 1.15,
 		"reserves": { "population": 2, "electricity": 2 },
@@ -56,7 +56,7 @@
 	{
 		"id": "sandmine",
 		"name": "Sandmine",
-		"icon": "res://assets/buildings/sandmine.png",
+		"icon": "res://assets/buildings/sandmine.svg",
 		"cost": { "coins": 60 },
 		"growth": 1.15,
 		"reserves": { "population": 1 },
@@ -66,7 +66,7 @@
 		"id": "copper_mining",
 		"parent": "mine",
 		"name": "Kupferabbau",
-		"icon": "res://assets/icons/copper_ore.png",
+		"icon": "res://assets/icons/copper_ore.svg",
 		"requires": { "mine": 5 },
 		"cost": { "food": 100, "wood": 100, "stone": 100 },
 		"growth": 1.15,
@@ -76,7 +76,7 @@
 		"id": "iron_mining",
 		"parent": "mine",
 		"name": "Eisenabbau",
-		"icon": "res://assets/icons/iron_ore.png",
+		"icon": "res://assets/icons/iron_ore.svg",
 		"requires": { "mine": 10 },
 		"cost": { "food": 200, "wood": 200, "stone": 200 },
 		"growth": 1.15,
@@ -86,7 +86,7 @@
 		"id": "gold_mining",
 		"parent": "mine",
 		"name": "Goldabbau",
-		"icon": "res://assets/icons/gold_ore.png",
+		"icon": "res://assets/icons/gold_ore.svg",
 		"requires": { "mine": 20 },
 		"cost": { "food": 400, "wood": 400, "stone": 400 },
 		"growth": 1.15,
@@ -95,7 +95,7 @@
 	{
 		"id": "smeltery",
 		"name": "Schmelze",
-		"icon": "res://assets/buildings/smeltery.png",
+		"icon": "res://assets/buildings/smeltery.svg",
 		"cost": { "coins": 100, "stone": 150 },
 		"growth": 1.15,
 		"reserves": { "population": 1, "electricity": 1 },
@@ -104,7 +104,7 @@
 	{
 		"id": "factory",
 		"name": "Fabrik",
-		"icon": "res://assets/buildings/factory.png",
+		"icon": "res://assets/buildings/factory.svg",
 		"cost": { "coins": 150, "wood": 180, "stone": 225 },
 		"growth": 1.15,
 		"reserves": { "population": 2, "electricity": 3 },

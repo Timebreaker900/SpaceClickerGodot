@@ -2,7 +2,7 @@
 	{
 		"id": "copper_bar",
 		"name": "Kupferbarren",
-		"icon": "res://assets/icons/copper_bar.png",
+		"icon": "res://assets/icons/copper_bar.svg",
 		"building": "smeltery",
 		"input": { "copper_ore": 2 },
 		"output": { "copper_bar": 1 },
@@ -11,7 +11,7 @@
 	{
 		"id": "iron_bar",
 		"name": "Eisenbarren",
-		"icon": "res://assets/icons/iron_bar.png",
+		"icon": "res://assets/icons/iron_bar.svg",
 		"building": "smeltery",
 		"input": { "iron_ore": 2 },
 		"output": { "iron_bar": 1 },
@@ -20,7 +20,7 @@
 	{
 		"id": "gold_bar",
 		"name": "Goldbarren",
-		"icon": "res://assets/icons/gold_bar.png",
+		"icon": "res://assets/icons/gold_bar.svg",
 		"building": "smeltery",
 		"input": { "gold_ore": 2 },
 		"output": { "gold_bar": 1 },
@@ -29,7 +29,7 @@
 	{
 		"id": "glass",
 		"name": "Glas",
-		"icon": "res://assets/icons/glass.png",
+		"icon": "res://assets/icons/glass.svg",
 		"building": "smeltery",
 		"input": { "sand": 2 },
 		"output": { "glass": 1 },
@@ -38,7 +38,7 @@
 	{
 		"id": "copper_cable",
 		"name": "Kupferkabel",
-		"icon": "res://assets/icons/copper_cable.png",
+		"icon": "res://assets/icons/copper_cable.svg",
 		"building": "factory",
 		"input": { "copper_bar": 1 },
 		"output": { "copper_cable": 2 },
@@ -47,7 +47,7 @@
 	{
 		"id": "iron_plate",
 		"name": "Eisenplatte",
-		"icon": "res://assets/icons/iron_plate.png",
+		"icon": "res://assets/icons/iron_plate.svg",
 		"building": "factory",
 		"input": { "iron_bar": 2 },
 		"output": { "iron_plate": 1 },
