@@ -68,9 +68,34 @@ func _ready() -> void:
 	_check("Coins nach Laden", Game.amounts["coins"], coins_before)
 	_check("Level nach Laden", Game.levels["lumberjack"], 1)
 
+	# Freischaltung über Gebäude-Level
+	var copper_mining: Dictionary = _building("copper_mining")
+	_check("Kupferabbau anfangs gesperrt", Game.is_unlocked(copper_mining), false)
+	Game.levels["mine"] = 5
+	_check("Kupferabbau ab Mine Lv 5 frei", Game.is_unlocked(copper_mining), true)
+
+	# Rezepte: Zutaten sofort weg, Ergebnis nach Ablauf, Menge = Gebäude-Level
+	var copper_bar: Dictionary = _recipe("copper_bar")
+	Game.amounts["copper_ore"] = 4.0
+	_check("Ohne Schmelze kein Schmelzen", Game.can_start_recipe(copper_bar), false)
+	Game.levels["smeltery"] = 2
+	_check("Mit Schmelze startbar", Game.start_recipe(copper_bar), true)
+	_check("Erz sofort abgezogen", Game.amounts["copper_ore"], 0.0)
+	Game._advance_recipe(copper_bar, 3.9)
+	_check("Vor Ablauf noch kein Barren", Game.amounts["copper_bar"], 0.0)
+	Game._advance_recipe(copper_bar, 0.2)
+	_check("Nach Ablauf 2 Barren", Game.amounts["copper_bar"], 2.0)
+	Game.amounts["copper_ore"] = 4.0
+	Game.set_recipe_auto(copper_bar, true)
+	Game._advance_recipe(copper_bar, 0.0)
+	_check("Auto startet von selbst", Game.recipe_state["copper_bar"]["running"], true)
+	Game.set_recipe_auto(copper_bar, false)
+
 	# Zahlenformat
 	_check("Format klein", Game.fmt(1234.9), "1234")
 	_check("Format groß", Game.fmt(2_500_000.0), "2.50e6")
+	_check("Format krumme Rate", Game.fmt_signed(0.8), "+0.8")
+	_check("Format negative Rate", Game.fmt_signed(-2.0), "-2")
 
 	# Hauptbildschirm laden und ein paar Bilder laufen lassen
 	Game.set_process(true)
@@ -80,6 +105,12 @@ func _ready() -> void:
 		await get_tree().process_frame
 	_check("Gebäudezeilen angelegt", main.get_node("%BuildingList").get_child_count(), Game.buildings.size())
 
+	_check("Rezeptzeilen angelegt", main.get_node("%RecipeList").get_child_count(), Game.recipes.size())
+
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--tab="):
+			main.get_node("Margin/Layout/Tabs").current_tab = int(arg.trim_prefix("--tab="))
+			await get_tree().process_frame
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--shot="):
 			await RenderingServer.frame_post_draw
@@ -97,11 +128,20 @@ func _building(id: String) -> Dictionary:
 	return {}
 
 
+func _recipe(id: String) -> Dictionary:
+	for recipe: Dictionary in Game.recipes:
+		if recipe["id"] == id:
+			return recipe
+	return {}
+
+
 func _reset() -> void:
 	for id: String in Game.amounts:
 		Game.amounts[id] = 0.0
 	for id: String in Game.levels:
 		Game.levels[id] = 0
+	for id: String in Game.recipe_state:
+		Game.recipe_state[id] = Game._new_recipe_state()
 
 
 func _check(what: String, actual: Variant, expected: Variant) -> void:
