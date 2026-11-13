@@ -109,6 +109,12 @@ func _build_building_rows() -> void:
 
 
 func _process(_delta: float) -> void:
+	# Der Planet schwebt: langsam auf und ab und wiegt sich dabei ein wenig.
+	# Zwei verschieden schnelle Sinuswellen, damit es nicht mechanisch wirkt.
+	var time: float = Time.get_ticks_msec() / 1000.0
+	planet.position.y = sin(time * 0.9) * 10.0
+	planet.rotation = sin(time * 0.5) * 0.045
+
 	var rates: Dictionary = Game.get_rates()
 	_update_resource_views(rates)
 	_update_population_button(rates)

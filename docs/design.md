@@ -67,7 +67,7 @@ Wird Punkt für Punkt abgearbeitet: Nach jedem Punkt testet der Nutzer und gibt 
 - [x] Effekt, wenn ein „???“ aufgedeckt wird oder eine Ressource dazukommt (Icon färbt sich ein, Einblendung „Neu: …“ bzw. „Entdeckt: …“)
 - [x] Kaufmenge „Max“ (1 → 10 → 100 → Max; kauft so viele Level wie leistbar)
 - [x] Ton (Klick, Kauf, Upgrade, Aufdecken, Entdecken, Tippen) – per Code erzeugt, Lautstärke in den Einstellungen
-- [ ] Planet bewegt sich leicht
+- [x] Planet bewegt sich leicht (schwebt auf und ab, wiegt sich)
 - [ ] Einstiegshinweis für neue Spieler
 - [ ] Zahlenformat als Einstellung (1.23e6 oder 1,23 Mio)
 - [ ] Bevölkerungs-Knopf erklärt, wofür Bevölkerung gebraucht wird

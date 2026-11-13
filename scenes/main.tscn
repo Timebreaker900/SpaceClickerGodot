@@ -110,10 +110,17 @@ theme_override_constants/separation = 36
 custom_minimum_size = Vector2(0, 540)
 layout_mode = 2
 
-[node name="Planet" type="TextureButton" parent="Margin/Layout/PlanetArea"]
-unique_name_in_owner = true
+[node name="PlanetHolder" type="Control" parent="Margin/Layout/PlanetArea"]
 custom_minimum_size = Vector2(540, 540)
 layout_mode = 2
+mouse_filter = 2
+
+[node name="Planet" type="TextureButton" parent="Margin/Layout/PlanetArea/PlanetHolder"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(540, 540)
+layout_mode = 0
+offset_right = 540.0
+offset_bottom = 540.0
 texture_normal = ExtResource("3_earth")
 ignore_texture_size = true
 stretch_mode = 0
