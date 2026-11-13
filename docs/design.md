@@ -2,7 +2,20 @@
 
 Der gültige Stand. Gebaut wird nur, was hier steht. Neue Ideen kommen über `ideen.md` herein.
 
-Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Noch nichts davon ist für die Godot-Version bestätigt.
+Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Abschnitte mit „(alt)“ sind noch nicht für die Godot-Version bestätigt.
+
+## Leitidee
+
+- Ein Incremental-Spiel, in dem man auf der Erde eine Bevölkerung aufbaut.
+- Von dort arbeitet man sich auf weitere Planeten vor, bis ein ultimatives Ziel erreicht ist. Das Ziel ist noch offen.
+- Anders als bei üblichen Clickern wächst nicht nur eine Währung, sondern mehrere nebeneinander (Coins, Holz, Nahrung, Stein, …).
+- Die Anmutung soll etwas futuristisch sein.
+
+## Bestätigt für die Erde
+
+- Klicken gibt Coins oder Holz. Beide haben unterschiedliche Verwendungszwecke.
+- Alle Gebäude aus dem alten Stand bleiben (Liste unter „Gebäude Erde“).
+- Es gibt eine eigene Sicht, die alle Währungen auf einmal zeigt.
 
 ## Umgesetzt in Godot
 
@@ -18,7 +31,7 @@ Abweichungen vom alten Stand:
 - Bevölkerung ist technisch ein Gebäude (kostet Nahrung, verbraucht 2 Nahrung/s, liefert 1 Bevölkerung).
 - Die Erde ist eine sich drehende Kugel statt eines flachen Bildes.
 
-Noch nicht portiert: Schmelze, Fabrik, Sandmine, Solarpanel, Erzabbau, Rezepte, Upgrades, weitere Planeten.
+Noch nicht portiert: Schmelze, Fabrik, Sandmine, Solarpanel, Erzabbau, Rezepte, Upgrades, Sicht mit allen Währungen, weitere Planeten.
 
 ## Rahmen
 
@@ -104,11 +117,12 @@ Verstärktes Glas wird vom Solarpanel verlangt, hat aber kein Rezept.
 
 ## Offene Fragen
 
+- Was ist das ultimative Ziel? Gibt es Prestige?
+- Was heißt „futuristisch“ konkret: nur das Aussehen der Oberfläche, oder auch Inhalte (spätere Gebäude, Technologien)? Die Erde beginnt mit Farm und Holzfäller.
+- Wie viele Planeten, was bringt jeder, und wie schaltet man sie frei?
 - Wie groß soll das Spiel werden (ein paar Stunden oder Wochen)?
-- Was ist das Ziel bzw. gibt es Prestige?
-- Was bringen Mond und Mars, und wie schaltet man sie frei?
+- Worin unterscheiden sich die Verwendungszwecke von Coins und Holz über den Anfang hinaus? Derzeit kosten fast alle Gebäude Coins, Holz nur vier davon.
 - Monetarisierung am Handy: welche Art? Was unterscheidet die Steam-Version?
-- Was vom alten Stand bleibt, was fliegt raus?
 
 ## Später
 
