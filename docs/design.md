@@ -44,7 +44,7 @@ Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Abschnitte mit �
 - Erzabbau für Kupfer, Eisen und Gold, freigeschaltet über das Minen-Level
 - Rezepte mit Laufzeit, Start-Knopf und Auto-Schalter – Werte in `data/recipes.json`
 - Vier Reiter: Gebäude, Produktion, Upgrades, Ressourcen (die Sicht mit allen Währungen)
-- Gebäude-Upgrades als Reihe: alle 5 Level eine Stufe. Frühe Gebäude (Farm, Holzfäller, Mine, Markt, Wassermühle, Sandmine) haben 5 Stufen, späte (Solarpanel, Sägewerk, Bank) 10. So hören die frühen ab Level 25 auf, stärker zu werden, und die späten lohnen sich dauerhaft. Stufe n bringt n × 0,5 der Grundproduktion dazu (bei Grundwert 1: +0,5, dann +1, dann +1,5 …). Die Regel steht in `data/upgrade_series.json`.
+- Gebäude-Upgrades als Reihe: alle 5 Level eine Stufe. Frühe Gebäude (Farm, Holzfäller, Mine, Markt, Wassermühle) und der gesamte Bergbau (Sand, Kohle, Kupfer, Eisen, Gold, Titan) haben 5 Stufen, späte (Solarpanel, Sägewerk, Bank) 10. So hören die frühen ab Level 25 auf, stärker zu werden, und die späten lohnen sich dauerhaft. Stufe n bringt n × 0,5 der Grundproduktion dazu (bei Grundwert 1: +0,5, dann +1, dann +1,5 …). Die Regel steht in `data/upgrade_series.json`.
 - Klick-Upgrades als Reihe für Coins und Holz: alle 250 Klicks eine Stufe (250, 500, 750 …), jede bringt +1 pro Klick. Die Regel steht in `data/upgrade_series.json`.
 - Eigenes Design: dunkle Flächen mit türkisem Akzent, Schrift Exo 2
 - Gezeichnete Erde aus dem alten Projekt als Planet
