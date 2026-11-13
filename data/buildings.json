@@ -1,0 +1,54 @@
+[
+	{
+		"id": "farm",
+		"name": "Farm",
+		"icon": "res://assets/buildings/farm.png",
+		"cost": { "coins": 25, "wood": 25 },
+		"growth": 1.15,
+		"produces": { "food": 1 }
+	},
+	{
+		"id": "housing",
+		"name": "Bevölkerung",
+		"icon": "res://assets/icons/population.png",
+		"cost": { "food": 250 },
+		"growth": 1.0,
+		"produces": { "food": -2 },
+		"provides": { "population": 1 }
+	},
+	{
+		"id": "lumberjack",
+		"name": "Holzfäller",
+		"icon": "res://assets/buildings/lumberjack.png",
+		"cost": { "coins": 50 },
+		"growth": 1.15,
+		"reserves": { "population": 1 },
+		"produces": { "wood": 1 }
+	},
+	{
+		"id": "mine",
+		"name": "Mine",
+		"icon": "res://assets/buildings/mine.png",
+		"cost": { "coins": 75, "wood": 75 },
+		"growth": 1.15,
+		"reserves": { "population": 2 },
+		"produces": { "stone": 1 }
+	},
+	{
+		"id": "watermill",
+		"name": "Wassermühle",
+		"icon": "res://assets/buildings/watermill.png",
+		"cost": { "coins": 100, "wood": 100 },
+		"growth": 1.15,
+		"provides": { "electricity": 1 }
+	},
+	{
+		"id": "bank",
+		"name": "Bank",
+		"icon": "res://assets/buildings/bank.png",
+		"cost": { "coins": 125, "stone": 125 },
+		"growth": 1.15,
+		"reserves": { "population": 2, "electricity": 2 },
+		"produces": { "coins": 2 }
+	}
+]

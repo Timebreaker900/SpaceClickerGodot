@@ -1,0 +1,8 @@
+[
+	{ "id": "coins", "name": "Coins", "type": "stock", "icon": "res://assets/icons/coins.png" },
+	{ "id": "wood", "name": "Holz", "type": "stock", "icon": "res://assets/icons/wood.png" },
+	{ "id": "food", "name": "Nahrung", "type": "stock", "icon": "res://assets/icons/food.png" },
+	{ "id": "stone", "name": "Stein", "type": "stock", "icon": "res://assets/icons/stone.png" },
+	{ "id": "population", "name": "Bevölkerung", "type": "capacity", "icon": "res://assets/icons/population.png" },
+	{ "id": "electricity", "name": "Strom", "type": "capacity", "icon": "res://assets/icons/electricity.png" }
+]
