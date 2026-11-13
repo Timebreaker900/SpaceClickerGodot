@@ -59,6 +59,24 @@ Vorschlagswerte bei den Upgrades: Eine Stufe der Gebäude-Reihe kostet das Fünf
 
 Noch nicht portiert: Solarpanel, weitere Planeten.
 
+## Feinschliff Erde
+
+Wird Punkt für Punkt abgearbeitet: Nach jedem Punkt testet der Nutzer und gibt den nächsten frei.
+
+- [x] Rückmeldung beim Kauf (Zeile blitzt auf, Icon hüpft)
+- [ ] Effekt, wenn ein „???“ aufgedeckt wird oder eine Ressource dazukommt
+- [ ] Kaufmenge „Max“
+- [ ] Ton (Klick, Kauf, Upgrade)
+- [ ] Planet bewegt sich leicht
+- [ ] Einstiegshinweis für neue Spieler
+- [ ] Zahlenformat als Einstellung (1.23e6 oder 1,23 Mio)
+- [ ] Bevölkerungs-Knopf erklärt, wofür Bevölkerung gebraucht wird
+- [ ] Handy-Ränder (Notch, runde Ecken)
+- [ ] Ruhigerer Hintergrund
+- [ ] Solarpanel samt Rezept für verstärktes Glas
+- [ ] Auto bei Rezepten als Upgrade
+- [ ] Mehr Verwendung für Strom und Goldbarren
+
 ## Rahmen
 
 - Engine: Godot 4, GDScript

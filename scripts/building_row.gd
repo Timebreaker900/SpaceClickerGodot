@@ -23,8 +23,15 @@ var building: Dictionary
 func setup(definition: Dictionary) -> void:
 	building = definition
 	icon.texture = load(building["icon"])
-	buy_button.pressed.connect(func() -> void: Game.buy(building))
+	buy_button.pressed.connect(_on_buy_pressed)
 	expand_button.toggled.connect(_on_expand_toggled)
+
+
+func _on_buy_pressed() -> void:
+	if Game.buy(building):
+		Ui.flash($Panel)
+		Ui.pop(icon)
+		Ui.pop(name_label, 1.08)
 
 
 ## Hängt die Zeile eines untergeordneten Gebäudes ein.

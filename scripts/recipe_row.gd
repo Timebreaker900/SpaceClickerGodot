@@ -17,7 +17,9 @@ func setup(definition: Dictionary) -> void:
 	icon.texture = load(recipe["icon"])
 	name_label.text = recipe["name"]
 	auto_button.button_pressed = Game.recipe_state[recipe["id"]]["auto"]
-	start_button.pressed.connect(func() -> void: Game.start_recipe(recipe))
+	start_button.pressed.connect(func() -> void:
+		if Game.start_recipe(recipe):
+			Ui.pop(icon))
 	auto_button.toggled.connect(func(on: bool) -> void: Game.set_recipe_auto(recipe, on))
 
 

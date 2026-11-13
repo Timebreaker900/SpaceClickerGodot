@@ -21,3 +21,18 @@ static func cost_line(cost: Dictionary) -> String:
 	for id: String in cost:
 		parts.append(amount(id, cost[id], Game.amounts[id] >= float(cost[id])))
 	return "   ".join(parts)
+
+
+## Lässt eine Fläche kurz hell aufblitzen und wieder abklingen – die Bestätigung,
+## dass ein Kauf geklappt hat. self_modulate färbt nur die Fläche selbst, nicht
+## den Inhalt darauf.
+static func flash(panel: CanvasItem) -> void:
+	panel.self_modulate = Color(5.0, 5.0, 5.0)
+	panel.create_tween().tween_property(panel, "self_modulate", Color.WHITE, 0.35).set_ease(Tween.EASE_OUT)
+
+
+## Lässt ein Element kurz größer werden und zurückfedern.
+static func pop(node: Control, strength: float = 1.25) -> void:
+	node.pivot_offset = node.size / 2.0
+	node.scale = Vector2.ONE * strength
+	node.create_tween().tween_property(node, "scale", Vector2.ONE, 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)

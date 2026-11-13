@@ -64,7 +64,9 @@ func _ready() -> void:
 	planet.button_down.connect(_on_planet_pressed)
 	click_coins.pressed.connect(_set_click_target.bind("coins"))
 	click_wood.pressed.connect(_set_click_target.bind("wood"))
-	pop_button.pressed.connect(func() -> void: Game.buy(_planet_building))
+	pop_button.pressed.connect(func() -> void:
+		if Game.buy(_planet_building):
+			Ui.pop(pop_button, 1.12))
 	buy_amount_button.pressed.connect(_on_buy_amount_pressed)
 	settings_button.pressed.connect(_open_settings)
 	resources_button.pressed.connect(_open_bar_picker)

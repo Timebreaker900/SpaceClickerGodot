@@ -215,6 +215,13 @@ func _ready() -> void:
 	main._on_planet_pressed()
 	await get_tree().create_timer(0.2).timeout
 	_check("Klick über die Oberfläche zählt", Game.amounts["coins"] > coins_before_click, true)
+	# Kauf über die Zeile samt Aufblitzen darf keinen Fehler werfen
+	Game.amounts["coins"] += 1000.0
+	Game.amounts["wood"] += 1000.0
+	var farm_level_before: int = Game.levels["farm"]
+	main.get_node("%BuildingList").get_child(0)._on_buy_pressed()
+	await get_tree().create_timer(0.1).timeout
+	_check("Kauf über die Zeile zählt", Game.levels["farm"], farm_level_before + 1)
 	_check("Rezeptzeilen angelegt", main.get_node("%RecipeList").get_child_count(), Game.recipes.size())
 
 	for arg: String in OS.get_cmdline_user_args():

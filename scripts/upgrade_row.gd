@@ -13,6 +13,7 @@ extends PanelContainer
 @onready var buy_button: Button = %BuyButton
 
 var upgrade: Dictionary
+var _leaving: bool = false  # gekauft, die Zeile blendet gerade aus
 
 
 func setup(definition: Dictionary) -> void:
@@ -23,7 +24,7 @@ func setup(definition: Dictionary) -> void:
 
 
 func _process(_delta: float) -> void:
-	if upgrade.is_empty():
+	if upgrade.is_empty() or _leaving:
 		return
 	var state: String = Game.upgrade_visibility(upgrade)
 	visible = state != "hidden"
@@ -42,8 +43,17 @@ func _process(_delta: float) -> void:
 
 
 func _on_buy_pressed() -> void:
-	if Game.buy_upgrade(upgrade):
-		queue_free()
+	if not Game.buy_upgrade(upgrade):
+		return
+	# Aufblitzen, kurz stehen lassen, dann ausblenden und entfernen.
+	_leaving = true
+	buy_button.disabled = true
+	Ui.flash(self)
+	Ui.pop(icon)
+	var tween: Tween = create_tween()
+	tween.tween_interval(0.25)
+	tween.tween_property(self, "modulate:a", 0.0, 0.25)
+	tween.tween_callback(queue_free)
 
 
 ## Z. B. "Farm: +1 Nahrung/s je Level" oder "+1 Coins pro Klick".
