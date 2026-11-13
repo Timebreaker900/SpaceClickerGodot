@@ -64,7 +64,7 @@ Noch nicht portiert: Solarpanel, weitere Planeten.
 Wird Punkt für Punkt abgearbeitet: Nach jedem Punkt testet der Nutzer und gibt den nächsten frei.
 
 - [x] Rückmeldung beim Kauf (Zeile blitzt auf, Icon hüpft)
-- [ ] Effekt, wenn ein „???“ aufgedeckt wird oder eine Ressource dazukommt
+- [x] Effekt, wenn ein „???“ aufgedeckt wird oder eine Ressource dazukommt (Icon färbt sich ein, Einblendung „Neu: …“ bzw. „Entdeckt: …“)
 - [ ] Kaufmenge „Max“
 - [ ] Ton (Klick, Kauf, Upgrade)
 - [ ] Planet bewegt sich leicht

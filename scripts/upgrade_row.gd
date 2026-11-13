@@ -14,6 +14,8 @@ extends PanelContainer
 
 var upgrade: Dictionary
 var _leaving: bool = false  # gekauft, die Zeile blendet gerade aus
+var _last_state: String = ""
+var _reveal_until: float = 0.0
 
 
 func setup(definition: Dictionary) -> void:
@@ -28,10 +30,19 @@ func _process(_delta: float) -> void:
 		return
 	var state: String = Game.upgrade_visibility(upgrade)
 	visible = state != "hidden"
+	var previous_state: String = _last_state
+	_last_state = state
 	if not visible:
 		return
 	var known: bool = state == "known"
-	icon.self_modulate = Color.WHITE if known else Color(0, 0, 0, 0.75)  # nur das Icon, nicht das Abzeichen
+	var now: float = Time.get_ticks_msec() / 1000.0
+	if previous_state == "mystery" and known:
+		_reveal_until = now + 0.6
+		Ui.reveal(self, icon, true)
+	elif previous_state == "hidden":
+		Ui.fade_in(self)
+	if now >= _reveal_until:
+		icon.self_modulate = Color.WHITE if known else Color(0, 0, 0, 0.75)  # nur das Icon, nicht das Abzeichen
 	badge.visible = known
 	info_label.visible = known
 	name_label.text = upgrade["name"] if known else "???"

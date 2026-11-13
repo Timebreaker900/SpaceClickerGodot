@@ -36,3 +36,19 @@ static func pop(node: Control, strength: float = 1.25) -> void:
 	node.pivot_offset = node.size / 2.0
 	node.scale = Vector2.ONE * strength
 	node.create_tween().tween_property(node, "scale", Vector2.ONE, 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+
+## Aufdecken eines Rätsels: Das Icon geht vom schwarzen Umriss in seine Farben
+## über und hüpft dabei, die Fläche blitzt auf.
+static func reveal(panel: CanvasItem, icon: Control, use_self_modulate: bool = false) -> void:
+	flash(panel)
+	pop(icon, 1.5)
+	var property: String = "self_modulate" if use_self_modulate else "modulate"
+	icon.set(property, Color(0, 0, 0, 0.75))
+	icon.create_tween().tween_property(icon, property, Color.WHITE, 0.5)
+
+
+## Sanftes Einblenden, wenn eine Zeile neu auftaucht.
+static func fade_in(node: CanvasItem) -> void:
+	node.modulate.a = 0.0
+	node.create_tween().tween_property(node, "modulate:a", 1.0, 0.4)

@@ -23,6 +23,7 @@ const GAME_VERSION := "0.1"
 @onready var upgrade_list: VBoxContainer = %UpgradeList
 @onready var resource_list: VBoxContainer = %ResourceList
 @onready var tabs: TabContainer = %Tabs
+@onready var toasts: VBoxContainer = %Toasts
 @onready var popup: Control = %Popup
 @onready var offline_popup: Control = %OfflinePopup
 @onready var offline_time: Label = %OfflineTime
@@ -34,6 +35,7 @@ const GAME_VERSION := "0.1"
 var _bar_entries: Dictionary = {}
 var _list_entries: Dictionary = {}
 var _group_headings: Dictionary = {}  # Gruppenname -> Überschrift im Reiter
+var _seen_before: Dictionary = {}     # Stand von Game.seen im vorigen Bild
 var _planet_building: Dictionary      # Gebäude mit eigenem Knopf beim Planeten (Bevölkerung)
 
 
@@ -71,6 +73,8 @@ func _ready() -> void:
 	settings_button.pressed.connect(_open_settings)
 	resources_button.pressed.connect(_open_bar_picker)
 	_set_click_target(Game.click_target)
+	_seen_before = Game.seen.duplicate()
+	Game.announcement.connect(_show_toast)
 
 	# Abwesenheit: beim Start steht der Bericht schon bereit, bei der Rückkehr in
 	# die App (Handy) kommt er über das Signal.
@@ -133,6 +137,12 @@ func _update_resource_views(rates: Dictionary) -> void:
 		var list_entry: Dictionary = _list_entries[id]
 		list_entry["node"].visible = seen
 		list_entry["label"].text = _resource_text(id, rates, true)
+		if seen and not _seen_before.get(id, false):
+			# Gerade entdeckt: Einblendung, und der Eintrag in der Leiste hüpft.
+			_seen_before[id] = true
+			_show_toast(res["icon"], "Entdeckt: %s" % res["name"])
+			if bar_entry["node"].visible:
+				Ui.pop.call_deferred(bar_entry["node"], 1.4)
 		if seen:
 			groups_seen[res.get("group", "")] = true
 			any_capacity = any_capacity or is_capacity
@@ -205,6 +215,35 @@ func _add_group_heading(title: String) -> Label:
 	heading.add_theme_color_override("font_color", Color(0.25, 0.82, 1.0))
 	resource_list.add_child(heading)
 	return heading
+
+
+## Kurze Einblendung unter der Leiste: erscheint, bleibt gut zwei Sekunden und
+## blendet wieder aus. Mehrere stapeln sich untereinander.
+func _show_toast(icon_path: String, text: String) -> void:
+	var toast := PanelContainer.new()
+	toast.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	toast.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	var margin := MarginContainer.new()
+	for side: String in ["left", "right"]:
+		margin.add_theme_constant_override("margin_" + side, 28)
+	for side: String in ["top", "bottom"]:
+		margin.add_theme_constant_override("margin_" + side, 14)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 16)
+	row.add_child(_icon(icon_path, 60))
+	var label := Label.new()
+	label.text = text
+	label.theme_type_variation = &"HeadingLabel"
+	row.add_child(label)
+	margin.add_child(row)
+	toast.add_child(margin)
+	toasts.add_child(toast)
+	toast.modulate.a = 0.0
+	var tween: Tween = toast.create_tween()
+	tween.tween_property(toast, "modulate:a", 1.0, 0.2)
+	tween.tween_interval(2.2)
+	tween.tween_property(toast, "modulate:a", 0.0, 0.4)
+	tween.tween_callback(toast.queue_free)
 
 
 # --- Fenster ------------------------------------------------------------------

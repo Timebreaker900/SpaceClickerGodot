@@ -215,6 +215,15 @@ func _ready() -> void:
 	main._on_planet_pressed()
 	await get_tree().create_timer(0.2).timeout
 	_check("Klick über die Oberfläche zählt", Game.amounts["coins"] > coins_before_click, true)
+	# Aufdecken: Gebäude wird bekannt, Ressource wird entdeckt -> je eine Einblendung
+	if not OS.get_cmdline_user_args().has("--demo"):
+		Game.levels["farm"] = 1
+		Game.amounts["stone"] = 5.0
+		Game._update_seen()
+		for i: int in 3:
+			await get_tree().process_frame
+		_check("Drei Einblendungen (Holzfäller, Stein, Nahrung)", main.get_node("%Toasts").get_child_count(), 3)
+
 	# Kauf über die Zeile samt Aufblitzen darf keinen Fehler werfen
 	Game.amounts["coins"] += 1000.0
 	Game.amounts["wood"] += 1000.0

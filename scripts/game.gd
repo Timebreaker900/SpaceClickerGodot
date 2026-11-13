@@ -31,6 +31,10 @@ const SAVE_VERSION := 1
 ## Wird ausgelöst, wenn Abwesenheit nachgerechnet wurde (Start oder Rückkehr in die App).
 signal offline_applied(report: Dictionary)
 
+## Etwas Neues ist aufgetaucht (Gebäude aufgedeckt, Ressource entdeckt). Der
+## Hauptbildschirm zeigt dazu eine kurze Einblendung.
+signal announcement(icon_path: String, text: String)
+
 var save_path: String = "user://save.json"  # Tests biegen das auf eine eigene Datei um.
 
 var resources: Array = []

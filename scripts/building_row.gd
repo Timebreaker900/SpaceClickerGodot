@@ -18,6 +18,8 @@ extends VBoxContainer
 @onready var sub_list: VBoxContainer = %SubList
 
 var building: Dictionary
+var _last_state: String = ""   # Zustand im vorigen Bild, um Wechsel zu bemerken
+var _reveal_until: float = 0.0  # solange läuft die Aufdeck-Animation des Icons
 
 
 func setup(definition: Dictionary) -> void:
@@ -45,11 +47,23 @@ func _process(_delta: float) -> void:
 		return
 	var state: String = Game.building_visibility(building)
 	visible = state != "hidden"
+	var previous_state: String = _last_state
+	_last_state = state
 	if not visible:
 		return
 	var known: bool = state == "known"
+	var now: float = Time.get_ticks_msec() / 1000.0
+	# Wechsel bemerken. Beim allerersten Bild (previous_state leer) passiert nichts,
+	# damit beim Spielstart nicht alles auf einmal aufblitzt.
+	if previous_state == "mystery" and known:
+		_reveal_until = now + 0.6
+		Ui.reveal($Panel, icon)
+		Game.announcement.emit(building["icon"], "Neu: %s" % building["name"])
+	elif previous_state == "hidden":
+		Ui.fade_in(self)
 	# Als Rätsel bleibt vom Icon nur der schwarze Umriss.
-	icon.modulate = Color.WHITE if known else Color(0, 0, 0, 0.75)
+	if now >= _reveal_until:
+		icon.modulate = Color.WHITE if known else Color(0, 0, 0, 0.75)
 	info_label.visible = known
 	expand_button.visible = known and sub_list.get_child_count() > 0
 	sub_margin.visible = expand_button.visible and expand_button.button_pressed
