@@ -100,6 +100,10 @@ func _init() -> void:
 	theme.set_stylebox("grabber_area", "HSlider", _box(Color(ACCENT, 0.7), ACCENT, 0, 8, 0, 8))
 	theme.set_stylebox("grabber_area_highlight", "HSlider", _box(ACCENT, ACCENT, 0, 8, 0, 8))
 
+	var grabber: Texture2D = load("res://ui/slider_grabber.svg")
+	for icon_name: String in ["grabber", "grabber_highlight", "grabber_disabled"]:
+		theme.set_icon(icon_name, "HSlider", grabber)
+
 	# Schmale Bildlaufleiste
 	var track := _box(Color(0, 0, 0, 0), Color(0, 0, 0, 0), 0, 4)
 	track.content_margin_left = 4
@@ -117,6 +121,15 @@ func _init() -> void:
 		empty.content_margin_top = 8
 		empty.content_margin_bottom = 8
 		theme.set_stylebox(state, "CheckButton", empty)
+	var switch_on: Texture2D = load("res://ui/switch_on.svg")
+	var switch_off: Texture2D = load("res://ui/switch_off.svg")
+	var switch_disabled: Texture2D = load("res://ui/switch_disabled.svg")
+	for suffix: String in ["", "_mirrored"]:
+		theme.set_icon("checked" + suffix, "CheckButton", switch_on)
+		theme.set_icon("unchecked" + suffix, "CheckButton", switch_off)
+		theme.set_icon("checked_disabled" + suffix, "CheckButton", switch_disabled)
+		theme.set_icon("unchecked_disabled" + suffix, "CheckButton", switch_disabled)
+	theme.set_constant("h_separation", "CheckButton", 16)
 	theme.set_color("font_color", "CheckButton", TEXT_MUTED)
 	theme.set_color("font_pressed_color", "CheckButton", Color.WHITE)
 	theme.set_color("font_hover_color", "CheckButton", TEXT)
