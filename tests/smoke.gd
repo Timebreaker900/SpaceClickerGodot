@@ -348,14 +348,15 @@ func _ready() -> void:
 	_check("Tempo hat 3 Stufen (4 s bis 1 s), Menge unbegrenzt", [Game.recipe_upgrade_max(bar, "speed"), Game.recipe_upgrade_max(bar, "amount"), Game.recipe_upgrade_max(_recipe("gold_bar"), "speed")], [3, 0, 7])
 	_check("Vierte Stufe wird nicht verkauft", Game.buy_recipe_upgrade(bar, "speed"), false)
 	Game.buy_recipe_upgrade(bar, "amount")
-	_check("Menge I: 2 pro Durchgang (1 + 1 Upgrade)", Game.recipe_batch(bar), 2)
-	Game.amounts["copper_ore"] = 4.0
-	Game.amounts["coal"] = 1.0
-	_check("Ohne genug Kohle kein Durchgang (braucht 2)", Game.can_start_recipe(bar), false)
+	_check("Mehr I: 2 Ergebnis pro Durchgang, Zutaten bleiben bei 1 Einheit", [Game.recipe_batch(bar), Game.recipe_input_batch(bar)], [2, 1])
+	Game.amounts["copper_ore"] = 2.0
+	Game.amounts["coal"] = 0.0
+	_check("Ohne Kohle kein Durchgang (braucht 1)", Game.can_start_recipe(bar), false)
 	Game.amounts["coal"] = 100.0
 	Game.start_recipe(bar)
-	_check("Durchgang nimmt 4 Erz", Game.amounts["copper_ore"], 0.0)
+	_check("Durchgang nimmt nur 2 Erz (Mehr kostet keine Zutaten)", Game.amounts["copper_ore"], 0.0)
 	Game._advance_recipe(bar, 1.0)
+	_check("Mehr: Durchgang liefert 2 Barren aus Zutaten für einen", Game.recipe_state["copper_bar"]["running"], false)
 	var bars_before: float = Game.amounts["copper_bar"]
 	_check("Auto kostet 100", Game.recipe_upgrade_cost(bar, "auto")["copper_bar"], 100.0)
 	Game.buy_recipe_upgrade(bar, "auto")

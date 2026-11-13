@@ -351,6 +351,13 @@ func recipe_batch(recipe: Dictionary) -> int:
 	return 1 + (building_level - unlock_level) + int(recipe_state[recipe["id"]]["amount"])
 
 
+## Wie viele Einheiten an Zutaten ein Durchgang verbraucht. Das Mengen-Upgrade
+## ("Mehr") zählt hier nicht mit: Es vergrößert nur das Ergebnis.
+func recipe_input_batch(recipe: Dictionary) -> int:
+	var batch: int = recipe_batch(recipe)
+	return 0 if batch == 0 else batch - int(recipe_state[recipe["id"]]["amount"])
+
+
 ## Ab welchem Level das Gebäude sein nächstes Rezept freischaltet (0 = keines mehr).
 func next_recipe_level(building: Dictionary) -> int:
 	var next: int = 0
@@ -448,7 +455,7 @@ func can_start_recipe(recipe: Dictionary) -> bool:
 	var batch: int = recipe_batch(recipe)
 	if batch == 0 or recipe_state[recipe["id"]]["running"]:
 		return false
-	var input: Dictionary = recipe_input(recipe, batch)
+	var input: Dictionary = recipe_input(recipe, recipe_input_batch(recipe))
 	for id: String in input:
 		if amounts[id] < input[id]:
 			return false
@@ -567,7 +574,7 @@ func start_recipe(recipe: Dictionary) -> bool:
 		return false
 	var state: Dictionary = recipe_state[recipe["id"]]
 	var batch: int = recipe_batch(recipe)
-	var input: Dictionary = recipe_input(recipe, batch)
+	var input: Dictionary = recipe_input(recipe, recipe_input_batch(recipe))
 	for id: String in input:
 		amounts[id] -= input[id]
 	state["running"] = true
@@ -714,7 +721,7 @@ func _offline_recipe(recipe: Dictionary, seconds: float) -> void:
 		return
 	# Wie viele ganze Durchgänge gehen sich aus? Begrenzt durch Zeit und Zutaten.
 	var cycles: float = floorf(time_left / duration)
-	var input: Dictionary = recipe_input(recipe, batch)
+	var input: Dictionary = recipe_input(recipe, recipe_input_batch(recipe))
 	for id: String in input:
 		cycles = minf(cycles, floorf(amounts[id] / input[id]))
 	for id: String in input:

@@ -56,7 +56,7 @@ func _process(_delta: float) -> void:
 	auto_button.set_pressed_no_signal(state["auto"])
 
 	var info: String = "%s  →  %s    %d s" % [
-		_describe(Game.recipe_input(recipe, batch), 1, true), _describe(recipe["output"], batch, false), int(seconds)]
+		_describe(Game.recipe_input(recipe, Game.recipe_input_batch(recipe)), 1, true), _describe(recipe["output"], batch, false), int(seconds)]
 	if info_label.text != info:
 		info_label.text = info
 

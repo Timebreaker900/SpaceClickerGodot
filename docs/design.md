@@ -67,7 +67,7 @@ Abweichungen vom alten Stand:
 
 - Kostenfaktor 1,15 pro Level für alle Gebäude. Das ist ein Vorschlag, der alte Wert ist unbekannt.
 - Bevölkerung ist technisch ein Gebäude (kostet Nahrung, verbraucht 2 Nahrung/s, liefert 1 Bevölkerung).
-- Menge pro Durchgang: 1 beim Freischalten, +1 je weiterem Level von Schmelze bzw. Fabrik, +1 je Mengen-Upgrade des Rezepts. Größere Menge heißt mehr Zutaten und mehr Ergebnis bei gleicher Dauer.
+- Menge pro Durchgang: 1 beim Freischalten, +1 je weiterem Level von Schmelze bzw. Fabrik, Größere Menge heißt mehr Zutaten und mehr Ergebnis bei gleicher Dauer. Das Mengen-Upgrade „Mehr“ gibt zusätzlich +1 Ergebnis je Stufe, ohne mehr Zutaten zu verbrauchen.
 - Das Level der Schmelze schaltet die Schmelz-Rezepte frei: ab Lv 1 Glas, ab Lv 5 Kupferbarren, ab Lv 10 Eisenbarren, ab Lv 15 Goldbarren, ab Lv 20 Stahl (Eisenbarren und Kohle), ab Lv 25 Titanbarren (Titanerz und Kohle). Glas steht in der Produktionsliste ganz oben.
 - Kohle ist der Brennstoff der Schmelze: Jeder Schmelz-Durchgang verbraucht Kohle als zusätzliche Zutat (Glas und Kupferbarren 1, Eisen- und Goldbarren 2, mal Menge). Die Schmelze belegt dafür keinen Strom.
 - Die Fabrik ist genauso gestaffelt: ab Lv 5 Kupferkabel, ab Lv 10 Eisenplatte, ab Lv 15 Chips (Goldbarren und Kupferkabel; für die Steuerung der Rakete).
@@ -97,7 +97,7 @@ Wird Punkt für Punkt abgearbeitet: Nach jedem Punkt testet der Nutzer und gibt 
 - [x] Solarpanel (kostet Coins, Kupferkabel, Eisenplatten; verstärktes Glas entfällt)
 - [x] Auto bei Rezepten als Upgrade (100 vom eigenen Erzeugnis)
 - [x] Erzabbau darf das Level der Mine nie übersteigen
-- [x] Rezept-Upgrades, bezahlt mit dem eigenen Erzeugnis: „Schneller“ (je Stufe −1 s, mindestens 1 s) und „Mehr“ (je Stufe +1 Menge, also Zutaten und Ergebnis um den Grundwert); Preis 25, 50, 75 …
+- [x] Rezept-Upgrades, bezahlt mit dem eigenen Erzeugnis: „Schneller“ (je Stufe −1 s, mindestens 1 s) und „Mehr“ (je Stufe +1 Ergebnis pro Durchgang; die Zutaten bleiben gleich); Preis 25, 50, 75 …
 - [x] Viertes Rezept-Upgrade „Sparsam“ für alle Rezepte mit Kohle: je Stufe 15 % weniger Kohle, 6 Stufen (bis auf ein Zehntel), aufgerundet auf ganze Stück; Preis wie bei „Schneller“ und „Mehr“. Die Upgrade-Knöpfe stehen dafür in zwei Spalten.
 - [x] Siegbildschirm nach dem Raketenstart: „Geschafft! Du hast den Mond erreicht“ mit Klicks und Gebäude-Leveln; danach kann man weiterspielen. Damit endet der Inhalt vorerst.
 - [x] Coins heißen im Spiel „Geld“ (die interne Kennung bleibt `coins`).
