@@ -825,7 +825,8 @@ func _expand_upgrade_series(series: Dictionary) -> void:
 	for entry: Dictionary in series["buildings"]:
 		var building: Dictionary = _building_by_id[entry["building"]]
 		var growth: float = float(building.get("growth", 1.0))
-		for tier: int in range(1, int(series["tiers"]) + 1):
+		# Wie viele Stufen es gibt, kann je Gebäude abweichen (späte Gebäude mehr).
+		for tier: int in range(1, int(entry.get("tiers", series["tiers"])) + 1):
 			var upgrade: Dictionary = {
 				"id": "%s_%d" % [building["id"], tier],
 				"name": "%s %s" % [entry["name"], _roman(tier)],

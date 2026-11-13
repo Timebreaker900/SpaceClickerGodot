@@ -174,6 +174,7 @@ func _ready() -> void:
 	_check("Stufe II: +1 dazu, zusammen 2,5", Game.building_output(_building("farm"), "produces")["food"], 2.5)
 	_check("Stufe III erst nach II sichtbar, dann Rätsel", Game.upgrade_visibility(_upgrade("farm_3")), "mystery")
 	_check("Stufe IV noch unsichtbar", Game.upgrade_visibility(_upgrade("farm_4")), "hidden")
+	_check("Frühe Gebäude haben 5 Stufen, späte 10", [_upgrade("farm_5").is_empty(), _upgrade("farm_6").is_empty(), _upgrade("bank_10").is_empty(), _upgrade("bank_11").is_empty()], [false, true, false, true])
 	_check("Strom-Upgrade in ganzen Einheiten", _upgrade("watermill_1")["add_provides"]["watermill"]["electricity"], 1.0)
 	_check("Bank-Upgrade I: halbe Grundproduktion", _upgrade("bank_1")["add_produces"]["bank"]["coins"], 25.0)
 	_check("Upgrade nur einmal kaufbar", Game.can_buy_upgrade(farm_upgrade), false)

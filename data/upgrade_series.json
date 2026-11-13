@@ -1,7 +1,7 @@
 {
 	"every_levels": 5,
 	"step": 0.5,
-	"tiers": 20,
+	"tiers": 5,
 	"cost_factor": 5,
 	"buildings": [
 		{ "building": "farm", "name": "Farm-Upgrade" },
@@ -10,9 +10,9 @@
 		{ "building": "market", "name": "Markt-Upgrade" },
 		{ "building": "watermill", "name": "Wassermühlen-Upgrade" },
 		{ "building": "sandmine", "name": "Sandminen-Upgrade" },
-		{ "building": "solarpanel", "name": "Solarpanel-Upgrade" },
-		{ "building": "sawmill", "name": "Sägewerk-Upgrade" },
-		{ "building": "bank", "name": "Bank-Upgrade" }
+		{ "building": "solarpanel", "name": "Solarpanel-Upgrade", "tiers": 10 },
+		{ "building": "sawmill", "name": "Sägewerk-Upgrade", "tiers": 10 },
+		{ "building": "bank", "name": "Bank-Upgrade", "tiers": 10 }
 	],
 	"clicks": {
 		"every_clicks": 250,

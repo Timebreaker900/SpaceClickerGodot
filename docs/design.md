@@ -40,7 +40,7 @@ Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Abschnitte mit �
 - Erzabbau für Kupfer, Eisen und Gold, freigeschaltet über das Minen-Level
 - Rezepte mit Laufzeit, Start-Knopf und Auto-Schalter – Werte in `data/recipes.json`
 - Vier Reiter: Gebäude, Produktion, Upgrades, Ressourcen (die Sicht mit allen Währungen)
-- Gebäude-Upgrades als Reihe für Farm, Holzfäller, Mine, Wassermühle, Bank und Sandmine: alle 5 Level eine Stufe. Stufe n bringt n × 0,5 der Grundproduktion dazu (bei Grundwert 1: +0,5, dann +1, dann +1,5 …). Die Regel steht in `data/upgrade_series.json`.
+- Gebäude-Upgrades als Reihe: alle 5 Level eine Stufe. Frühe Gebäude (Farm, Holzfäller, Mine, Markt, Wassermühle, Sandmine) haben 5 Stufen, späte (Solarpanel, Sägewerk, Bank) 10. So hören die frühen ab Level 25 auf, stärker zu werden, und die späten lohnen sich dauerhaft. Stufe n bringt n × 0,5 der Grundproduktion dazu (bei Grundwert 1: +0,5, dann +1, dann +1,5 …). Die Regel steht in `data/upgrade_series.json`.
 - Klick-Upgrades als Reihe für Coins und Holz: alle 250 Klicks eine Stufe (250, 500, 750 …), jede bringt +1 pro Klick. Die Regel steht in `data/upgrade_series.json`.
 - Eigenes Design: dunkle Flächen mit türkisem Akzent, Schrift Exo 2
 - Gezeichnete Erde aus dem alten Projekt als Planet
@@ -70,7 +70,7 @@ Abweichungen vom alten Stand:
 
 Vorschlagswerte, weil die alten nur im Unity-Editor standen: Kosten und Ertrag der Sandmine, Kosten und Freischalt-Level des Erzabbaus (Mine Lv 5 / 10 / 20), Mengen und Zeiten aller Rezepte. Die Erz-Raten 0,8 / 0,5 / 0,2 pro Sekunde stammen aus dem alten Code.
 
-Vorschlagswerte bei den Upgrades: Eine Stufe der Gebäude-Reihe kostet das Fünffache dessen, was das Gebäude auf dem Freischalt-Level kostet; es gibt 20 Stufen (bis Level 100); Strom-Upgrades werden auf ganze Einheiten aufgerundet. Eine Klick-Stufe kostet so viele der geklickten Ressource wie Klicks nötig sind und halb so viele der anderen (Stufe I: 250 und 125); es gibt 40 Stufen.
+Vorschlagswerte bei den Upgrades: Eine Stufe der Gebäude-Reihe kostet das Fünffache dessen, was das Gebäude auf dem Freischalt-Level kostet; Strom-Upgrades werden auf ganze Einheiten aufgerundet. Eine Klick-Stufe kostet so viele der geklickten Ressource wie Klicks nötig sind und halb so viele der anderen (Stufe I: 250 und 125); es gibt 40 Stufen.
 
 Noch nicht portiert: Solarpanel, weitere Planeten.
 
