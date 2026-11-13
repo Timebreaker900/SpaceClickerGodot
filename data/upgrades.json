@@ -62,5 +62,62 @@
 		"requires": { "sandmine": 10 },
 		"cost": { "coins": 600 },
 		"add_produces": { "sandmine": { "sand": 1 } }
+	},
+	{
+		"id": "offline_1",
+		"name": "Nachtschicht",
+		"icon": "res://assets/icons/offline_rate.svg",
+		"requires": { "farm": 5 },
+		"cost": { "coins": 500, "food": 500 },
+		"add_offline_hours": 1,
+		"add_offline_percent": 20
+	},
+	{
+		"id": "offline_time_2",
+		"name": "Längere Schicht I",
+		"icon": "res://assets/icons/offline_time.svg",
+		"requires_upgrades": ["offline_1"],
+		"cost": { "coins": 2000, "wood": 1000 },
+		"add_offline_hours": 1
+	},
+	{
+		"id": "offline_time_3",
+		"name": "Längere Schicht II",
+		"icon": "res://assets/icons/offline_time.svg",
+		"requires_upgrades": ["offline_time_2"],
+		"cost": { "coins": 10000, "copper_cable": 50 },
+		"add_offline_hours": 2
+	},
+	{
+		"id": "offline_time_4",
+		"name": "Längere Schicht III",
+		"icon": "res://assets/icons/offline_time.svg",
+		"requires_upgrades": ["offline_time_3"],
+		"cost": { "coins": 50000, "iron_plate": 50 },
+		"add_offline_hours": 4
+	},
+	{
+		"id": "offline_rate_2",
+		"name": "Fleißige Schicht I",
+		"icon": "res://assets/icons/offline_rate.svg",
+		"requires_upgrades": ["offline_1"],
+		"cost": { "coins": 2000, "stone": 1000 },
+		"add_offline_percent": 20
+	},
+	{
+		"id": "offline_rate_3",
+		"name": "Fleißige Schicht II",
+		"icon": "res://assets/icons/offline_rate.svg",
+		"requires_upgrades": ["offline_rate_2"],
+		"cost": { "coins": 10000, "glass": 50 },
+		"add_offline_percent": 20
+	},
+	{
+		"id": "offline_rate_4",
+		"name": "Fleißige Schicht III",
+		"icon": "res://assets/icons/offline_rate.svg",
+		"requires_upgrades": ["offline_rate_3"],
+		"cost": { "coins": 50000, "gold_bar": 25 },
+		"add_offline_percent": 20
 	}
 ]

@@ -18,7 +18,10 @@ extends Node
 ## Ein Upgrade wird einmal gekauft und verbessert dauerhaft etwas:
 ##   add_produces / add_provides - Gebäude liefern pro Level mehr
 ##   add_click                   - ein Klick bringt mehr
-## Freigeschaltet wird es über Gebäude-Level (requires) oder Klicks (requires_clicks).
+##   add_offline_hours / _percent - Abwesenheit zählt länger bzw. mit mehr Ertrag
+## Ohne Abwesenheits-Upgrade passiert nichts, solange das Spiel zu ist.
+## Freigeschaltet wird es über Gebäude-Level (requires), Klicks (requires_clicks)
+## oder andere Upgrades (requires_upgrades).
 ##
 ## Ein Rezept wandelt in "seconds" Sekunden "input" in "output" um. Es gehört zu
 ## einem Gebäude; dessen Level bestimmt, wie viel pro Durchgang verarbeitet wird.
@@ -139,6 +142,16 @@ func building_output(building: Dictionary, key: String) -> Dictionary:
 	return result
 
 
+## Wie viele Stunden Abwesenheit höchstens angerechnet werden (0 = gar keine).
+func offline_hours() -> float:
+	return _bonus.get("offline_hours", 0.0)
+
+
+## Wie viel Prozent der normalen Produktion bei Abwesenheit zählen.
+func offline_percent() -> float:
+	return _bonus.get("offline_percent", 0.0)
+
+
 ## Wie viel ein Klick für eine Ressource bringt.
 func click_gain(id: String) -> float:
 	return float(settings["click"][id]) + _bonus.get("click", {}).get(id, 0.0)
@@ -244,8 +257,16 @@ func cycle_buy_amount() -> void:
 	buy_amount = int(options[(index + 1) % options.size()])
 
 
+## Upgrades einer Kette tauchen erst auf, wenn ihr Vorgänger gekauft ist.
+func upgrade_visible(upgrade: Dictionary) -> bool:
+	for id: String in upgrade.get("requires_upgrades", []):
+		if not bought[id]:
+			return false
+	return true
+
+
 func upgrade_unlocked(upgrade: Dictionary) -> bool:
-	if not is_unlocked(upgrade):
+	if not is_unlocked(upgrade) or not upgrade_visible(upgrade):
 		return false
 	var clicks: Dictionary = upgrade.get("requires_clicks", {})
 	for id: String in clicks:
@@ -308,23 +329,25 @@ func _advance_recipe(recipe: Dictionary, delta: float) -> void:
 # --- Abwesenheit -------------------------------------------------------------
 
 ## Rechnet nach, was in "seconds" Sekunden Abwesenheit passiert wäre, und gibt
-## einen Bericht zurück. Angerechnet wird höchstens offline_max_hours.
+## einen Bericht zurück. Dauer und Ertrag hängen von den gekauften Upgrades ab:
+## höchstens offline_hours() Stunden, davon zählen offline_percent() Prozent.
 ##   - Gebäude liefern ihre normale Produktion.
 ##   - Ein laufender Rezept-Durchgang wird fertig.
 ##   - Rezepte auf "Auto" laufen weiter, solange Zeit und Zutaten reichen.
 func apply_offline(seconds: float) -> Dictionary:
-	var counted: float = clampf(seconds, 0.0, float(settings.get("offline_max_hours", 8)) * 3600.0)
+	var counted: float = clampf(seconds, 0.0, offline_hours() * 3600.0)
+	var effective: float = counted * offline_percent() / 100.0  # so viel Zeit zählt wirklich
 	var before: Dictionary = amounts.duplicate()
 	var rates: Dictionary = get_rates()
 	for id: String in rates:
-		amounts[id] = maxf(0.0, amounts[id] + rates[id] * counted)
+		amounts[id] = maxf(0.0, amounts[id] + rates[id] * effective)
 	for recipe: Dictionary in recipes:
-		_offline_recipe(recipe, counted)
+		_offline_recipe(recipe, effective)
 	var gains: Dictionary = {}
 	for id: String in amounts:
 		if amounts[id] - before[id] >= 1.0:
 			gains[id] = amounts[id] - before[id]
-	return { "seconds": seconds, "counted": counted, "gains": gains }
+	return { "seconds": seconds, "counted": counted, "percent": offline_percent(), "gains": gains }
 
 
 func _offline_recipe(recipe: Dictionary, seconds: float) -> void:
@@ -364,7 +387,7 @@ func _advance_recipe_to_end(recipe: Dictionary) -> void:
 
 ## Zeit seit dem letzten Speichern nachrechnen und melden, wenn es sich lohnt.
 func _catch_up() -> void:
-	if _last_save_time <= 0.0:
+	if _last_save_time <= 0.0 or offline_hours() <= 0.0 or offline_percent() <= 0.0:
 		return
 	var away: float = Time.get_unix_time_from_system() - _last_save_time
 	if away < float(settings.get("offline_min_seconds", 60)):
@@ -474,7 +497,7 @@ func fmt_signed(value: float) -> String:
 ##   _bonus["produces"][Gebäude-ID][Ressourcen-ID] = Zuschlag pro Level
 ##   _bonus["click"][Ressourcen-ID] = Zuschlag pro Klick
 func _rebuild_bonuses() -> void:
-	_bonus = { "produces": {}, "provides": {}, "click": {} }
+	_bonus = { "produces": {}, "provides": {}, "click": {}, "offline_hours": 0.0, "offline_percent": 0.0 }
 	for upgrade: Dictionary in upgrades:
 		if not bought[upgrade["id"]]:
 			continue
@@ -486,6 +509,8 @@ func _rebuild_bonuses() -> void:
 				var target: Dictionary = _bonus[key][building_id]
 				for id: String in per_building[building_id]:
 					target[id] = target.get(id, 0.0) + float(per_building[building_id][id])
+		_bonus["offline_hours"] += float(upgrade.get("add_offline_hours", 0.0))
+		_bonus["offline_percent"] += float(upgrade.get("add_offline_percent", 0.0))
 		var click_bonus: Dictionary = upgrade.get("add_click", {})
 		for id: String in click_bonus:
 			_bonus["click"][id] = _bonus["click"].get(id, 0.0) + float(click_bonus[id])

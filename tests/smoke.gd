@@ -119,21 +119,40 @@ func _ready() -> void:
 	# Abwesenheit: Gebäude liefern weiter, Auto-Rezepte laufen, Obergrenze greift
 	_reset()
 	Game.levels["farm"] = 3
-	var report: Dictionary = Game.apply_offline(100.0)
-	_check("100 s weg: 300 Nahrung", Game.amounts["food"], 300.0)
-	_check("Bericht nennt Nahrung", report["gains"].get("food", 0.0), 300.0)
+	var report: Dictionary = Game.apply_offline(1000.0)
+	_check("Ohne Upgrade keine Abwesenheit", Game.amounts["food"], 0.0)
+	Game.bought["offline_1"] = true
+	Game._rebuild_bonuses()
+	report = Game.apply_offline(100.0)
+	_check("Erstes Upgrade: 20 Prozent", Game.amounts["food"], 60.0)
+	_check("Bericht nennt Nahrung", report["gains"].get("food", 0.0), 60.0)
+	Game.amounts["food"] = 0.0
+	Game.apply_offline(100.0 * 3600.0)
+	_check("Erstes Upgrade: höchstens 1 Stunde", Game.amounts["food"], 3.0 * 3600.0 * 0.2)
+	_check("Kette: Stufe 3 erst nach Stufe 2 sichtbar", Game.upgrade_visible(_upgrade("offline_time_3")), false)
+	for upgrade: Dictionary in Game.upgrades:
+		if upgrade["id"].begins_with("offline_"):
+			Game.bought[upgrade["id"]] = true
+	Game._rebuild_bonuses()
+	_check("Alle Upgrades: 8 Stunden", Game.offline_hours(), 8.0)
+	_check("Alle Upgrades: 80 Prozent", Game.offline_percent(), 80.0)
 	_reset()
+	for upgrade: Dictionary in Game.upgrades:
+		if upgrade["id"].begins_with("offline_"):
+			Game.bought[upgrade["id"]] = true
+	Game._rebuild_bonuses()
 	Game.levels["farm"] = 1
-	report = Game.apply_offline(100.0 * 3600.0)
-	_check("Obergrenze 8 Stunden", Game.amounts["food"], 8.0 * 3600.0)
-	_reset()
+	Game.apply_offline(100.0 * 3600.0)
+	_check("Obergrenze 8 Stunden zu 80 Prozent", is_equal_approx(Game.amounts["food"], 8.0 * 3600.0 * 0.8), true)
+	Game.amounts["food"] = 0.0
+	Game.levels["farm"] = 0
 	Game.levels["smeltery"] = 1
 	Game.amounts["copper_ore"] = 10.0
 	Game.apply_offline(1000.0)
 	_check("Ohne Auto wird nichts geschmolzen", Game.amounts["copper_bar"], 0.0)
 	Game.set_recipe_auto(_recipe("copper_bar"), true)
-	Game.apply_offline(12.0)
-	_check("Auto: 12 s reichen für 3 Durchgänge", Game.amounts["copper_bar"], 3.0)
+	Game.apply_offline(15.0)
+	_check("Auto: 15 s zu 80 Prozent reichen für 3 Durchgänge", Game.amounts["copper_bar"], 3.0)
 	Game.apply_offline(1000.0)
 	_check("Auto: Zutaten begrenzen", Game.amounts["copper_bar"], 5.0)
 	_check("Erz aufgebraucht", Game.amounts["copper_ore"], 0.0)
@@ -166,7 +185,7 @@ func _ready() -> void:
 
 	for arg: String in OS.get_cmdline_user_args():
 		if arg == "--offline":
-			main._show_offline_report({ "seconds": 30000.0, "counted": 28800.0,
+			main._show_offline_report({ "seconds": 30000.0, "counted": 28800.0, "percent": 80.0,
 				"gains": { "coins": 57600.0, "wood": 28800.0, "food": 1234567.0, "copper_bar": 420.0 } })
 			await get_tree().process_frame
 		if arg == "--expand":
