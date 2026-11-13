@@ -23,7 +23,7 @@
 	"clicks": {
 		"every_clicks": 250,
 		"amount": 1,
-		"tiers": 40,
+		"tiers": 20,
 		"cost_per_click": 1,
 		"other_cost_per_click": 0.5,
 		"resources": [

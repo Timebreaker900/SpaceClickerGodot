@@ -76,7 +76,7 @@ Abweichungen vom alten Stand:
 
 Vorschlagswerte, weil die alten nur im Unity-Editor standen: Kosten und Ertrag der Sandmine, Kosten und Freischalt-Level des Erzabbaus (Mine Lv 5 / 10 / 20), Mengen und Zeiten aller Rezepte. Die Erz-Raten 0,8 / 0,5 / 0,2 pro Sekunde stammen aus dem alten Code.
 
-Vorschlagswerte bei den Upgrades: Eine Stufe der Gebäude-Reihe kostet das Fünffache dessen, was das Gebäude auf dem Freischalt-Level kostet; Strom-Upgrades werden auf ganze Einheiten aufgerundet. Eine Klick-Stufe kostet so viele der geklickten Ressource wie Klicks nötig sind und halb so viele der anderen (Stufe I: 250 und 125); es gibt 40 Stufen.
+Vorschlagswerte bei den Upgrades: Eine Stufe der Gebäude-Reihe kostet das Fünffache dessen, was das Gebäude auf dem Freischalt-Level kostet; Strom-Upgrades werden auf ganze Einheiten aufgerundet. Eine Klick-Stufe kostet so viele der geklickten Ressource wie Klicks nötig sind und halb so viele der anderen (Stufe I: 250 und 125); es gibt 20 Stufen (bis 5.000 Klicks, 21 pro Klick).
 
 Noch nicht portiert: Solarpanel, weitere Planeten.
 

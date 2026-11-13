@@ -257,7 +257,7 @@ func _ready() -> void:
 	Game.buy_upgrade(click_upgrade_2)
 	_check("Nach Stufe II bringt ein Klick 3 Coins", Game.click_gain("coins"), 3.0)
 	_check("Holz-Klick bleibt bei 1", Game.click_gain("wood"), 1.0)
-	_check("Stufe XL heißt XL", _upgrade("click_wood_40")["name"], "Stärkerer Klick: Holz XL")
+	_check("Stufe XX heißt XX, eine 21. gibt es nicht", [_upgrade("click_wood_20")["name"], _upgrade("click_wood_21").is_empty()], ["Stärkerer Klick: Holz XX", true])
 	Game.save_game()
 	_reset()
 	Game.load_game()
