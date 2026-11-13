@@ -10,6 +10,7 @@ var _failed: int = 0
 
 
 func _ready() -> void:
+	Options.number_format = "scientific"  # die meisten Prüfungen unten erwarten diese Schreibweise
 	_check("Test nutzt eigene Speicherdatei", Game.save_path, "user://test_save.json")
 	Game.set_process(false)  # Zeit steht, damit die Zahlen exakt bleiben.
 	_reset()
@@ -198,7 +199,7 @@ func _ready() -> void:
 	_check("Eigener Klick-Ton je Ressource", [Sfx._streams.has("click_coins"), Sfx._streams.has("click_wood")], [true, true])
 	_check("Klick-Ton ist 0,08 s lang", is_equal_approx(Sfx._streams["click"].get_length(), 0.08), true)
 	Sfx.set_volume(0.4)
-	_check("Lautstärke gesetzt", Sfx.volume, 0.4)
+	_check("Lautstärke gesetzt", Options.volume, 0.4)
 	Sfx.play("upgrade")
 
 	# Zahlenformat
@@ -206,6 +207,14 @@ func _ready() -> void:
 	_check("Format groß", Game.fmt(2_500_000.0), "2.50e6")
 	_check("Format krumme Rate", Game.fmt_signed(0.8), "+0.8")
 	_check("Format negative Rate", Game.fmt_signed(-2.0), "-2")
+	Options.number_format = "short"
+	_check("Kurz: Tausenderpunkt", Game.fmt(1234567.0 / 100.0), "12.345")
+	_check("Kurz: Millionen", Game.fmt(2_500_000.0), "2,50 Mio")
+	_check("Kurz: Milliarden", Game.fmt(4.5e9), "4,50 Mrd")
+	_check("Kurz: Billionen", Game.fmt(123.4e12), "123,40 Bio")
+	_check("Kurz: ohne Namen wissenschaftlich", Game.fmt(1.5e40), "1.50e40")
+	_check("Kurz: Komma bei Raten", Game.fmt_signed(0.8), "+0,8")
+	Options.number_format = "scientific"
 
 	# Leisten-Auswahl: höchstens bar_max
 	Game.bar_selection = []
@@ -259,6 +268,10 @@ func _ready() -> void:
 	_check("Rezeptzeilen angelegt", main.get_node("%RecipeList").get_child_count(), Game.recipes.size())
 
 	for arg: String in OS.get_cmdline_user_args():
+		if arg == "--short":
+			Options.number_format = "short"
+			Game.amounts["coins"] = 48213456.0
+			await get_tree().process_frame
 		if arg == "--fresh":
 			_reset()
 			Game._reset_discovery()

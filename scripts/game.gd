@@ -589,12 +589,35 @@ func reset_game() -> void:
 
 # --- Hilfen -----------------------------------------------------------------
 
-## Zahl für die Anzeige: bis 1 Million ausgeschrieben, darüber als 1.23e9.
+## Namen für je drei Stellen mehr, beginnend bei der Million.
+const NUMBER_NAMES: Array = ["Mio", "Mrd", "Bio", "Brd", "Trio", "Trd", "Quad", "Qrd"]
+
+
+## Zahl für die Anzeige, je nach Einstellung:
+##   kurz:             12.345   1,23 Mio   4,50 Mrd
+##   wissenschaftlich: 12345    1.23e6     4.50e9
+## Gehen die Namen aus, wird auch im kurzen Format wissenschaftlich geschrieben.
 func fmt(value: float) -> String:
-	if value >= 1_000_000.0:
-		var exponent: int = int(floor(log(value) / log(10.0)))
-		return "%.2fe%d" % [value / pow(10.0, exponent), exponent]
-	return str(int(floor(value)))
+	var short: bool = Options.number_format == "short"
+	if value < 1_000_000.0:
+		var digits: String = str(int(floor(value)))
+		return _group_thousands(digits) if short else digits
+	var exponent: int = int(floor(log(value) / log(10.0)))
+	var name_index: int = exponent / 3 - 2
+	if short and name_index < NUMBER_NAMES.size():
+		var mantissa: float = value / pow(10.0, (name_index + 2) * 3)
+		return ("%.2f" % mantissa).replace(".", ",") + " " + NUMBER_NAMES[name_index]
+	return "%.2fe%d" % [value / pow(10.0, exponent), exponent]
+
+
+## 1234567 -> 1.234.567
+func _group_thousands(digits: String) -> String:
+	var result: String = ""
+	for i: int in digits.length():
+		if i > 0 and (digits.length() - i) % 3 == 0:
+			result += "."
+		result += digits[i]
+	return result
 
 
 ## Wie fmt, aber mit Vorzeichen und einer Nachkommastelle bei krummen kleinen
@@ -603,7 +626,8 @@ func fmt_signed(value: float) -> String:
 	var sign_text: String = "-" if value < 0.0 else "+"
 	var magnitude: float = absf(value)
 	if magnitude < 100.0 and not is_equal_approx(magnitude, roundf(magnitude)):
-		return sign_text + "%.1f" % magnitude
+		var text: String = "%.1f" % magnitude
+		return sign_text + (text.replace(".", ",") if Options.number_format == "short" else text)
 	return sign_text + fmt(magnitude)
 
 

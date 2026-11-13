@@ -329,7 +329,7 @@ func _open_bar_picker() -> void:
 
 
 func _open_settings() -> void:
-	popup.open("Einstellungen", 560)
+	popup.open("Einstellungen", 680)
 	var version := Label.new()
 	version.text = "Space Clicker – Version %s" % GAME_VERSION
 	version.add_theme_color_override("font_color", Color(0.56, 0.70, 0.84))
@@ -345,7 +345,7 @@ func _open_settings() -> void:
 	var slider := HSlider.new()
 	slider.max_value = 100
 	slider.step = 5
-	slider.value = Sfx.volume * 100.0
+	slider.value = Options.volume * 100.0
 	slider.custom_minimum_size.y = 64
 	var show_volume := func() -> void:
 		volume_label.text = "Ton: aus" if slider.value == 0 else "Ton: %d %%" % int(slider.value)
@@ -355,6 +355,19 @@ func _open_settings() -> void:
 		show_volume.call())
 	show_volume.call()
 	popup.content.add_child(slider)
+
+	# Zahlenformat: ein Knopf, der zwischen den beiden Schreibweisen wechselt.
+	var format_button := Button.new()
+	format_button.custom_minimum_size.y = 96
+	var show_format := func() -> void:
+		format_button.text = "Zahlen: %s" % Game.fmt(1234567.0)
+	format_button.pressed.connect(func() -> void:
+		Options.number_format = "scientific" if Options.number_format == "short" else "short"
+		Options.save()
+		Sfx.play("tap")
+		show_format.call())
+	show_format.call()
+	popup.content.add_child(format_button)
 
 	# Zurücksetzen braucht zwei Klicks, damit es nicht aus Versehen passiert.
 	var reset := Button.new()

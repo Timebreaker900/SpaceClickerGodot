@@ -69,7 +69,7 @@ Wird Punkt für Punkt abgearbeitet: Nach jedem Punkt testet der Nutzer und gibt 
 - [x] Ton (Klick, Kauf, Upgrade, Aufdecken, Entdecken, Tippen) – per Code erzeugt, Lautstärke in den Einstellungen
 - [x] Planet bewegt sich leicht (schwebt auf und ab, wiegt sich)
 - [x] Einstiegshinweis für neue Spieler (führt bis zum ersten Gebäude: tippen, umschalten, kaufen)
-- [ ] Zahlenformat als Einstellung (1.23e6 oder 1,23 Mio)
+- [x] Zahlenformat als Einstellung (kurz: 12.345 / 1,23 Mio, oder wissenschaftlich: 1.23e6; kurz ist Standard)
 - [ ] Bevölkerungs-Knopf erklärt, wofür Bevölkerung gebraucht wird
 - [ ] Handy-Ränder (Notch, runde Ecken)
 - [ ] Ruhigerer Hintergrund
