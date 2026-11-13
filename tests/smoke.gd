@@ -76,7 +76,8 @@ func _ready() -> void:
 	for building: Dictionary in Game.buildings:
 		if not building.has("parent") and building.get("placement", "list") == "list":
 			order.append(building["id"])
-	_check("Gebäude-Reihenfolge", order, ["farm", "lumberjack", "mine", "market", "watermill", "sandmine", "smeltery", "factory", "solarpanel", "sawmill", "bank"])
+	_check("Gebäude-Reihenfolge", order, ["farm", "lumberjack", "mine", "market", "sandmine", "smeltery", "watermill", "factory", "solarpanel", "sawmill", "bank"])
+	_check("Schmelze braucht keinen Strom mehr, Kohleabbau ab Mine Lv 2", [_building("smeltery")["reserves"].has("electricity"), _building("coal_mining")["requires"]["mine"]], [false, 2.0])
 	_check("Erste Bank kostet 1 Goldbarren, die dritte 3", [Game.cost_for(_building("bank"), 1)["gold_bar"], Game.cost_for(_building("bank"), 3)["gold_bar"]], [1.0, 6.0])
 	_check("Markt liefert 1 Coin, Sägewerk mehr Holz als der Holzfäller", [_building("market")["produces"]["coins"], _building("sawmill")["produces"]["wood"] > _building("lumberjack")["produces"]["wood"]], [1.0, true])
 
@@ -113,6 +114,7 @@ func _ready() -> void:
 	# Rezepte: Zutaten sofort weg, Ergebnis nach Ablauf, Menge = Gebäude-Level
 	var copper_bar: Dictionary = _recipe("copper_bar")
 	Game.amounts["copper_ore"] = 2.0
+	Game.amounts["coal"] = 100.0
 	_check("Ohne Schmelze kein Schmelzen", Game.can_start_recipe(copper_bar), false)
 	Game.levels["smeltery"] = 1
 	_check("Schmelze Lv 1: Glas ja, Kupferbarren nein", [Game.recipe_batch(_recipe("glass")), Game.recipe_batch(copper_bar)], [1, 0])
@@ -131,7 +133,7 @@ func _ready() -> void:
 	Game.levels["smeltery"] = 5
 	_check("Nächstes Rezept ab Lv 10", Game.next_recipe_level(_building("smeltery")), 10)
 	_check("Mit Schmelze startbar", Game.start_recipe(copper_bar), true)
-	_check("Erz sofort abgezogen", Game.amounts["copper_ore"], 0.0)
+	_check("Erz sofort abgezogen, dazu 1 Kohle", [Game.amounts["copper_ore"], Game.amounts["coal"]], [0.0, 99.0])
 	Game._advance_recipe(copper_bar, 3.9)
 	_check("Vor Ablauf noch kein Barren", Game.amounts["copper_bar"], 0.0)
 	Game._advance_recipe(copper_bar, 0.2)
@@ -233,6 +235,7 @@ func _ready() -> void:
 	Game.levels["farm"] = 0
 	Game.levels["smeltery"] = 5
 	Game.amounts["copper_ore"] = 10.0
+	Game.amounts["coal"] = 1000.0
 	Game.apply_offline(1000.0)
 	_check("Ohne Auto wird nichts geschmolzen", Game.amounts["copper_bar"], 0.0)
 	Game.recipe_state["copper_bar"]["auto_unlocked"] = true
@@ -255,6 +258,8 @@ func _ready() -> void:
 	# Erzabbau darf die Mine nicht überholen
 	_reset()
 	Game.levels.merge({ "farm": 1, "lumberjack": 1, "mine": 5 }, true)
+	_check("Kupferabbau bleibt Rätsel, bis der Kohleabbau steht", Game.building_visibility(_building("copper_mining")), "mystery")
+	Game.levels["coal_mining"] = 1
 	for id: String in ["food", "wood", "stone"]:
 		Game.amounts[id] = 1.0e9
 	var copper: Dictionary = _building("copper_mining")
@@ -281,6 +286,9 @@ func _ready() -> void:
 	Game.buy_recipe_upgrade(bar, "amount")
 	_check("Menge I: 2 pro Durchgang (1 + 1 Upgrade)", Game.recipe_batch(bar), 2)
 	Game.amounts["copper_ore"] = 4.0
+	Game.amounts["coal"] = 1.0
+	_check("Ohne genug Kohle kein Durchgang (braucht 2)", Game.can_start_recipe(bar), false)
+	Game.amounts["coal"] = 100.0
 	Game.start_recipe(bar)
 	_check("Durchgang nimmt 4 Erz", Game.amounts["copper_ore"], 0.0)
 	Game._advance_recipe(bar, 1.0)
@@ -296,6 +304,7 @@ func _ready() -> void:
 
 	# Rezepte verraten nichts: erst sichtbar, wenn die Zutat entdeckt ist
 	Game.levels["smeltery"] = 15
+	Game.seen["coal"] = true
 	_check("Goldbarren-Rezept ohne Golderz unsichtbar", Game.recipe_visible(_recipe("gold_bar")), false)
 	Game.amounts["gold_ore"] = 1.0
 	Game._update_seen()
@@ -333,8 +342,8 @@ func _ready() -> void:
 
 	# Für Bildschirmfotos: ein fortgeschrittener Spielstand
 	if OS.get_cmdline_user_args().has("--demo"):
-		Game.levels.merge({ "farm": 12, "housing": 14, "lumberjack": 4, "mine": 6, "market": 3, "watermill": 6, "sandmine": 2, "smeltery": 10, "factory": 5, "solarpanel": 1, "bank": 1, "copper_mining": 6, "iron_mining": 2 }, true)
-		Game.amounts.merge({ "coins": 4820.0, "wood": 1310.0, "food": 960.0, "stone": 455.0, "sand": 88.0, "copper_ore": 37.0, "iron_ore": 3.0, "copper_bar": 61.0, "iron_bar": 12.0 }, true)
+		Game.levels.merge({ "farm": 12, "housing": 14, "lumberjack": 4, "mine": 6, "market": 3, "watermill": 6, "sandmine": 2, "smeltery": 10, "factory": 5, "solarpanel": 1, "bank": 1, "coal_mining": 6, "copper_mining": 6, "iron_mining": 2 }, true)
+		Game.amounts.merge({ "coins": 4820.0, "wood": 1310.0, "food": 960.0, "stone": 455.0, "sand": 88.0, "coal": 240.0, "copper_ore": 37.0, "iron_ore": 3.0, "copper_bar": 61.0, "iron_bar": 12.0 }, true)
 		Game.recipe_state["copper_bar"].merge({ "auto_unlocked": true, "auto": true, "speed": 1 }, true)
 		Game.click_counts["coins"] = 140
 		Game._update_seen()
@@ -424,6 +433,14 @@ func _ready() -> void:
 	_check("Rand oben = 28 + 130", main.get_node("Margin").get_theme_constant("margin_top"), 158)
 	_check("Rand unten = 28 + 70", main.get_node("Margin").get_theme_constant("margin_bottom"), 98)
 	main.set_insets(0.0, 0.0, 0.0, 0.0)
+
+	# Hinweis auf Kohle: Schmelze steht, Kohle nie gehabt
+	_reset()
+	Game.seen["coal"] = false
+	Game.levels.merge({ "farm": 1, "housing": 5, "lumberjack": 1, "mine": 2, "market": 1, "sandmine": 1, "smeltery": 1 }, true)
+	Game.amounts["sand"] = 5.0
+	Game._update_seen()
+	_check("Hinweis: Schmelze braucht Kohle", main._hint_text(), "Schmelze braucht Kohle: Bergbau unter Mine")
 
 	# Einstiegshinweise: führen bis zur ersten Farm, danach Ruhe
 	_reset()

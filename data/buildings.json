@@ -35,7 +35,18 @@
 		"growth": 1.15,
 		"reserves": { "population": 2 },
 		"produces": { "stone": 1 },
-		"children_label": "Erzabbau"
+		"children_label": "Bergbau"
+	},
+	{
+		"id": "coal_mining",
+		"parent": "mine",
+		"level_cap": "mine",
+		"name": "Kohleabbau",
+		"icon": "res://assets/icons/coal.svg",
+		"requires": { "mine": 2 },
+		"cost": { "food": 40, "wood": 40, "stone": 40 },
+		"growth": 1.15,
+		"produces": { "coal": 1 }
 	},
 	{
 		"id": "copper_mining",
@@ -80,14 +91,6 @@
 		"produces": { "coins": 1 }
 	},
 	{
-		"id": "watermill",
-		"name": "Wassermühle",
-		"icon": "res://assets/buildings/watermill.svg",
-		"cost": { "coins": 150, "wood": 150 },
-		"growth": 1.22,
-		"provides": { "electricity": 1 }
-	},
-	{
 		"id": "sandmine",
 		"name": "Sandmine",
 		"icon": "res://assets/buildings/sandmine.svg",
@@ -102,10 +105,18 @@
 		"icon": "res://assets/buildings/smeltery.svg",
 		"cost": { "coins": 100, "stone": 150 },
 		"growth": 1.15,
-		"reserves": { "population": 1, "electricity": 1 },
+		"reserves": { "population": 1 },
 		"levels_after_last_recipe": 5,
 		"note": "Jedes Level: +1 Menge bei allen Schmelz-Rezepten",
 		"recipes_label": "Schmelzen"
+	},
+	{
+		"id": "watermill",
+		"name": "Wassermühle",
+		"icon": "res://assets/buildings/watermill.svg",
+		"cost": { "coins": 150, "wood": 150 },
+		"growth": 1.22,
+		"provides": { "electricity": 1 }
 	},
 	{
 		"id": "factory",

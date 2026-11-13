@@ -4,7 +4,7 @@
 		"name": "Glas",
 		"icon": "res://assets/icons/glass.svg",
 		"building": "smeltery",
-		"input": { "sand": 2 },
+		"input": { "sand": 2, "coal": 1 },
 		"output": { "glass": 1 },
 		"seconds": 4
 	},
@@ -14,7 +14,7 @@
 		"name": "Kupferbarren",
 		"icon": "res://assets/icons/copper_bar.svg",
 		"building": "smeltery",
-		"input": { "copper_ore": 2 },
+		"input": { "copper_ore": 2, "coal": 1 },
 		"output": { "copper_bar": 1 },
 		"seconds": 4
 	},
@@ -24,7 +24,7 @@
 		"name": "Eisenbarren",
 		"icon": "res://assets/icons/iron_bar.svg",
 		"building": "smeltery",
-		"input": { "iron_ore": 2 },
+		"input": { "iron_ore": 2, "coal": 2 },
 		"output": { "iron_bar": 1 },
 		"seconds": 6
 	},
@@ -34,7 +34,7 @@
 		"name": "Goldbarren",
 		"icon": "res://assets/icons/gold_bar.svg",
 		"building": "smeltery",
-		"input": { "gold_ore": 2 },
+		"input": { "gold_ore": 2, "coal": 2 },
 		"output": { "gold_bar": 1 },
 		"seconds": 8
 	},

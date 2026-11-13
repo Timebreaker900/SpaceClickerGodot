@@ -17,11 +17,11 @@ Stand: Ausgangslage aus dem Unity-Projekt von 2021 übernommen. Abschnitte mit �
 - Gebäude in dieser Reihenfolge (Werte in `data/buildings.json`):
   1. Farm – Nahrung
   2. Holzfäller – Holz
-  3. Mine – Stein, darunter der Erzabbau
+  3. Mine – Stein, darunter der Bergbau: Kohle ab Mine Lv 2, dann Kupfer, Eisen, Gold
   4. Markt – 1 Coin pro Sekunde, die erste Coin-Quelle ohne Klicken
-  5. Wassermühle – Strom
-  6. Sandmine – Sand
-  7. Schmelze – schaltet Schmelz-Rezepte frei
+  5. Sandmine – Sand
+  6. Schmelze – schaltet Schmelz-Rezepte frei; braucht Kohle statt Strom
+  7. Wassermühle – Strom, zuerst für die Fabrik
   8. Fabrik – schaltet Fabrik-Rezepte frei
   9. Solarpanel – Strom; kostet Coins, Kupferkabel und Eisenplatten
   10. Sägewerk – mehr Holz als der Holzfäller
@@ -64,6 +64,7 @@ Abweichungen vom alten Stand:
 - Bevölkerung ist technisch ein Gebäude (kostet Nahrung, verbraucht 2 Nahrung/s, liefert 1 Bevölkerung).
 - Menge pro Durchgang: 1 beim Freischalten, +1 je weiterem Level von Schmelze bzw. Fabrik, +1 je Mengen-Upgrade des Rezepts. Größere Menge heißt mehr Zutaten und mehr Ergebnis bei gleicher Dauer.
 - Das Level der Schmelze schaltet die Schmelz-Rezepte frei: ab Lv 1 Glas, ab Lv 5 Kupferbarren, ab Lv 10 Eisenbarren, ab Lv 15 Goldbarren. Glas steht in der Produktionsliste ganz oben.
+- Kohle ist der Brennstoff der Schmelze: Jeder Schmelz-Durchgang verbraucht Kohle als zusätzliche Zutat (Glas und Kupferbarren 1, Eisen- und Goldbarren 2, mal Menge). Die Schmelze belegt dafür keinen Strom.
 - Die Fabrik ist genauso gestaffelt: ab Lv 5 Kupferkabel, ab Lv 10 Eisenplatte.
 - Höchstlevel von Schmelze und Fabrik: immer 5 Level über der letzten Freischaltung (Schmelze 20, Fabrik 15), damit auch das letzte Rezept noch größere Durchgänge bekommt.
 - Die Fabrik kostet zusätzlich Glas: das erste Level 1, jedes weitere eines mehr (bis Lv 10 zusammen 55).

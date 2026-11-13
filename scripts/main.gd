@@ -221,7 +221,8 @@ func set_insets(left: float, top: float, right: float, bottom: float) -> void:
 func _hint_text() -> String:
 	var first: Dictionary = Game.buildings[0]
 	if Game.levels[first["id"]] > 0:
-		return _capacity_hint()
+		var capacity_hint: String = _capacity_hint()
+		return capacity_hint if capacity_hint != "" else _fuel_hint()
 	if Game.can_buy(first, 1):
 		return "Kaufe unten: %s" % first["name"]
 	var total_clicks: int = 0
@@ -254,6 +255,26 @@ func _capacity_hint() -> String:
 				var paid_with: String = Game.resource_def(cost.keys()[0])["name"] if not cost.is_empty() else ""
 				return "%s braucht %s. Kaufe sie rechts mit %s" % [
 					building["name"], Game.resource_def(capacity_id)["name"], paid_with]
+	return ""
+
+
+## Dritter Schritt: Steht ein Gebäude mit Rezepten, aber es fehlt noch eine Zutat,
+## die der Spieler nie hatte (Kohle für die Schmelze), sagt der Hinweis, woher
+## sie kommt. Sonst stünde man vor einem leeren Produktions-Reiter.
+func _fuel_hint() -> String:
+	for recipe: Dictionary in Game.recipes:
+		if Game.recipe_batch(recipe) == 0 or Game.recipe_visible(recipe):
+			continue
+		for id: String in recipe["input"]:
+			if Game.seen[id]:
+				continue
+			for building: Dictionary in Game.buildings:
+				if building.get("produces", {}).has(id) and Game.building_visibility(building) != "hidden":
+					var where: String = building["name"]
+					if building.has("parent"):
+						var parent: Dictionary = Game.building_def(building["parent"])
+						where = "%s unter %s" % [parent.get("children_label", ""), parent["name"]]
+					return "%s braucht %s: %s" % [Game.building_def(recipe["building"])["name"], Game.resource_def(id)["name"], where]
 	return ""
 
 

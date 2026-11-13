@@ -7,9 +7,10 @@
 	{ "id": "population", "name": "Bevölkerung", "type": "capacity", "group": "Versorgung", "icon": "res://assets/icons/population.svg" },
 	{ "id": "electricity", "name": "Strom", "type": "capacity", "group": "Versorgung", "icon": "res://assets/icons/electricity.svg" },
 
-	{ "id": "copper_ore", "name": "Kupfererz", "type": "stock", "group": "Erze", "icon": "res://assets/icons/copper_ore.svg" },
-	{ "id": "iron_ore", "name": "Eisenerz", "type": "stock", "group": "Erze", "icon": "res://assets/icons/iron_ore.svg" },
-	{ "id": "gold_ore", "name": "Golderz", "type": "stock", "group": "Erze", "icon": "res://assets/icons/gold_ore.svg" },
+	{ "id": "coal", "name": "Kohle", "type": "stock", "group": "Bergbau", "icon": "res://assets/icons/coal.svg" },
+	{ "id": "copper_ore", "name": "Kupfererz", "type": "stock", "group": "Bergbau", "icon": "res://assets/icons/copper_ore.svg" },
+	{ "id": "iron_ore", "name": "Eisenerz", "type": "stock", "group": "Bergbau", "icon": "res://assets/icons/iron_ore.svg" },
+	{ "id": "gold_ore", "name": "Golderz", "type": "stock", "group": "Bergbau", "icon": "res://assets/icons/gold_ore.svg" },
 
 	{ "id": "copper_bar", "name": "Kupferbarren", "type": "stock", "group": "Barren", "icon": "res://assets/icons/copper_bar.svg" },
 	{ "id": "iron_bar", "name": "Eisenbarren", "type": "stock", "group": "Barren", "icon": "res://assets/icons/iron_bar.svg" },
