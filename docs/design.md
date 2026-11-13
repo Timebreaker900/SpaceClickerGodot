@@ -52,7 +52,7 @@ Abweichungen vom alten Stand:
 - Bevölkerung ist technisch ein Gebäude (kostet Nahrung, verbraucht 2 Nahrung/s, liefert 1 Bevölkerung).
 - Menge pro Durchgang kommt allein aus den Mengen-Upgrades des Rezepts (Start: 1).
 - Das Level der Schmelze schaltet die Schmelz-Rezepte frei: ab Lv 5 Kupferbarren und Glas, ab Lv 10 Eisenbarren, ab Lv 15 Goldbarren. Darüber gibt es kein Level (Höchstlevel 15, Vorschlag).
-- Die Fabrik gibt es vorerst nur einmal; ihre beiden Rezepte sind sofort da. Ob sie wie die Schmelze gestaffelt werden soll, ist offen.
+- Die Fabrik ist genauso gestaffelt: ab Lv 5 Kupferkabel, ab Lv 10 Eisenplatte, Höchstlevel 10.
 
 Vorschlagswerte, weil die alten nur im Unity-Editor standen: Kosten und Ertrag der Sandmine, Kosten und Freischalt-Level des Erzabbaus (Mine Lv 5 / 10 / 20), Mengen und Zeiten aller Rezepte. Die Erz-Raten 0,8 / 0,5 / 0,2 pro Sekunde stammen aus dem alten Code.
 

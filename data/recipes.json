@@ -41,6 +41,7 @@
 	},
 	{
 		"id": "copper_cable",
+		"requires_level": 5,
 		"name": "Kupferkabel",
 		"icon": "res://assets/icons/copper_cable.svg",
 		"building": "factory",
@@ -50,6 +51,7 @@
 	},
 	{
 		"id": "iron_plate",
+		"requires_level": 10,
 		"name": "Eisenplatte",
 		"icon": "res://assets/icons/iron_plate.svg",
 		"building": "factory",

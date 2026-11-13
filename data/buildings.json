@@ -113,8 +113,7 @@
 		"cost": { "coins": 150, "wood": 180, "stone": 225 },
 		"growth": 1.15,
 		"reserves": { "population": 2, "electricity": 3 },
-		"max_level": 1,
-		"note": "Schaltet das Herstellen frei",
+		"max_level": 10,
 		"recipes_label": "Herstellen"
 	}
 ]
