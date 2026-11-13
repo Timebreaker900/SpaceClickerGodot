@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="256" height="256">
+  <ellipse cx="64" cy="116" rx="54" ry="6" fill="#000" opacity=".28"/>
+  <!-- Schiene -->
+  <rect x="10" y="110" width="108" height="5" rx="2.5" fill="#3a4656"/>
+  <!-- Erzhaufen -->
+  <path d="M30 60 40 38 56 30 70 40 78 28 92 36 100 60z" fill="#9aa7b5"/>
+  <path d="M40 38 56 30 60 60H30z" fill="#c3ccd6"/>
+  <path d="M70 40 78 28 92 36 84 60H66z" fill="#7d8ea3"/>
+  <path d="M48 44l8-6 4 10-8 6z" fill="#3fd0ff"/>
+  <path d="M78 40l8 2-2 10-8-3z" fill="#ffb347"/>
+  <path d="M62 46l6-2 2 8-6 2z" fill="#3fd0ff"/>
+  <!-- Lore -->
+  <path d="M24 62h80l-9 34H33z" fill="#4c5a6b"/>
+  <path d="M64 62h40l-9 34H64z" fill="#3d4957"/>
+  <rect x="18" y="56" width="92" height="10" rx="3" fill="#7d8ea3"/>
+  <rect x="18" y="56" width="92" height="4" rx="2" fill="#9fb0c4"/>
+  <circle cx="38" cy="74" r="2.5" fill="#9fb0c4"/>
+  <circle cx="90" cy="74" r="2.5" fill="#9fb0c4"/>
+  <!-- Räder -->
+  <circle cx="44" cy="102" r="11" fill="#232b36"/>
+  <circle cx="44" cy="102" r="4.5" fill="#9fb0c4"/>
+  <circle cx="84" cy="102" r="11" fill="#232b36"/>
+  <circle cx="84" cy="102" r="4.5" fill="#9fb0c4"/>
+</svg>

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="256" height="256">
+  <defs>
+    <!-- Alles unterhalb der Kerbe wird abgeschnitten: die Klinge steckt im Holz -->
+    <clipPath id="above-notch"><path d="M0 0H128V60.4L30 80H0z"/></clipPath>
+  </defs>
+  <ellipse cx="64" cy="112" rx="50" ry="7" fill="#000" opacity=".28"/>
+  <!-- Baumstumpf -->
+  <path d="M28 78v24c0 8 16 12 36 12s36-4 36-12V78z" fill="#7a4a2b"/>
+  <path d="M64 78h36v24c0 8-16 12-36 12z" fill="#643a20"/>
+  <path d="M40 92v14M52 96v14M80 96v12" stroke="#55301a" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="64" cy="78" rx="36" ry="13" fill="#ecd8ae"/>
+  <ellipse cx="64" cy="78" rx="24" ry="8" fill="none" stroke="#c9a66b" stroke-width="2.5"/>
+  <!-- Kerbe -->
+  <path d="M43 77.6 82 69.8" stroke="#7a5a30" stroke-width="3.5" stroke-linecap="round"/>
+  <!-- Stiel -->
+  <path d="M41 57 108 20" stroke="#6b4226" stroke-width="11" stroke-linecap="round"/>
+  <path d="M41 57 108 20" stroke="#b98554" stroke-width="6" stroke-linecap="round"/>
+  <!-- Axtkopf: Schneide zeigt nach unten in den Stumpf -->
+  <g clip-path="url(#above-notch)">
+    <path d="M39.1 48.9 53.1 41.1 57.9 47.7 77.6 71.1 51.4 85.5 42.1 56.3z" fill="#c3ccd6"/>
+    <path d="M39.1 48.9 53.1 41.1 57.9 47.7 42.1 56.3z" fill="#8a98a8"/>
+    <path d="M57.9 47.7 77.6 71.1 64.5 78.3 50 52z" fill="#aab5c2"/>
+    <path d="M74.2 65 77.6 71.1 51.4 85.5 48 79.4z" fill="#f2f6fa"/>
+  </g>
+</svg>
