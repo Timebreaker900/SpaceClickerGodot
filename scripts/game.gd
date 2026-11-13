@@ -103,16 +103,22 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	advance(delta)
+	_save_timer += delta
+	if _save_timer >= float(settings.get("autosave_seconds", 10)):
+		save_game()
+
+
+## Lässt die Spielwelt um "delta" Sekunden weiterlaufen: Gebäude produzieren,
+## Rezepte laufen. Getrennt vom Speichern, damit die Balancing-Simulation
+## (tests/sim.gd) Stunden in Sekunden durchspielen kann.
+func advance(delta: float) -> void:
 	var rates: Dictionary = get_rates()
 	for id: String in rates:
 		amounts[id] = maxf(0.0, amounts[id] + rates[id] * delta)
 	for recipe: Dictionary in recipes:
 		_advance_recipe(recipe, delta)
 	_update_seen()
-
-	_save_timer += delta
-	if _save_timer >= float(settings.get("autosave_seconds", 10)):
-		save_game()
 
 
 func _notification(what: int) -> void:

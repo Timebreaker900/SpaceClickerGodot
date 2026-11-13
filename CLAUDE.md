@@ -27,7 +27,8 @@ Ziel: Handy (Android, iOS) im Hochformat mit Monetarisierung, später Steam als 
 - Ein System pro Schritt, ein Commit pro System, dazu eine kurze Erklärung, was gebaut wurde und warum – der Nutzer will mitlernen.
 - Nach jeder Änderung am Spiel das Debug-Fenster neu starten: `pwsh tools/restart_game.ps1`. Das Skript schließt das Fenster normal, damit der Spielstand gespeichert wird – der Nutzer spielt nebenbei. Nie den Prozess abschießen und nie `user://save.json` anfassen; Tests laufen mit eigener Speicherdatei.
 - Aussehen der Oberfläche steht in `tools/build_theme.gd`, das `ui/theme.tres` erzeugt. Nicht `theme.tres` von Hand ändern.
-- Vor dem Commit: `godot_console --headless --path . res://tests/smoke.tscn` muss „ALLE TESTS OK“ melden.
+- Vor dem Commit: `godot_console --headless --path . res://tests/smoke.tscn --quit-after 3000` muss „ALLE TESTS OK“ melden. Tests mit Fenster ebenfalls mit `--quit-after`, sonst bleibt bei einem Skriptfehler ein Fenster hängen.
+- Nach Änderungen an Preisen, Erträgen oder Freischaltungen die Balancing-Simulation laufen lassen und Auffälligkeiten nennen: `godot_console --headless --path . res://tests/sim.tscn -- --minutes=180 --clicks=3` (aktiver Spieler) bzw. `--minutes=360 --clicks=0.5` (nebenbei). Sie braucht rund 20 Sekunden.
 - Icons sind handgeschriebene SVGs in `assets/icons` (Ressourcen, 128 px) und `assets/buildings` (Gebäude, 256 px), alle mit viewBox 128. Stil: flach, zwei bis drei Tonwerte pro Fläche (helle und dunkle Seite), kein Hintergrundkasten, Gebäude mit Bodenschatten, Türkis `#3fd0ff` als Akzent. Neue Icons im selben Stil zeichnen und vor dem Einbau als Bild prüfen.
 - Upgrades haben kein eigenes Icon: Sie zeigen das Icon des Gebäudes bzw. der Ressource, die Zeile legt das Abzeichen `upgrade_badge.svg` darüber.
 - Antworten auf Deutsch.
